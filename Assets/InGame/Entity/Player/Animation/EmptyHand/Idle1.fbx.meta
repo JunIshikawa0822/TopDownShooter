@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 2f3d77d6426e94d35b1fe4f456f491b9
+guid: d782fb2d5742e4325863fdbe026195ff
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
@@ -31,20 +31,20 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Walking_Left
+      name: Idle1
       takeName: mixamo.com
       internalID: -203655887218126122
       firstFrame: 0
-      lastFrame: 62
+      lastFrame: 600
       wrapMode: 0
-      orientationOffsetY: 0
+      orientationOffsetY: -30
       level: 0
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
       loopTime: 1
       loopBlend: 0
-      loopBlendOrientation: 0
+      loopBlendOrientation: 1
       loopBlendPositionY: 0
       loopBlendPositionXZ: 0
       keepOriginalOrientation: 0

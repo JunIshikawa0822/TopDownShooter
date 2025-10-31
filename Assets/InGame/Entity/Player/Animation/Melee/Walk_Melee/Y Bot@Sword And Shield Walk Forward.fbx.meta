@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: d782fb2d5742e4325863fdbe026195ff
+guid: 9f74b431a71964ba58d75dd1652f3d04
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
@@ -31,20 +31,20 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Idle1
+      name: Sword And Shield Walk Forward
       takeName: mixamo.com
       internalID: -203655887218126122
       firstFrame: 0
-      lastFrame: 600
+      lastFrame: 65
       wrapMode: 0
-      orientationOffsetY: 0
+      orientationOffsetY: -18
       level: 0
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
       loopTime: 1
       loopBlend: 0
-      loopBlendOrientation: 0
+      loopBlendOrientation: 1
       loopBlendPositionY: 0
       loopBlendPositionXZ: 0
       keepOriginalOrientation: 0

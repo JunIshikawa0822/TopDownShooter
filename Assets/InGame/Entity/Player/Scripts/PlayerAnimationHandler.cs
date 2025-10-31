@@ -5,6 +5,10 @@ using UnityEngine;
 public class PlayerAnimationHandler : MonoBehaviour, IAnimationHandler
 {
     [SerializeField] private Animator _animator;
+    // カテゴリごとのベースAnimatorController
+    [SerializeField] private RuntimeAnimatorController _noneAnimatorControllerBase;
+    [SerializeField] private RuntimeAnimatorController _gunAnimatorControllerBase;
+    [SerializeField] private RuntimeAnimatorController _meleeAnimatorControllerBase;
     [SerializeField] private float _dampTime = 0.01f;
     private float _currentSpeed;
 
@@ -20,19 +24,19 @@ public class PlayerAnimationHandler : MonoBehaviour, IAnimationHandler
         _animator.SetFloat("MoveDir_Y", entity.MoveDirection.y);
     }
 
-    // private void OnAnimatorIK(int layerIndex)
-    // {
-    //     if (!_animator) return;
+    public void OnWeaponEquipped(IWeapon weapon)
+    {
+        //武器の種類に応じて基本Controllerを切り替え
+        if (weapon.WeaponType == WeaponType.None)
+            _animator.runtimeAnimatorController = _noneAnimatorControllerBase;
+        else if (weapon.WeaponType == WeaponType.Melee)
+            _animator.runtimeAnimatorController = _meleeAnimatorControllerBase;
+        else
+            _animator.runtimeAnimatorController = _gunAnimatorControllerBase;
 
-    //     _animator.SetIKPositionWeight(AvatarIKGoal.LeftFoot, 1f);
-    //     _animator.SetIKRotationWeight(AvatarIKGoal.LeftFoot, 1f);
-    //     _animator.SetIKPosition(AvatarIKGoal.LeftFoot, leftFootTarget.position);
-    //     _animator.SetIKRotation(AvatarIKGoal.LeftFoot, leftFootTarget.rotation);
-
-    //     _animator.SetIKPositionWeight(AvatarIKGoal.RightFoot, 1f);
-    //     _animator.SetIKRotationWeight(AvatarIKGoal.RightFoot, 1f);
-    //     _animator.SetIKPosition(AvatarIKGoal.RightFoot, rightFootTarget.position);
-    //     _animator.SetIKRotation(AvatarIKGoal.RightFoot, rightFootTarget.rotation);
-    // }
+        //武器固有のOverrideControllerを適用
+        if (weapon.AnimatorOverrideController != null)
+            _animator.runtimeAnimatorController = weapon.AnimatorOverrideController;
+    }
 
 }

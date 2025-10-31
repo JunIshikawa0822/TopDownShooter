@@ -364,13 +364,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 667668997}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.8, z: -20.84}
+  m_LocalRotation: {x: 0.048909277, y: -0, z: -0, w: 0.9988032}
+  m_LocalPosition: {x: 0, y: 3.94, z: -20.84}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 5.607, y: 0, z: 0}
 --- !u!114 &667669001
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -715,7 +715,7 @@ Transform:
   m_GameObject: {fileID: 2110673055}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.53, y: 1.032, z: 0}
+  m_LocalPosition: {x: -0.2, y: 1.032, z: -5.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -773,7 +773,7 @@ Animator:
   m_GameObject: {fileID: 2110673055}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 2caeaf1b5af984e6da497e593f3ee818, type: 3}
-  m_Controller: {fileID: 9100000, guid: 5860ff5c5ebd340ccae0e464c86c29a7, type: 2}
+  m_Controller: {fileID: 9100000, guid: 0f53c8f287fbf4e1580ddf59bf69e5e9, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -798,6 +798,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimationHandler
   _animator: {fileID: 2110673062}
+  _gunAnimatorControllerBase: {fileID: 0}
+  _meleeAnimatorControllerBase: {fileID: 0}
   _dampTime: 0.1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

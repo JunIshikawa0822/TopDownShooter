@@ -4,5 +4,5 @@ using UnityEngine;
 
 public interface IGun : IWeapon
 {
-    public void METHOD();
+    public void Reload();
 }

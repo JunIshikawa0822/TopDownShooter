@@ -2,12 +2,10 @@ using UnityEngine;
 
 public class PlayerController : A_Entity, IWeaponHandler
 {
-    
     //プレイヤーの移動速度倍率
     [SerializeField] private float _playerMoveSpeed = 5f;
     //プレイヤーの時間倍率（プレイヤーのみスローモーションにするなど用)
     [SerializeField] private float _playerTime = 1f;
-
     private Rigidbody _rigidbody;
     private Vector3 _velocity;
     private Vector2 _direction;
@@ -42,8 +40,13 @@ public class PlayerController : A_Entity, IWeaponHandler
         // --- 拡張時に Event 化したい場合 ---
         // OnMoved?.Invoke(this);
     }
-    
+
     public void Rotate(Vector2 direction)
+    {
+
+    }
+    
+    public void Equip(IWeapon weapon)
     {
         
     }
