@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class PlayerController : A_Entity, IWeaponHandler
 {
+    //現在装備中の武器（3Dオブジェクト）
+    private IWeapon _currentWeapon;
     //プレイヤーの移動速度倍率
     [SerializeField] private float _playerMoveSpeed = 5f;
     //プレイヤーの時間倍率（プレイヤーのみスローモーションにするなど用)
@@ -45,9 +47,24 @@ public class PlayerController : A_Entity, IWeaponHandler
     {
 
     }
-    
+
     public void Equip(IWeapon weapon)
     {
-        
+        _currentWeapon = weapon;
+    }
+
+    public void AttackStart()
+    {
+        _currentWeapon?.AttackStart();
+    }
+
+    public void AttackProcess()
+    {
+        _currentWeapon?.AttackProcess();
+    }
+    
+    public void AttckEnd()
+    {
+        _currentWeapon?.AttackEnd();
     }
 }
