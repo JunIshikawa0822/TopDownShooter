@@ -12,10 +12,11 @@ public class ItemData : ScriptableObject
     [Header("基本パラメータ")]
     [SerializeField] private float _weight;//重量
     [SerializeField] private int _price;//売買価格
+    [SerializeField] private int _stackableNumber;//スタックできる個数
 
     [Header("分類情報")]
     [SerializeField] private ItemType _itemType;//アイテム種別
-    [SerializeField] private ItemTag _tags;//タグ（Flags）
+    [SerializeField] private ItemTag _tags;//タグ（Flags)
 
     [Header("見た目情報（Prefab）")]
     [SerializeField] private ItemVisualData _visualData;//別SO参照
@@ -26,6 +27,7 @@ public class ItemData : ScriptableObject
     public string Description => _description;
     public float Weight => _weight;
     public int Price => _price;
+    public int MaxStack => _stackableNumber;
     public ItemType ItemType => _itemType;
     public ItemTag Tags => _tags;
     public ItemVisualData VisualData => _visualData;

@@ -12,19 +12,30 @@ namespace Game.Items
         [SerializeField] private float _recoil;//反動値
         [SerializeField] private float _accuracy;//命中精度
         [SerializeField] private float _bulletVelocity;//弾速
-        [SerializeField] private int _defaultMagazineSize;//標準マガジン容量
+        [SerializeField] private int _maxMagazineCapacity;//最大マガジン容量
 
         [Header("アタッチメント設定")]
-        [SerializeField] private List<AttachmentSlot> _attachmentSlots;
-        // 例：スコープスロット、マガジンスロット、グリップスロットなど
+        //どんなアタッチメントがつけられるかを定義
+        [SerializeField] private List<AttachmentSlotData> _ableAttachmentSlots;
 
         public FireMode FireMode => _fireMode;
         public float FireRate => _fireRate;
         public float Recoil => _recoil;
         public float Accuracy => _accuracy;
         public float BulletVelocity => _bulletVelocity;
-        public int DefaultMagazineSize => _defaultMagazineSize;
-        public IReadOnlyList<AttachmentSlot> AttachmentSlots => _attachmentSlots;
+        public int MaxMagazineCapacity => _maxMagazineCapacity;
+        public IReadOnlyList<AttachmentSlotData> AbleAttachmentSlots => _ableAttachmentSlots;
+    }
+
+    public enum GunStatType
+    {
+        FireRate,
+        Recoil,
+        Accuracy,
+        BulletVelocity,
+        MaxMagazineCapacity,
+
+        Count//enumの末尾に配置、ループや配列長取得用
     }
 }
 
