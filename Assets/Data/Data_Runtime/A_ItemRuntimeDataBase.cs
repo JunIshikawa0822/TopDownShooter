@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Game.Items
 {
-    public abstract class ItemRuntimeDataBase : IItemRuntimeData
+    public abstract class AItemRuntimeDataBase : IItemRuntimeData
     {
         private int _stackCount;
         private readonly ItemData _itemData;
@@ -15,7 +15,7 @@ namespace Game.Items
         public ItemType ItemType => BaseData.ItemType;
         public bool CanStack => MaxStack > 1;
 
-        protected ItemRuntimeDataBase(ItemData data, int initialCount = 1)
+        protected AItemRuntimeDataBase(ItemData data, int initialCount = 1)
         {
             _itemData = data;
             _stackCount = Mathf.Clamp(initialCount, 0, MaxStack);

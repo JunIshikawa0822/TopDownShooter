@@ -5,13 +5,15 @@ using System.Linq;
 namespace Game.Items
 {
     [Serializable]
-    public class GunRuntimeData : WeaponRuntimeData
+    public class GunRuntimeData : AWeaponRuntimeDataBase
     {
         private readonly List<AttachmentSlotRuntimeData> _slots = new List<AttachmentSlotRuntimeData>();
         private readonly float[] _baseStats = new float[(int)GunStatType.Count];
         private readonly float[] _currentStats = new float[(int)GunStatType.Count];
-        private FireMode _fireMode; // 射撃モード
+        private FireMode _fireMode;//射撃モード
+        private string _skinID;//将来的にスキン切りかえにつかうかも
 
+        #region プロパティ
         public GunData GunBaseData => BaseData as GunData;
         public IReadOnlyList<AttachmentSlotRuntimeData> Slots => _slots;
         
@@ -20,6 +22,8 @@ namespace Game.Items
         public float Accuracy => _currentStats[(int)GunStatType.Accuracy];
         public float BulletVelocity => _currentStats[(int)GunStatType.BulletVelocity];
         public FireMode CurrentFireMode => _fireMode;
+        public string SkinID => _skinID;
+        #endregion
 
         public GunRuntimeData(GunData baseData, int initialCount = 1) : base(baseData, initialCount)
         {
@@ -30,7 +34,6 @@ namespace Game.Items
             _baseStats[(int)GunStatType.Recoil] = baseData.Recoil;
             _baseStats[(int)GunStatType.Accuracy] = baseData.Accuracy;
             _baseStats[(int)GunStatType.BulletVelocity] = baseData.BulletVelocity;
-            _baseStats[(int)GunStatType.MaxMagazineCapacity] = baseData.MaxMagazineCapacity;
 
             // Array.Copy(_baseStats, _currentStats, _baseStats.Length);
 
@@ -92,7 +95,7 @@ namespace Game.Items
         //標準的なアタッチメント取り外し
         public AttachmentRuntimeData UnEquipAttachment(string slotID)
         {
-            AttachmentSlotRuntimeData slot = FindSlotById(slotID);
+            AttachmentSlotRuntimeData slot = FindSlotByID(slotID);
             if (slot == null) return null;
 
             AttachmentRuntimeData data = slot.UnEquip();
@@ -116,7 +119,7 @@ namespace Game.Items
             return oldMagazine; // 交換前のマガジンを返す
         }
 
-        private AttachmentSlotRuntimeData FindSlotById(string slotID)
+        private AttachmentSlotRuntimeData FindSlotByID(string slotID)
         {
             return _slots.FirstOrDefault(s => s.SlotId == slotID);
         }
@@ -124,6 +127,24 @@ namespace Game.Items
         private AttachmentSlotRuntimeData FindSlotByType(AttachmentType type)
         {
             return _slots.FirstOrDefault(s => s.SlotType == type);
+        }
+
+        public AttachmentRuntimeData GetAttachmentByID(string slotID)
+        {
+            AttachmentSlotRuntimeData slot = FindSlotByID(slotID);
+            if (slot == null) return null;
+
+            AttachmentRuntimeData attachment = slot.EquippedAttachment;
+            return attachment;
+        }
+
+        public AttachmentRuntimeData GetAttachmentByType(AttachmentType type)
+        {
+            AttachmentSlotRuntimeData slot = FindSlotByType(type);
+            if (slot == null) return null;
+
+            AttachmentRuntimeData attachment = slot.EquippedAttachment;
+            return attachment;
         }
     }
 }

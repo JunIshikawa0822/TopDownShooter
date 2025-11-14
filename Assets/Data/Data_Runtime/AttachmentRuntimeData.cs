@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Game.Items
 {
-    public class AttachmentRuntimeData : ItemRuntimeDataBase
+    public class AttachmentRuntimeData : AItemRuntimeDataBase
     {
         public AttachmentData AttachmentData => BaseData as AttachmentData;
         public AttachmentType AttachmentType => AttachmentData.attachmentType;

@@ -8,11 +8,10 @@ namespace Game.Items
     {
         [Header("射撃設定")]
         [SerializeField] private FireMode _fireMode;//射撃タイプ（セミ・フル・バーストなど）
-        [SerializeField] private float _fireRate;//発射間隔
+        [SerializeField] private float _fireRate;//発射間隔（1秒間に何発打てるか）
         [SerializeField] private float _recoil;//反動値
         [SerializeField] private float _accuracy;//命中精度
         [SerializeField] private float _bulletVelocity;//弾速
-        [SerializeField] private int _maxMagazineCapacity;//最大マガジン容量
 
         [Header("アタッチメント設定")]
         //どんなアタッチメントがつけられるかを定義
@@ -23,7 +22,6 @@ namespace Game.Items
         public float Recoil => _recoil;
         public float Accuracy => _accuracy;
         public float BulletVelocity => _bulletVelocity;
-        public int MaxMagazineCapacity => _maxMagazineCapacity;
         public IReadOnlyList<AttachmentSlotData> AbleAttachmentSlots => _ableAttachmentSlots;
     }
 

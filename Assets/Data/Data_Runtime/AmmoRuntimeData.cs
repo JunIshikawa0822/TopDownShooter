@@ -3,7 +3,7 @@ using UnityEngine;
 namespace Game.Items
 {
     //Ammoをインベントリで扱うためのフォーマット
-    public class AmmoRuntimeData : ItemRuntimeDataBase
+    public class AmmoRuntimeData : AItemRuntimeDataBase
     {
         public AmmoData AmmoBaseData => BaseData as AmmoData;
         public AmmoCaliberType Caliber => AmmoBaseData?.Caliber ?? AmmoCaliberType.None;

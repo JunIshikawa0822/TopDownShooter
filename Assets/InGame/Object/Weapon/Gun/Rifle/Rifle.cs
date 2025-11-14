@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Rifle : APooledObject, IGun
+public class Rifle : APooledObject
 {
     [SerializeField] private AnimatorOverrideController _animatorOverride;
 

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Game.Items
 {
-    public abstract class WeaponRuntimeData : ItemRuntimeDataBase
+    public abstract class AWeaponRuntimeDataBase : AItemRuntimeDataBase
     {
         // WeaponData としての BaseData のラッパー（型安全に扱うため）
         public WeaponData WeaponBaseData => BaseData as WeaponData;
@@ -14,7 +14,7 @@ namespace Game.Items
         //ついているエンチャント
         protected List<EnchantData> _attachedEnchats = new List<EnchantData>();
 
-        protected WeaponRuntimeData(WeaponData baseData, int initialCount = 1) : base(baseData, initialCount)
+        protected AWeaponRuntimeDataBase(WeaponData baseData, int initialCount = 1) : base(baseData, initialCount)
         {
 
         }

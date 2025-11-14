@@ -8,6 +8,7 @@ namespace Game.Items
     public class WeaponData : ItemData
     {
         [SerializeField] private WeaponType _weaponType;
+        [SerializeField] private AnimatorOverrideController _weaponAnimation;
         //[SerializeField] private EquipmentSlot _equipSlot;
 
         [Header("Enchant")]
@@ -20,6 +21,7 @@ namespace Game.Items
         public WeaponType WeaponType => _weaponType;
         //public EquipmentSlot EquipSlot => _equipSlot;
         public IReadOnlyList<EnchantData> AttachableEnchants => _attachableEnchants;
+        public AnimatorOverrideController WeaponAnim => _weaponAnimation;
         //public IReadOnlyList<CustomEffect> CustomEffects => customEffects;
     }
 }

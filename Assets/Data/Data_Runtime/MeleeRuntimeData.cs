@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Game.Items
 {
-    public class MeleeRuntimeData : WeaponRuntimeData
+    public class MeleeRuntimeData : AWeaponRuntimeDataBase
     {
         private readonly float[] _baseStats;
         private readonly float[] _currentStats;
