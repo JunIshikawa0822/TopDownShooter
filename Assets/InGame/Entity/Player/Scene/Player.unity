@@ -773,7 +773,7 @@ Animator:
   m_GameObject: {fileID: 2110673055}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 2caeaf1b5af984e6da497e593f3ee818, type: 3}
-  m_Controller: {fileID: 9100000, guid: 0f53c8f287fbf4e1580ddf59bf69e5e9, type: 2}
+  m_Controller: {fileID: 9100000, guid: b442342e6c2474ae08b79815efa497c6, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -798,6 +798,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimationHandler
   _animator: {fileID: 2110673062}
+  _noneAnimatorControllerBase: {fileID: 0}
   _gunAnimatorControllerBase: {fileID: 0}
   _meleeAnimatorControllerBase: {fileID: 0}
   _dampTime: 0.1

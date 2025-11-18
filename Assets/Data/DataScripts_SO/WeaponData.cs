@@ -4,14 +4,15 @@ using System.Collections.Generic;
 
 namespace Game.Items
 {
-    [CreateAssetMenu(menuName = "Game/Item/WeaponData")]
-    public class WeaponData : ItemData
+    public abstract class WeaponData : ItemData
     {
+        [Header("武器固有情報")]
         [SerializeField] private WeaponType _weaponType;
+        [SerializeField] private GameObject _weaponPrefab;
         [SerializeField] private AnimatorOverrideController _weaponAnimation;
         //[SerializeField] private EquipmentSlot _equipSlot;
 
-        [Header("Enchant")]
+        [Header("エンチャント")]
         [SerializeField] private List<EnchantData> _attachableEnchants;
 
         //[Header("Custom Effects")]
@@ -19,7 +20,7 @@ namespace Game.Items
 
         // public float AttackSpeed => _attackSpeed;
         public WeaponType WeaponType => _weaponType;
-        //public EquipmentSlot EquipSlot => _equipSlot;
+        public GameObject WeaponPrefab => _weaponPrefab;
         public IReadOnlyList<EnchantData> AttachableEnchants => _attachableEnchants;
         public AnimatorOverrideController WeaponAnim => _weaponAnimation;
         //public IReadOnlyList<CustomEffect> CustomEffects => customEffects;

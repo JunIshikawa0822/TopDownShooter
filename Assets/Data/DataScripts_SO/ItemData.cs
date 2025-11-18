@@ -1,8 +1,6 @@
 using System;
 using UnityEngine;
-
-[CreateAssetMenu(menuName = "Game/Item Data", fileName = "NewItemData")]
-public class ItemData : ScriptableObject
+public abstract class ItemData : ScriptableObject
 {
     [Header("基本情報")]
     [SerializeField] private string _id;//ユニークID
@@ -18,7 +16,7 @@ public class ItemData : ScriptableObject
     [SerializeField] private ItemType _itemType;//アイテム種別
     [SerializeField] private ItemTag _tags;//タグ（Flags)
 
-    [Header("見た目情報（Prefab）")]
+    [Header("見た目情報")]
     [SerializeField] private ItemVisualData _visualData;//別SO参照
 
     // --- プロパティ ---

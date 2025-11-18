@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Game.Items
 {
-    [CreateAssetMenu(menuName = "Game/Item/GunData")]
+    [CreateAssetMenu(menuName = "Game/Weapon/GunData")]
     public class GunData : WeaponData
     {
         [Header("射撃設定")]

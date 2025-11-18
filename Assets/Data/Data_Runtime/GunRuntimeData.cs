@@ -41,9 +41,9 @@ namespace Game.Items
             {
                 AttachmentSlotRuntimeData runtimeSlot = new AttachmentSlotRuntimeData
                 (
-                    slot.slotID,
-                    slot.slotType,
-                    new AttachmentRuntimeData(slot.defaultAttachmentData)
+                    slot.SlotID,
+                    slot.SlotType,
+                    new AttachmentRuntimeData(slot.DefaultAttachmentData)
                 );
 
                 runtimeSlot.onChanged += RecalculateStats;
@@ -68,7 +68,7 @@ namespace Game.Items
 
                 foreach (GunStatModifier mod in attachment.Modifiers)
                 {
-                    int index = (int)mod.statName;
+                    int index = (int)mod.StatName;
                     mod.ApplyTo(ref addBuffer[index], ref mulBuffer[index]);
                 }
             }

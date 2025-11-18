@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Game.Items
 {
-    [CreateAssetMenu(menuName = "Game/Item/MeleeData")]
+    [CreateAssetMenu(menuName = "Game/Weapon/MeleeData")]
     public class MeleeData : WeaponData
     {
         [Header("近接武器設定")]
