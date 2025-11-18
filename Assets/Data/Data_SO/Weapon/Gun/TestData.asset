@@ -18,10 +18,11 @@ MonoBehaviour:
   _weight: 0
   _price: 0
   _stackableNumber: 0
-  _itemType: 0
+  _itemType: 4
   _tags: 0
   _visualData: {fileID: 0}
-  _weaponType: 0
+  _weaponType: 1
+  _weaponPrefab: {fileID: 0}
   _weaponAnimation: {fileID: 0}
   _attachableEnchants: []
   _fireMode: 0
@@ -29,4 +30,10 @@ MonoBehaviour:
   _recoil: 0
   _accuracy: 0
   _bulletVelocity: 0
-  _ableAttachmentSlots: []
+  _ableAttachmentSlots:
+  - _slotID: 
+    _slotType: 0
+    _allowedTags: []
+    _defaultAttachmentData: {fileID: 0}
+    _slotPosition: {x: 0, y: 0, z: 0}
+    _slotRotation: {x: 0, y: 0, z: 0, w: 0}
