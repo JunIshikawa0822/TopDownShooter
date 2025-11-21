@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
-namespace Game.Items
+namespace Game.Data
 {
     [Serializable]
     public class GunRuntimeData : AWeaponRuntimeDataBase
@@ -27,6 +28,7 @@ namespace Game.Items
 
         public GunRuntimeData(GunData baseData, int initialCount = 1) : base(baseData, initialCount)
         {
+            // Debug.Log("GunRuntimeData constructing");
             _fireMode = baseData.FireMode;
 
             // // ---ベース値を配列に格納---
@@ -35,15 +37,24 @@ namespace Game.Items
             _baseStats[(int)GunStatType.Accuracy] = baseData.Accuracy;
             _baseStats[(int)GunStatType.BulletVelocity] = baseData.BulletVelocity;
 
-            // Array.Copy(_baseStats, _currentStats, _baseStats.Length);
+            Array.Copy(_baseStats, _currentStats, _baseStats.Length);
 
             foreach (AttachmentSlotData slot in baseData.AbleAttachmentSlots)
             {
+                AttachmentRuntimeData defaultAttachment = null;
+
+                if (slot.DefaultAttachmentData != null)
+                {
+                    //デフォルトアタッチメントのデータが存在する場合のみ、インスタンスを生成
+                    defaultAttachment = new AttachmentRuntimeData(slot.DefaultAttachmentData);
+                }
+
                 AttachmentSlotRuntimeData runtimeSlot = new AttachmentSlotRuntimeData
                 (
+                    slot,
                     slot.SlotID,
                     slot.SlotType,
-                    new AttachmentRuntimeData(slot.DefaultAttachmentData)
+                    defaultAttachment//ここでnullが渡されるのはOK
                 );
 
                 runtimeSlot.onChanged += RecalculateStats;
@@ -134,8 +145,7 @@ namespace Game.Items
             AttachmentSlotRuntimeData slot = FindSlotByID(slotID);
             if (slot == null) return null;
 
-            AttachmentRuntimeData attachment = slot.EquippedAttachment;
-            return attachment;
+            return slot.EquippedAttachment;
         }
 
         public AttachmentRuntimeData GetAttachmentByType(AttachmentType type)
@@ -143,8 +153,23 @@ namespace Game.Items
             AttachmentSlotRuntimeData slot = FindSlotByType(type);
             if (slot == null) return null;
 
-            AttachmentRuntimeData attachment = slot.EquippedAttachment;
-            return attachment;
+            return slot.EquippedAttachment;
+        }
+
+        public Vector3 AttachmentPos(AttachmentType type)
+        {
+            AttachmentSlotRuntimeData slot = FindSlotByType(type);
+            if (slot == null) return Vector3.zero;
+
+            return slot.BaseData.SlotPosition;
+        }
+
+        public Quaternion AttachmentRot(AttachmentType type)
+        {
+            AttachmentSlotRuntimeData slot = FindSlotByType(type);
+            if (slot == null) return Quaternion.identity;
+
+            return slot.BaseData.SlotRotation;
         }
     }
 }

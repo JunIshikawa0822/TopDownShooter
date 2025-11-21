@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Game.Items
+namespace Game.Data
 {
     public class MeleeRuntimeData : AWeaponRuntimeDataBase
     {

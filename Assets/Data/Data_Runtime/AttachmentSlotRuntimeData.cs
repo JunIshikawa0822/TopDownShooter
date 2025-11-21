@@ -1,21 +1,25 @@
 using UnityEngine;
 using System;
 
-namespace Game.Items
+namespace Game.Data
 {
     public class AttachmentSlotRuntimeData
     {
+        private AttachmentSlotData _slotData;
         private string _slotID;
         private readonly AttachmentType _slotType;
         private AttachmentRuntimeData _equippedAttachment;
 
         public event Action onChanged;
+
+        public AttachmentSlotData BaseData => _slotData;
         public string SlotId => _slotID;
         public AttachmentType SlotType => _slotType;
         public AttachmentRuntimeData EquippedAttachment => _equippedAttachment;
 
-        public AttachmentSlotRuntimeData(string slotId, AttachmentType slotType, AttachmentRuntimeData defaultAttachment = null)
+        public AttachmentSlotRuntimeData(AttachmentSlotData slodData, string slotId, AttachmentType slotType, AttachmentRuntimeData defaultAttachment = null)
         {
+            _slotData = slodData;
             _slotID = slotId;
             _slotType = slotType;
             _equippedAttachment = defaultAttachment;

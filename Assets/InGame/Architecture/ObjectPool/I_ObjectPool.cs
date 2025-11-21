@@ -1,8 +1,8 @@
 using UnityEngine;
 
-public interface IObjectPool 
+public interface IObjectPool<T> where T : APooledObject 
 {
     void PoolSetUp(uint index);
-    APooledObject GetFromPool();
-    void ReturnToPool(APooledObject pooledObject);
+    T GetFromPool();
+    void ReturnToPool(T pooledObject);
 }

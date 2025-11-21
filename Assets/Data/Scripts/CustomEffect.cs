@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Game.Items
+namespace Game.Data
 {
     /// <summary>
     /// 抽象的なカスタム効果。ロジック層で評価される。

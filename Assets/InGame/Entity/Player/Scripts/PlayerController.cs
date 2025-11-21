@@ -1,10 +1,11 @@
-using Game.Items;
+using Game.Data;
 using UnityEngine;
 
 public class PlayerController : A_Entity, IWeaponHandler
 {
     //現在装備中の武器（3Dオブジェクト）
-    private IWeapon<AWeaponRuntimeDataBase> _currentWeapon;
+    private AWeaponBase _currentWeapon;
+    [SerializeField] private Transform _righthand;
     //プレイヤーの移動速度倍率
     [SerializeField] private float _playerMoveSpeed = 5f;
     //プレイヤーの時間倍率（プレイヤーのみスローモーションにするなど用)
@@ -46,12 +47,15 @@ public class PlayerController : A_Entity, IWeaponHandler
 
     public void Rotate(Vector2 direction)
     {
-
+        if(_currentWeapon == null) return;
+        _righthand.rotation = transform.rotation;
     }
 
-    public void Equip(IWeapon<AWeaponRuntimeDataBase> weapon)
+    public void Equip(AWeaponBase weapon)
     {
         _currentWeapon = weapon;
+        _currentWeapon.transform.SetParent(this._righthand);
+        _currentWeapon.transform.SetPositionAndRotation(_righthand.position, _righthand.rotation);
     }
 
     public void AttackStart()

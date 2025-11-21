@@ -12,11 +12,17 @@ public class Bullet : APooledObject, IBullet, IOnUpdate
     private Vector3 _direction;
     private float _speed;
 
-    #region プロパティ
+    private bool _isActive = false;
+
+    #region IBulletプロパティ
     public AmmoData Data => _ammoData;
     public float Damage => Data.Damage;
     public float PenetrationPower => Data.PenetrationPower;
     public AmmoCaliberType CaliberType => Data.Caliber;
+    #endregion
+
+    #region IOnUpdateプロパティ
+    public bool IsActiveForUpdate => _isActive;
     #endregion
 
     public virtual void Init(AmmoData ammoData, Vector3 direction, float speed)
@@ -24,12 +30,14 @@ public class Bullet : APooledObject, IBullet, IOnUpdate
         _ammoData = ammoData;
         _bulletTransform = this.transform;
 
-        _bulletPrePos = _bulletTransform.position;
-
         _direction = direction.normalized;
         _speed = speed;
 
+        _bulletPrePos = _bulletTransform.position;
+
         _bulletDistance = 0f;
+
+        _isActive = true;
     }
 
     public virtual void OnUpdate()
@@ -67,5 +75,11 @@ public class Bullet : APooledObject, IBullet, IOnUpdate
     {
         //ダメージ計算・エフェクト生成
         //貫通を実装するなら
+    }
+
+    public override void ReturnToPool()
+    {
+        base.ReturnToPool();
+        _isActive = false;
     }
 }

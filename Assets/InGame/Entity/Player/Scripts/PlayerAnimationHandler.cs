@@ -1,4 +1,4 @@
-using Game.Items;
+using Game.Data;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
@@ -39,5 +39,4 @@ public class PlayerAnimationHandler : MonoBehaviour, IAnimationHandler
         if (weapon.WeaponAnim != null)
             _animator.runtimeAnimatorController = weapon.WeaponAnim;
     }
-
 }

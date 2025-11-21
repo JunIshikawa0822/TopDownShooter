@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Game.Items
+namespace Game.Data
 {
     public abstract class AItemRuntimeDataBase : IItemRuntimeData
     {
@@ -17,7 +17,9 @@ namespace Game.Items
 
         protected AItemRuntimeDataBase(ItemData data, int initialCount = 1)
         {
+            // Debug.Log("AItemRuntimeData constructing");
             _itemData = data;
+            Debug.Log(_itemData);
             _stackCount = Mathf.Clamp(initialCount, 0, MaxStack);
         }
 

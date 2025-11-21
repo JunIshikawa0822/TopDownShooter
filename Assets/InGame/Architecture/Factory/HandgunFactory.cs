@@ -1,20 +1,22 @@
 using System;
+using Game.Data;
 using UnityEngine;
 
-public class Gun_Handgun_Factory //: IFactory<Rifle>
+public class Factory_Handgun : IFactory<AWeaponBase>
 {
-//     private Rifle _rifle;
-//     private ObjectPool<ABulletBase> _objectPool;
-//     public Gun_Rifle_Factory(ObjectPool<ABulletBase> objectPool, Rifle rifle)
-//     {
-//         _objectPool = objectPool;
-//         _rifle = rifle;
-//     }
+    private IObjectPool<Bullet> _bulletPool;
+    private Handgun _handgunPrefab;
+    public Factory_Handgun(Handgun handgunPrefab, IObjectPool<Bullet> bulletPool)
+    {
+        _handgunPrefab = handgunPrefab;
+        _bulletPool = bulletPool;
+    }
 
-//     public Rifle ObjectInstantiate()
-//     {
-//         Rifle newRifle = GameObject.Instantiate(_rifle);
+    public AWeaponBase ObjectInstantiate()
+    {
+        Handgun newHandgun = GameObject.Instantiate(_handgunPrefab);
+        newHandgun.SetBulletPool(_bulletPool);
 
-//         return newRifle;
-//     }
+        return newHandgun;
+    }
 }

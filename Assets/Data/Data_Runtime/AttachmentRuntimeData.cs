@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-namespace Game.Items
+namespace Game.Data
 {
     public class AttachmentRuntimeData : AItemRuntimeDataBase
     {

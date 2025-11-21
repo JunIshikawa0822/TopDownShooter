@@ -1,8 +1,10 @@
 public enum WeaponType
 {
     None,
-    Pistol,
-    Rifle,
+    Handgun,
+    SubMachineGun,
+    AssultRifle,
+    SniperRifle,
     Shotgun,
     Melee
 }

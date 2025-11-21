@@ -1,7 +1,7 @@
 using UnityEngine;
 using System;
 
-namespace Game.Items
+namespace Game.Data
 {
     public interface IItemRuntimeData
     {

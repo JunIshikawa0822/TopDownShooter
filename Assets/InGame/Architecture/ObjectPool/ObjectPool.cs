@@ -2,17 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-public class ObjectPool<T> : IObjectPool where T : APooledObject
+public class ObjectPool<T> : IObjectPool<T> where T : APooledObject
 {
-    private Stack<APooledObject> _pool;
+    private Stack<T> _pool;
     private GameObject _parent;
     private Transform _transform;
     private IFactory<T> _factory;
 
-    public ObjectPool(Transform poolTransform, IFactory<T> factory)
+    public ObjectPool(Transform poolTransform, IFactory<T> factory, string name = "")
     {
-        _pool = new Stack<APooledObject>();
-        _parent = new GameObject(typeof(T).Name);
+        _pool = new Stack<T>();
+        _parent = new GameObject(name);
         _transform = poolTransform;
 
         _factory = factory;
@@ -28,9 +28,6 @@ public class ObjectPool<T> : IObjectPool where T : APooledObject
             return;
         }
 
-        Stack<APooledObject> objectPool = _pool;
-        GameObject poolParent = _parent;
-
         //とりあえずPoolSize分instanceを生成して、見えなくしておく
         for (int i = 0; i < initPoolSize; i++)
         {
@@ -38,52 +35,50 @@ public class ObjectPool<T> : IObjectPool where T : APooledObject
             // Debug.Log(instance);
             if(instance == null)return;
 
-            instance.gameObject.transform.SetParent(poolParent.transform);
+            instance.gameObject.transform.SetParent(_parent.transform);
             instance.gameObject.SetActive(false);
-            objectPool.Push(instance);
+            _pool.Push(instance);
         }
     }
 
-    public APooledObject GetFromPool()
+    public T GetFromPool()
     {
         if(_factory == null)
         {
             return null;
         }
 
-        Stack<APooledObject> objectPool = _pool;
-        GameObject poolParent = _parent;
-
         // プールに在庫があればそれを使用、なければ新規作成
-        if (objectPool.Count < 1)
+        if (_pool.Count < 1)
         {
             T newInstance = ObjectInstantiate();
             if(newInstance == null)return null;
 
-            newInstance.gameObject.transform.SetParent(poolParent.transform);
+            newInstance.gameObject.transform.SetParent(_parent.transform);
             return newInstance;
         }
 
-        T nextInstance = objectPool.Pop() as T;
+        T nextInstance = _pool.Pop();
         nextInstance.gameObject.SetActive(true);
         return nextInstance;
     }
 
     private T ObjectInstantiate()
     {
-        T instance = _factory.ObjectInstantiate() as T;
-        if(instance == null)return null;
+        T instance = _factory.ObjectInstantiate();
+        if (instance == null) return null;
 
-        instance.SetPoolAction(ReturnToPool);
+        instance.SetPoolAction<T>(ReturnToPool);
         return instance;
     }
     
     // 弾をプールに戻す
-    public void ReturnToPool(APooledObject pooledObject)
+    public void ReturnToPool(T pooledObject)
     {
-        Stack<APooledObject> objectPool = _pool;
+        Stack<T> objectPool = _pool;
 
         objectPool.Push(pooledObject);
+        pooledObject.transform.SetParent(_parent.transform);
         pooledObject.gameObject.SetActive(false);
     }
 }

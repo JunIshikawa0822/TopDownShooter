@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Game.Items
+namespace Game.Data
 {
     //Ammoをインベントリで扱うためのフォーマット
     public class AmmoRuntimeData : AItemRuntimeDataBase

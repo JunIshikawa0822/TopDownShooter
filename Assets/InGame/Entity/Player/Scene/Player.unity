@@ -231,6 +231,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &481152267
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 481152268}
+  m_Layer: 0
+  m_Name: WeaponPos_Righthand
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &481152268
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 481152267}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.123, z: 0.051}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1713902728}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &499914791
 GameObject:
   m_ObjectHideFlags: 0
@@ -278,6 +309,15 @@ MonoBehaviour:
   _gameStat:
     player: {fileID: 2110673061}
     moveDirection: {x: 0, y: 0}
+    bulletPoolTrans: {fileID: 1242047622}
+    gunPoolTrans: {fileID: 1640089635}
+    bulletPrefab: {fileID: 724939986401457964, guid: 539ee4a5f4b944a2d9e22a94182dfed3, type: 3}
+    handgunPrefab: {fileID: 8853913209722130712, guid: 0a9f82aa0aa7f4fc4a306bea0561fa00, type: 3}
+    subMachinegunPrefab: {fileID: 9005893166952156157, guid: e5315b678757941aabe5b13da63c9ee4, type: 3}
+    assultRiflePrefab: {fileID: 5876628323592917999, guid: ac70eff0738244bb0afea4bb4b2a322e, type: 3}
+    sniperRiflePrefab: {fileID: 6533756477307387069, guid: e4379072a75f34934abe041561fc75b2, type: 3}
+    shotgunPrefab: {fileID: 1737157473128543164, guid: e5f9a87ff8446401fbd84a89a93cd456, type: 3}
+    playerWeaponData: {fileID: 11400000, guid: 6c2c0ba9871254b118c5db00a31fa7dc, type: 2}
 --- !u!1 &667668997
 GameObject:
   m_ObjectHideFlags: 0
@@ -364,13 +404,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 667668997}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.048909277, y: -0, z: -0, w: 0.9988032}
-  m_LocalPosition: {x: 0, y: 3.94, z: -20.84}
+  m_LocalRotation: {x: 0.073543146, y: -0, z: -0, w: 0.99729204}
+  m_LocalPosition: {x: -1, y: 3.5, z: -19.7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 5.607, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 8.435, y: 0, z: 0}
 --- !u!114 &667669001
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -596,12 +636,82 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 1852576806548013000, guid: 2caeaf1b5af984e6da497e593f3ee818, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 481152268}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2caeaf1b5af984e6da497e593f3ee818, type: 3}
 --- !u!4 &803048910 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 2caeaf1b5af984e6da497e593f3ee818, type: 3}
+  m_PrefabInstance: {fileID: 803048909}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1242047621
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1242047622}
+  m_Layer: 0
+  m_Name: BulletPoolTrans
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1242047622
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1242047621}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.99201, y: -0, z: -6.7787}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1640089634
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1640089635}
+  m_Layer: 0
+  m_Name: GunPoolTrans
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1640089635
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1640089634}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.99201, y: -0, z: -6.7787}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &1713902728 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1852576806548013000, guid: 2caeaf1b5af984e6da497e593f3ee818, type: 3}
   m_PrefabInstance: {fileID: 803048909}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &2110673055
@@ -761,6 +871,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f65e60fd054ae45558b79e7152ef0ed6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
+  _righthand: {fileID: 481152268}
   _playerMoveSpeed: 1.8
   _playerTime: 1
 --- !u!95 &2110673062
@@ -811,3 +922,5 @@ SceneRoots:
   - {fileID: 667669000}
   - {fileID: 2110673059}
   - {fileID: 499914792}
+  - {fileID: 1242047622}
+  - {fileID: 1640089635}

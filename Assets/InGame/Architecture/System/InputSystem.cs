@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 public class InputSystem : ASystem, IOnPreUpdate
 {
     private InputSystem_Actions _gameInputs;
+    private Vector2 _screenPosition;
     public override void OnSetUp()
     {
         _gameInputs = new InputSystem_Actions();
@@ -17,7 +18,10 @@ public class InputSystem : ASystem, IOnPreUpdate
 
     public void OnPreUpdate()
     {
+        gameStat.screenPosition = _screenPosition = _gameInputs.UI.Point.ReadValue<Vector2>();
 
+        Ray mouseRay = Camera.main.ScreenPointToRay(_screenPosition);
+        RaycastHit hit;
     }
 
     private void OnMoveInput(InputAction.CallbackContext context)
@@ -30,7 +34,17 @@ public class InputSystem : ASystem, IOnPreUpdate
 
     }
 
-    private void OnAttackInput(InputAction.CallbackContext context)
+    private void OnAttackStartInput(InputAction.CallbackContext context)
+    {
+
+    }
+
+    private void OnAttackProcessInput(InputAction.CallbackContext context)
+    {
+
+    }
+
+    private void OnAttackEndInput(InputAction.CallbackContext context)
     {
 
     }

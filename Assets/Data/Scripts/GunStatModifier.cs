@@ -1,5 +1,4 @@
 using System;
-using Game.Items;
 using UnityEngine;
 
 //「どのステータスを」「どのように」「どれだけ」変更するかを1単位として表す構造体。
