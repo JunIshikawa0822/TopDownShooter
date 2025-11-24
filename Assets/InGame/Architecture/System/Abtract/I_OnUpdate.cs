@@ -4,5 +4,6 @@ using UnityEngine;
 
 public interface IOnUpdate
 {
+    bool IsActiveForUpdate{get;}
     public void OnUpdate();
 }

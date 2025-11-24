@@ -1,3 +1,4 @@
+using Game.Data;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
@@ -24,7 +25,7 @@ public class PlayerAnimationHandler : MonoBehaviour, IAnimationHandler
         _animator.SetFloat("MoveDir_Y", entity.MoveDirection.y);
     }
 
-    public void OnWeaponEquipped(IWeapon weapon)
+    public void OnWeaponEquipped(IWeapon<AWeaponRuntimeDataBase> weapon)
     {
         //武器の種類に応じて基本Controllerを切り替え
         if (weapon.WeaponType == WeaponType.None)
@@ -35,8 +36,7 @@ public class PlayerAnimationHandler : MonoBehaviour, IAnimationHandler
             _animator.runtimeAnimatorController = _gunAnimatorControllerBase;
 
         //武器固有のOverrideControllerを適用
-        if (weapon.AnimatorOverrideController != null)
-            _animator.runtimeAnimatorController = weapon.AnimatorOverrideController;
+        if (weapon.WeaponAnim != null)
+            _animator.runtimeAnimatorController = weapon.WeaponAnim;
     }
-
 }
