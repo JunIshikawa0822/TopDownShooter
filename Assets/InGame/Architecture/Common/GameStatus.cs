@@ -4,22 +4,19 @@ using UnityEngine;
 [System.Serializable]
 public class GameStatus
 {
+    [Header("Camera")]
+    public Camera mainCamera;
     [Header("Player")]
     public PlayerController player;
 
     [Header("Inputs")]
-    public Vector2 moveDirection = Vector2.zero;
+    public Vector3 moveDirection = Vector3.zero;
     public Vector2 screenPosition = Vector2.zero;
     public Vector3 worldPosition = Vector3.zero;
-    public float maxVerticalAngle = 45f;
+    public GameObject cursorTrans;
     public float maxAimDistance = 50f;
     public float assistRadius = 0.5f; // エイムアシストの太さ
     public bool isCursorAssist = true;
-
-    //攻撃の水平位置
-    //銃ならmuzzleがある場所
-    //近接ならまた別
-    public Transform baseTrans;
 
     [Header("LayerMask")]
     public LayerMask targetLayerMask;

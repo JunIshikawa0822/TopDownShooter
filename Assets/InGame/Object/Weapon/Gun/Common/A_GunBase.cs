@@ -1,4 +1,5 @@
 using Game.Data;
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 
 public abstract class AGunBase<TRuntimeData> : AWeaponBase<TRuntimeData>, IGun<TRuntimeData>
@@ -6,6 +7,9 @@ public abstract class AGunBase<TRuntimeData> : AWeaponBase<TRuntimeData>, IGun<T
 {
     [SerializeField] private Transform _muzzleTrans;
     private IObjectPool<Bullet> _bulletPool;
+
+    [SerializeField] protected float _checkClipDist_Forward;
+    [SerializeField] protected float _checkClipDist_Backward;
 
     protected float _lastShotTime = 0f;
 
@@ -59,8 +63,12 @@ public abstract class AGunBase<TRuntimeData> : AWeaponBase<TRuntimeData>, IGun<T
         //弾が消費できたらtrue, できないならfalse
         if (!magazine.ConsumeBullet()) return;
 
-        bullet.transform.position = _muzzleTrans.position;
+        //ここからは貫通チェック
+        //貫通している状態で攻撃しても、弾が出ないだけで音とエフェクトは出る
+        if (Physics.Raycast(_muzzleTrans.position, _muzzleTrans.forward, _checkClipDist_Forward))return;
+        if (Physics.Raycast(_muzzleTrans.position, -_muzzleTrans.forward, _checkClipDist_Backward))return;
 
+        bullet.transform.position = _muzzleTrans.position;
         bullet.Init(magazine.LoadedAmmoData, _muzzleTrans.forward, RuntimeData.GunBaseData.BulletVelocity);
     }
     

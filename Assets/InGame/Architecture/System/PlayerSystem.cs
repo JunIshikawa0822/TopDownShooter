@@ -13,7 +13,7 @@ public class PlayerSystem : ASystem, IOnUpdate, IOnFixedUpdate
 
     public void OnUpdate()
     {
-        gameStat.player.Rotate(Vector2.zero);
+        gameStat.player.Rotate(gameStat.worldPosition);
     }
 
     public void OnFixedUpdate()
