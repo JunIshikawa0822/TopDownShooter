@@ -10,7 +10,22 @@ public class GameStatus
     [Header("Inputs")]
     public Vector2 moveDirection = Vector2.zero;
     public Vector2 screenPosition = Vector2.zero;
+    public Vector3 worldPosition = Vector3.zero;
     public float maxVerticalAngle = 45f;
+    public float maxAimDistance = 50f;
+    public float assistRadius = 0.5f; // エイムアシストの太さ
+    public bool isCursorAssist = true;
+
+    //攻撃の水平位置
+    //銃ならmuzzleがある場所
+    //近接ならまた別
+    public Transform baseTrans;
+
+    [Header("LayerMask")]
+    public LayerMask targetLayerMask;
+    public LayerMask obstacleLayerMask;
+    public LayerMask groundLayerMask;
+
     [Header("ObjectPool")]
     public Transform bulletPoolTrans;
     public Transform gunPoolTrans;
