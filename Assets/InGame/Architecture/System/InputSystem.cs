@@ -5,13 +5,10 @@ public class InputSystem : ASystem, IOnPreUpdate
 {
     private InputSystem_Actions _gameInputs;
     private Vector2 _screenPosition;
-    private float _maxVerticalAngle;
     private float _assistRadius;
-
     private Transform _baseTrans;
     private LayerMask _targetLayerMask;
     private LayerMask _obstacleLayerMask;
-    private LayerMask _groundLayerMask;
     private LayerMask _combinedLayerMask;
     public override void OnSetUp()
     {
@@ -23,19 +20,19 @@ public class InputSystem : ASystem, IOnPreUpdate
 
         _gameInputs.Enable();
 
-        _maxVerticalAngle = gameStat.maxVerticalAngle;
+        //_maxVerticalAngle = gameStat.player.MaxVerticalAngle;
 
         _targetLayerMask = gameStat.targetLayerMask;
         _obstacleLayerMask = gameStat.obstacleLayerMask;
-        _groundLayerMask = gameStat.groundLayerMask;
-        _combinedLayerMask = _targetLayerMask | _obstacleLayerMask | _groundLayerMask;
+        _combinedLayerMask = _targetLayerMask | _obstacleLayerMask;
     }
 
     public void OnPreUpdate()
     {
-        _baseTrans = gameStat.baseTrans;
+        _baseTrans = gameStat.player.AttackBaseTrans;
         gameStat.screenPosition = _screenPosition = _gameInputs.UI.Point.ReadValue<Vector2>();
         gameStat.worldPosition = GetCursorPos();
+        gameStat.cursorTrans.transform.position = gameStat.worldPosition;
     }
 
     private Vector3 GetCursorPos()
@@ -56,26 +53,13 @@ public class InputSystem : ASystem, IOnPreUpdate
             initialHitFound = Physics.Raycast(mouseRay, out hit, float.MaxValue, _combinedLayerMask);
         }
 
-        if (!initialHitFound)
+        //壁や敵、対象がある
+        if (initialHitFound)
         {
-            // 最終フォールバック（Rayが何も当たらなかった場合）
-            return basePos + _baseTrans.forward * 50;
-        }
-
-        Vector3 targetPoint = hit.point;
-        Vector3 directionToTarget = (targetPoint - basePos).normalized; 
-        
-        //【射角チェック】 銃口から見た照準点の角度
-        Vector3 flatDirection = new Vector3(directionToTarget.x, 0, directionToTarget.z).normalized;
-        float verticalAngle = Vector3.Angle(directionToTarget, flatDirection);
-
-        if (verticalAngle <= _maxVerticalAngle)
-        {
-            return targetPoint;
+            return hit.point;
         }
         else
         {
-            // 射角NGの場合: ターゲットを無視し、水平維持ロジックに進む
             // 銃口の高さの仮想平面で交差点を計算
             Plane aimPlane = new Plane(Vector3.up, new Vector3(0, basePos.y, 0));
             float enter;
@@ -86,14 +70,47 @@ public class InputSystem : ASystem, IOnPreUpdate
                 // カーソル Ray の壁チェックは既に行われているため、ここでは単純に平面上の点を返す
                 return mouseRay.GetPoint(enter);
             }
+        }
 
             // 最終フォールバック
             return basePos + _baseTrans.forward * 50;
+        //}
+    }
+
+    /// <summary>
+/// WASDのVector2入力を、カメラの向きに基づいたワールド空間のVector3移動ベクトルに変換する。
+/// </summary>
+/// <param name="inputDirection">WASDから得られた入力Vector2 (x: 左右, y: 前後)。</param>
+/// <returns>XZ平面上のワールド空間の移動ベクトルVector3。</returns>
+    public Vector3 GetCameraSpaceMovementVector(Vector2 inputDirection, Camera camera)
+    {
+        Transform cameraTransform = camera.transform;
+
+        Vector3 cameraForward = cameraTransform.forward;
+        cameraForward.y = 0; // Y成分をゼロにして、水平方向のベクトルにする
+        cameraForward = cameraForward.normalized;
+
+        Vector3 cameraRight = cameraTransform.right;
+        cameraRight.y = 0; // Y成分をゼロにして、水平方向のベクトルにする
+        cameraRight = cameraRight.normalized;
+
+        // 3. 入力とカメラの方向を合成して、ワールド空間の移動ベクトルを決定
+        // inputDirection.y (W/S) * cameraForward
+        // inputDirection.x (A/D) * cameraRight
+        Vector3 worldMovementVector = (cameraForward * inputDirection.y) + (cameraRight * inputDirection.x);
+
+        // 4. ベクトルを正規化し、斜め移動時の速度超過を防ぐ
+        if (worldMovementVector.sqrMagnitude > 1f)
+        {
+            worldMovementVector = worldMovementVector.normalized;
         }
+
+        return worldMovementVector;
     }
     private void OnMoveInput(InputAction.CallbackContext context)
     {
-        gameStat.moveDirection = context.ReadValue<Vector2>();
+        Vector2 direction = context.ReadValue<Vector2>();
+        gameStat.moveDirection = GetCameraSpaceMovementVector(direction, gameStat.mainCamera);
     }
 
     private void OnLookInput(InputAction.CallbackContext context)

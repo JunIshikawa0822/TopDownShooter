@@ -22,7 +22,7 @@ public class PlayerAnimationHandler : MonoBehaviour, IAnimationHandler
         _animator.SetFloat("Speed", _currentSpeed);
 
         _animator.SetFloat("MoveDir_X", entity.MoveDirection.x);
-        _animator.SetFloat("MoveDir_Y", entity.MoveDirection.y);
+        _animator.SetFloat("MoveDir_Y", entity.MoveDirection.z);
     }
 
     public void OnWeaponEquipped(IWeapon<AWeaponRuntimeDataBase> weapon)
