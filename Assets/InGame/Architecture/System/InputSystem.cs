@@ -18,6 +18,10 @@ public class InputSystem : ASystem, IOnPreUpdate
         _gameInputs.Player.Move.performed += OnMoveInput;
         _gameInputs.Player.Move.canceled += OnMoveInput;
 
+        _gameInputs.Player.Attack.started += OnAttackStartInput;
+        _gameInputs.Player.Attack.performed += OnAttackProcessInput;
+        _gameInputs.Player.Attack.canceled += OnAttackEndInput;
+
         _gameInputs.Enable();
 
         //_maxVerticalAngle = gameStat.player.MaxVerticalAngle;
@@ -120,7 +124,7 @@ public class InputSystem : ASystem, IOnPreUpdate
 
     private void OnAttackStartInput(InputAction.CallbackContext context)
     {
-
+        
     }
 
     private void OnAttackProcessInput(InputAction.CallbackContext context)
