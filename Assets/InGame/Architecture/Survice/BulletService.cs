@@ -18,6 +18,7 @@ public class BulletService : IBulletService, IOnFixedUpdate, IOnUpdate
     struct BulletStepData 
     {
         public Vector3 Pos;
+        public Vector3 PrevPos;
         public Vector3 Dir;
         public float DistRemain;
         public float Speed;
@@ -44,6 +45,8 @@ public class BulletService : IBulletService, IOnFixedUpdate, IOnUpdate
             BulletStepData b = _bullets[i];
             float step = b.Speed * Time.fixedDeltaTime;
 
+            b.PrevPos = b.Pos;
+
             if (Physics.Raycast(b.Pos, b.Dir, out RaycastHit hit, step, b.CollideMask))
             {
                 b.OnHit?.Invoke(hit);
@@ -61,13 +64,18 @@ public class BulletService : IBulletService, IOnFixedUpdate, IOnUpdate
 
     public void OnUpdate()
     {
+        float t = (Time.time - Time.fixedTime) / Time.fixedDeltaTime;
+
         for (int i = _bullets.Count - 1; i >= 0; i--)
         {
             BulletStepData b = _bullets[i];
             BulletVisual b_s = _bulletVisuals[i];
 
-            b_s.transform.position = b.Pos;
+            Vector3 interpolated = Vector3.Lerp(b.PrevPos, b.Pos, Mathf.Clamp01(t));
+            b_s.transform.position = interpolated;
         }
+
+
     }
     
     public Bullet GetBullet()
@@ -84,6 +92,7 @@ public class BulletService : IBulletService, IOnFixedUpdate, IOnUpdate
         _bullets.Add(new BulletStepData
         {
             Pos = startPos,
+            PrevPos = startPos,
             Dir = dir,
             Speed = speed,
             DistRemain = range,

@@ -29,7 +29,7 @@ MonoBehaviour:
   _fireRate: 5
   _recoil: 10
   _accuracy: 10
-  _bulletVelocity: 30
+  _bulletVelocity: 120
   _maxRange: 50
   _bulletSpawnPos: {x: 0, y: 0.061, z: 0.777}
   _ableAttachmentSlots:

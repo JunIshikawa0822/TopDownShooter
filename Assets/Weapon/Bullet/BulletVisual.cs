@@ -1,5 +1,4 @@
 using UnityEngine;
-
 public class BulletVisual : APooledObject
 {
     [SerializeField]private AmmoData _ammoData;

@@ -118,7 +118,10 @@ public abstract class AGunBase<TRuntimeData> : AWeaponBase<TRuntimeData>, IGun<T
 
     protected void DamageInvoke(RaycastHit opponent)
     {
-        //ダメージ処理
+        if(opponent.transform.TryGetComponent<IDamagable>(out IDamagable  damagable))
+        {
+            
+        }
     }
 
     protected IEnumerator InvokeMuzzleFlash()
