@@ -106,19 +106,9 @@ public class PlayerController : A_Entity, IWeaponHandler
         _currentWeapon.transform.SetPositionAndRotation(_righthand.position, _righthand.rotation);
     }
 
-    public void AttackStart()
+    public override void TakeDamage(float damage)
     {
-        _currentWeapon?.AttackStart();
-    }
-
-    public void AttackProcess()
-    {
-        _currentWeapon?.AttackProcess();
-    }
-    
-    public void AttckEnd()
-    {
-        _currentWeapon?.AttackEnd();
+        
     }
 
     //プレイヤーの向きに対してどの方向に移動しているか

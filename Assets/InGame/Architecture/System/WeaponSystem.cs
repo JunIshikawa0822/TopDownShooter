@@ -3,27 +3,33 @@ using Game.Data;
 using UnityEngine;
 using UnityEngine.XR;
 
-public class WeaponSystem : ASystem, IOnUpdate
+public class WeaponSystem : ASystem, IOnUpdate, IOnFixedUpdate
 {
-    private List<IOnUpdate> _updatableList = new();
+    //private List<IOnUpdate> _updatableList = new();
     private IObjectPool<Bullet> _bulletPool;
-
+    private IObjectPool<BulletVisual> _bulletVisualPool;
+    private GunService _gunService;
+    private BulletService _bulletService;
     private Dictionary<WeaponType, IObjectPool<AWeaponBase>> _weaponFactories;
-
     public bool IsActiveForUpdate => true;
-
+    public bool IsActiveForFixedUpdate => true;
     public override void OnSetUp()
     {
-        _bulletPool = new ObjectPool<Bullet>(gameStat.bulletPoolTrans, new Factory_Bullet(gameStat.bulletPrefab, UpdateRegistered));
+        _bulletPool = new ObjectPool<Bullet>(gameStat.bulletPoolTrans, new Factory_Bullet(gameStat.bulletPrefab), "Bullet");
+        _bulletVisualPool = new ObjectPool<BulletVisual>(gameStat.bulletVisualPoolTrans, new Factory_BulletVisual(gameStat.bulletVisualPrefab), "BulletVisual");
+        
         _bulletPool.PoolSetUp(20);
+        _bulletVisualPool.PoolSetUp(20);
 
         _weaponFactories = new()
         {
-            {WeaponType.Handgun, new ObjectPool<AWeaponBase>(gameStat.gunPoolTrans, new Factory_Handgun(gameStat.handgunPrefab, _bulletPool), "Handgun")},
-            {WeaponType.AssultRifle, new ObjectPool<AWeaponBase>(gameStat.gunPoolTrans, new Factory_AssultRifle(gameStat.assultRiflePrefab, _bulletPool), "AssultRifle")},
-            {WeaponType.SniperRifle, new ObjectPool<AWeaponBase>(gameStat.gunPoolTrans, new Factory_SniperRifle(gameStat.sniperRiflePrefab, _bulletPool), "SnipeRifle")},
-            {WeaponType.SubMachineGun, new ObjectPool<AWeaponBase>(gameStat.gunPoolTrans, new Factory_SubMachinegun(gameStat.subMachinegunPrefab, _bulletPool), "SubMachinegun")},
-            {WeaponType.Shotgun, new ObjectPool<AWeaponBase>(gameStat.gunPoolTrans, new Factory_Shotgun(gameStat.shotgunPrefab, _bulletPool), "Shotgun")}
+            {WeaponType.Handgun, new ObjectPool<AWeaponBase>(gameStat.gunPoolTrans, new Factory_Handgun(gameStat.handgunPrefab/*, _bulletPool*/), "Handgun")},
+            {WeaponType.AssultRifle, new ObjectPool<AWeaponBase>(gameStat.gunPoolTrans, new Factory_AssultRifle(gameStat.assultRiflePrefab/*, _bulletPool*/), "AssultRifle")},
+            {WeaponType.SniperRifle, new ObjectPool<AWeaponBase>(gameStat.gunPoolTrans, new Factory_SniperRifle(gameStat.sniperRiflePrefab/*, _bulletPool*/), "SnipeRifle")},
+            {WeaponType.SubMachineGun, new ObjectPool<AWeaponBase>(gameStat.gunPoolTrans, new Factory_SubMachinegun(gameStat.subMachinegunPrefab/*, _bulletPool*/), "SubMachinegun")},
+            {WeaponType.Shotgun, new ObjectPool<AWeaponBase>(gameStat.gunPoolTrans, new Factory_Shotgun(gameStat.shotgunPrefab/*, _bulletPool*/), "Shotgun")},
+
+            {WeaponType.AssultRifle_Ray, new ObjectPool<AWeaponBase>(gameStat.gunPoolTrans, new Factory_AssultRifle_Ray(gameStat.assultRifleRayPrefab/*, _bulletPool*/), "AssultRifle_Ray")},
         };
 
         foreach(KeyValuePair<WeaponType, IObjectPool<AWeaponBase>> set in _weaponFactories)
@@ -31,48 +37,80 @@ public class WeaponSystem : ASystem, IOnUpdate
             set.Value.PoolSetUp(2);
         }
 
+        _bulletService = new(_bulletPool, _bulletVisualPool);
+        _gunService = new();
+
         //こっからテスト用コード
         WeaponTestDataSet();
-        WeaponSet(gameStat.playerWeaponRuntimeData);
+        gameStat.playerEquipWeapon = CreateWeapon(gameStat.playerWeaponRuntimeData);
+
+        gameEvent.attackStartEvent += AttackStart;
+        gameEvent.attackEndEvent += AttackEnd;
     }
 
     public void OnUpdate()
     {
-        for(int i = _updatableList.Count - 1; i >= 0; i--)
-        {
-            if(_updatableList[i].IsActiveForUpdate == false)return;
+        _gunService.OnUpdate();
+        _bulletService.OnUpdate();
 
-            _updatableList[i].OnUpdate();
+        if(gameStat.isPressProcessing)
+        {
+            AttackProcess();
         }
     }
 
-    public void WeaponSet(AWeaponRuntimeDataBase weaponRuntimeData)
+    public void OnFixedUpdate()
     {
-        if(weaponRuntimeData == null)return;
+        _bulletService.OnFixedUpdate();
+    }
 
-        AWeaponBase weapon = null;
+    public void AttackStart()
+    {
+        if(gameStat.playerEquipWeapon == null)return;
+        gameStat.playerEquipWeapon.AttackStart();
+        //Debug.Log("AttackStart");
+    }
 
-        weapon = _weaponFactories[weaponRuntimeData.WeaponBaseData.WeaponType].GetFromPool();
+    public void AttackProcess()
+    {
+        if(gameStat.playerEquipWeapon == null)return;
+        gameStat.playerEquipWeapon.AttackProcess();
+        // Debug.Log("AttackProcess");
+    }
 
-        if(weapon == null) return;
+    public void AttackEnd()
+    {
+        if(gameStat.playerEquipWeapon == null)return;
+        gameStat.playerEquipWeapon.AttackEnd();
+        //Debug.Log("AttackEnd");
+    }
 
-        if(weapon is AWeaponBase<GunRuntimeData> gun)
-        {
-            gun.Initialize(weaponRuntimeData as GunRuntimeData);
-        } 
+    private AWeaponBase CreateWeapon(AWeaponRuntimeDataBase weaponRuntimeData)
+    {
+        if(weaponRuntimeData == null)return null;
+        AWeaponBase weapon = _weaponFactories[weaponRuntimeData.WeaponBaseData.WeaponType].GetFromPool();
+        if(weapon == null) return null;
 
         //見た目オブジェクトをセットする処理
         GameObject weaponVisualPrefab = GameObject.Instantiate(weaponRuntimeData.BaseData.VisualData.Prefab);
         weapon.VisualSet(weaponVisualPrefab);
 
-        gameStat.playerEquipWeapon = weapon;
-        //Attachmentの位置を示す空オブジェクトの場所を、それぞれデータに合わせて設定し直す処理
+        if(weapon is IGun<GunRuntimeData> gun)
+        {
+            gun.Initialize(weaponRuntimeData as GunRuntimeData);
+            gun.SetGunSurvice(_gunService);
+            gun.SetBulletSurvice(_bulletService);
+            _gunService.RegisterGun(gun);
+        }
+        // else if()
+        // {
+            
+        // }
+
+        return weapon;
     }
 
-    private void UpdateRegistered(IOnUpdate updatable)
-    {
-        _updatableList.Add(updatable);
-    }
+    //private IMelee<MeleeTuntimeData> CreateMelee(MeleeRuntimeData meleeRuntimeData)
 
     private void WeaponTestDataSet()
     {
@@ -88,7 +126,7 @@ public class WeaponSystem : ASystem, IOnUpdate
         }
         else
         {
-            Debug.Log("銃ではある");
+//            Debug.Log("銃ではある");
             if(gameStat.playerWeaponData is GunData gunData)
             {
                 // Debug.Log("GunTestDataSet");

@@ -5,6 +5,7 @@ public class GameMain : MonoBehaviour
 {
     [SerializeField]
     GameStatus _gameStat;
+    GameEventBus _gameEvent;
     List<ASystem> _allSystemsList;
     List<IOnUpdate> _allUpdateSystemsList;
     List<IOnPreUpdate> _allPreUpdateSystemsList;
@@ -20,6 +21,8 @@ public class GameMain : MonoBehaviour
             new PlayerSystem()
         };
 
+        _gameEvent = new();
+
         _allUpdateSystemsList = new List<IOnUpdate>();
         _allPreUpdateSystemsList = new List<IOnPreUpdate>();
         _allFixedUpdateSystemsList = new List<IOnFixedUpdate>();
@@ -27,7 +30,7 @@ public class GameMain : MonoBehaviour
 
         foreach (ASystem system in _allSystemsList)
         {
-            system.Init(_gameStat);
+            system.Init(_gameStat, _gameEvent);
 
             if (system is IOnUpdate) _allUpdateSystemsList.Add(system as IOnUpdate);
             if (system is IOnPreUpdate) _allPreUpdateSystemsList.Add(system as IOnPreUpdate);

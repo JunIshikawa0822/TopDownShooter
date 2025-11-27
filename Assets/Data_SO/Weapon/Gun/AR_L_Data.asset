@@ -24,11 +24,13 @@ MonoBehaviour:
   _weaponType: 3
   _weaponAnimation: {fileID: 0}
   _attachableEnchants: []
-  _fireMode: 2
-  _fireRate: 3
+  _fireType: 2
+  _burstCount: 0
+  _fireRate: 5
   _recoil: 10
   _accuracy: 10
-  _bulletVelocity: 10
+  _bulletVelocity: 3
+  _maxRange: 0
   _bulletSpawnPos: {x: 0, y: 0.061, z: 0.777}
   _ableAttachmentSlots:
   - _slotID: Scope
@@ -37,9 +39,10 @@ MonoBehaviour:
     _defaultAttachmentData: {fileID: 0}
     _slotPosition: {x: 0, y: 0.129, z: 0.071}
     _slotRotation: {x: 0, y: 0, z: 0, w: 0}
-  - _slotID: Mag
-    _slotType: 1
+  - _slotID: Magdehanai
+    _slotType: 5
     _allowedTags: []
     _defaultAttachmentData: {fileID: 0}
     _slotPosition: {x: 0, y: -0.049999997, z: 0.1225}
     _slotRotation: {x: 0, y: 0, z: 0, w: 0}
+  _internalAmmoMax: 90

@@ -11,8 +11,12 @@ namespace Game.Data
         private readonly List<AttachmentSlotRuntimeData> _slots = new List<AttachmentSlotRuntimeData>();
         private readonly float[] _baseStats = new float[(int)GunStatType.Count];
         private readonly float[] _currentStats = new float[(int)GunStatType.Count];
-        private FireMode _fireMode;//射撃モード
+        private FireType _fireType;//射撃モード
         private string _skinID;//将来的にスキン切りかえにつかうかも
+        
+        private AmmoData _currentLoadedAmmoData;
+        //マガジンを使わないタイプだった場合、直で入ってる弾の数
+        private int _internalAmmoRemaining;
 
         #region プロパティ
         public GunData GunBaseData => BaseData as GunData;
@@ -22,20 +26,24 @@ namespace Game.Data
         public float Recoil => _currentStats[(int)GunStatType.Recoil];
         public float Accuracy => _currentStats[(int)GunStatType.Accuracy];
         public float BulletVelocity => _currentStats[(int)GunStatType.BulletVelocity];
-        public FireMode CurrentFireMode => _fireMode;
+        public float MaxRange => _currentStats[(int)GunStatType.MaxRange];
+        public FireType CurrentFireType => _fireType;
         public string SkinID => _skinID;
+
+        public AmmoData CurrentAmmoData => _currentLoadedAmmoData;
         #endregion
 
         public GunRuntimeData(GunData baseData, int initialCount = 1) : base(baseData, initialCount)
         {
             // Debug.Log("GunRuntimeData constructing");
-            _fireMode = baseData.FireMode;
+            _fireType = baseData.FireType;
 
             // // ---ベース値を配列に格納---
             _baseStats[(int)GunStatType.FireRate] = baseData.FireRate;
             _baseStats[(int)GunStatType.Recoil] = baseData.Recoil;
             _baseStats[(int)GunStatType.Accuracy] = baseData.Accuracy;
             _baseStats[(int)GunStatType.BulletVelocity] = baseData.BulletVelocity;
+            _baseStats[(int)GunStatType.MaxRange] = baseData.MaxRange;
 
             Array.Copy(_baseStats, _currentStats, _baseStats.Length);
 
@@ -60,6 +68,8 @@ namespace Game.Data
                 runtimeSlot.onChanged += RecalculateStats;
                 _slots.Add(runtimeSlot);
             }
+
+            _internalAmmoRemaining = GunBaseData.InternalAmmoMax;
         }
 
         //補正値を反映した値にする計算
@@ -104,15 +114,27 @@ namespace Game.Data
         }
 
         //標準的なアタッチメント取り外し
-        public AttachmentRuntimeData UnEquipAttachment(string slotID)
+        public AttachmentRuntimeData UnEquipAttachmentByID(string slotID)
         {
             AttachmentSlotRuntimeData slot = FindSlotByID(slotID);
+            if(slot.EquippedAttachment is AttachmentRuntimeData_Magazine)_currentLoadedAmmoData = null;
             if (slot == null) return null;
 
             AttachmentRuntimeData data = slot.UnEquip();
             return data;
         }
 
+        public AttachmentRuntimeData UnEquipAttachmentByType(AttachmentType type)
+        {
+            AttachmentSlotRuntimeData slot = FindSlotByType(type);
+            if(slot.EquippedAttachment is AttachmentRuntimeData_Magazine)_currentLoadedAmmoData = null;
+            if (slot == null) return null;
+
+            AttachmentRuntimeData data = slot.UnEquip();
+            return data;
+        }
+
+        //マガジンを使う場合のリロード
         public AttachmentRuntimeData Reload(AttachmentRuntimeData_Magazine newMagazine)
         {
             if (newMagazine == null || newMagazine.AttachmentData.attachmentType != AttachmentType.Magazine)
@@ -127,7 +149,19 @@ namespace Game.Data
 
             // 新しいマガジンを装着
             slot.Equip(newMagazine);
+            _currentLoadedAmmoData = newMagazine.LoadedAmmoData;
             return oldMagazine; // 交換前のマガジンを返す
+        }
+
+        //マガジンを使わない場合のリロード
+        public int Reload(int loadAmmoNum, AmmoData loadAmmoData)
+        {
+            if(loadAmmoNum <= 0 || loadAmmoData == null) return 0;
+            int loadCount = Mathf.Min(GunBaseData.InternalAmmoMax - _internalAmmoRemaining, loadAmmoNum);
+            _internalAmmoRemaining += loadCount;
+            _currentLoadedAmmoData = loadAmmoData;
+
+            return loadAmmoNum - loadCount;
         }
 
         private AttachmentSlotRuntimeData FindSlotByID(string slotID)
@@ -156,7 +190,7 @@ namespace Game.Data
             return slot.EquippedAttachment;
         }
 
-        public Vector3 AttachmentPos(AttachmentType type)
+        public Vector3 GetAttachmentPos(AttachmentType type)
         {
             AttachmentSlotRuntimeData slot = FindSlotByType(type);
             if (slot == null) return Vector3.zero;
@@ -164,12 +198,66 @@ namespace Game.Data
             return slot.BaseData.SlotPosition;
         }
 
-        public Quaternion AttachmentRot(AttachmentType type)
+        public Quaternion GetAttachmentRot(AttachmentType type)
         {
             AttachmentSlotRuntimeData slot = FindSlotByType(type);
             if (slot == null) return Quaternion.identity;
 
             return slot.BaseData.SlotRotation;
+        }
+
+        public bool TryConsumeRuntimeBullets()
+        {
+            //magazineがある？
+            AttachmentSlotRuntimeData slotData = FindSlotByType(AttachmentType.Magazine);
+            // if(_currentLoadedAmmoData == null)
+            // {
+            //     Debug.Log("AmmoDataがないよ");
+            //     return false;
+            // }
+
+            //最初からmagazineがデータに設定されていない
+            if(slotData == null)
+            {
+                Debug.Log("マガジンがありません");
+                if(GunBaseData.InternalAmmoMax <= 0)
+                {
+                    Debug.Log("Internalも設定されていません");
+                    return false;
+                }
+                
+                if(_internalAmmoRemaining <= 0)
+                {
+                    Debug.Log("Internalが設定されています");
+                    Debug.Log("弾がありません");
+                    _currentLoadedAmmoData = null;
+                    return false;
+                }
+
+                Debug.Log("Internalが設定されています");
+                Debug.Log("弾を減らします");
+                _internalAmmoRemaining--;
+                return true;
+            }
+
+            Debug.Log("マガジンが設定されています");
+            if(slotData.EquippedAttachment is AttachmentRuntimeData_Magazine magazine)
+            {
+                bool canConsume = magazine.ConsumeBullet();
+                if(!canConsume)
+                {
+                    Debug.Log("弾がありません");
+                    _currentLoadedAmmoData = null;
+                }
+                else
+                {
+                    Debug.Log("弾を減らします");
+                }
+                return canConsume;
+            }
+
+            Debug.Log("マガジンが入っていないか、型変換に問題があります");
+            return false;
         }
     }
 }

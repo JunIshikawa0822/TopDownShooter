@@ -3,6 +3,7 @@ using UnityEngine;
 public class PlayerSystem : ASystem, IOnUpdate, IOnFixedUpdate
 {
     public bool IsActiveForUpdate => true;
+    public bool IsActiveForFixedUpdate => true;
     public override void OnSetUp()
     {
         IAnimationHandler playerAnimHandler = gameStat.player.GetComponent<PlayerAnimationHandler>();

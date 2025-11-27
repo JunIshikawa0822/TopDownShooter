@@ -1,4 +1,4 @@
-public enum FireMode
+public enum FireType
 {
     Semi,
     Burst,

@@ -18,9 +18,11 @@ public class InputSystem : ASystem, IOnPreUpdate
         _gameInputs.Player.Move.performed += OnMoveInput;
         _gameInputs.Player.Move.canceled += OnMoveInput;
 
-        _gameInputs.Enable();
+        _gameInputs.Player.Attack.started += OnAttackStartInput;
+        _gameInputs.Player.Attack.performed += OnAttackProcessInput;
+        _gameInputs.Player.Attack.canceled += OnAttackEndInput;
 
-        //_maxVerticalAngle = gameStat.player.MaxVerticalAngle;
+        _gameInputs.Enable();
 
         _targetLayerMask = gameStat.targetLayerMask;
         _obstacleLayerMask = gameStat.obstacleLayerMask;
@@ -120,17 +122,19 @@ public class InputSystem : ASystem, IOnPreUpdate
 
     private void OnAttackStartInput(InputAction.CallbackContext context)
     {
-
+        gameEvent.attackStartEvent?.Invoke();
+        gameStat.isPressProcessing = true;
     }
 
     private void OnAttackProcessInput(InputAction.CallbackContext context)
     {
-
+        gameEvent.attackProcessEvent?.Invoke();
     }
 
     private void OnAttackEndInput(InputAction.CallbackContext context)
     {
-
+        gameEvent.attackEndEvent?.Invoke();
+        gameStat.isPressProcessing = false;
     }
 
     private void OnInteractInput(InputAction.CallbackContext context)
