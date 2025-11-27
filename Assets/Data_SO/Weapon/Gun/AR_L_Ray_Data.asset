@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2849eccd2fd304db5a88e82dc4b69e85, type: 3}
-  m_Name: AR_L_Data
+  m_Name: AR_L_Ray_Data
   m_EditorClassIdentifier: Assembly-CSharp::Game.Items.GunData
   _id: ar_test
   _displayName: AR_L
@@ -21,7 +21,7 @@ MonoBehaviour:
   _itemType: 4
   _tags: 1
   _visualData: {fileID: 11400000, guid: 48e4ad5cbed8646e0951ed4d6b4af39e, type: 2}
-  _weaponType: 3
+  _weaponType: 7
   _weaponAnimation: {fileID: 0}
   _attachableEnchants: []
   _fireType: 2
@@ -29,8 +29,8 @@ MonoBehaviour:
   _fireRate: 5
   _recoil: 10
   _accuracy: 10
-  _bulletVelocity: 3
-  _maxRange: 0
+  _bulletVelocity: 30
+  _maxRange: 50
   _bulletSpawnPos: {x: 0, y: 0.061, z: 0.777}
   _ableAttachmentSlots:
   - _slotID: Scope

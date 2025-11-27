@@ -6,7 +6,7 @@ using UnityEngine;
 public abstract class AWeaponBase : APooledObject
 {
     [SerializeField] protected Transform _visualTrans;
-    protected GameObject _visualPrefab;
+    [SerializeField] protected GameObject _visualPrefab;
 
     public virtual void VisualSet(GameObject newVisualPrefab)
     {

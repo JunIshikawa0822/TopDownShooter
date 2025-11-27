@@ -8,5 +8,7 @@ public interface IGun<TRuntimeData> : IWeapon<TRuntimeData> where TRuntimeData :
 {
     public GunRuntimeData GunRuntimeData{get;}
     //public void SetBulletPool(IObjectPool<Bullet> bullet);
+    public void SetGunSurvice(IGunService gunService);
+    public void SetBulletSurvice(IBulletService bulletService);
     public void Reload();
 }

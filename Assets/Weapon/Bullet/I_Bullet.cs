@@ -7,5 +7,5 @@ public interface IBullet
     public float PenetrationPower{ get; }
     public float Damage { get; }
 
-    public void Init(AmmoData ammoData, Vector3 direction, float bulletSpeed);
+    public void Init(AmmoData ammoData, Vector3 direction, float bulletSpeed, float maxDist);
 }

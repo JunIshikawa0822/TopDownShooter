@@ -14,6 +14,7 @@ namespace Game.Data
         [SerializeField] private float _recoil;//反動値
         [SerializeField] private float _accuracy;//命中精度
         [SerializeField] private float _bulletVelocity;//弾速
+        [SerializeField] private float _maxRange;//射程距離
 
         [Header("弾が出る場所")]
         [SerializeField] private Vector3 _bulletSpawnPos;
@@ -24,7 +25,7 @@ namespace Game.Data
 
         [Header("マガジンがつかない武器")]
         //何発送店できるかを定義
-        [SerializeField] private int _internalAmmoCount;
+        [SerializeField] private int _internalAmmoMax;
 
         public FireType FireType => _fireType;
         public int BurstCount => _burstCount;
@@ -32,10 +33,11 @@ namespace Game.Data
         public float Recoil => _recoil;
         public float Accuracy => _accuracy;
         public float BulletVelocity => _bulletVelocity;
+        public float MaxRange => _maxRange;
 
         public Vector3 BulletSpawnPos => _bulletSpawnPos;
         public IReadOnlyList<AttachmentSlotData> AbleAttachmentSlots => _ableAttachmentSlots;
-        public int InternalAmmoCount => _internalAmmoCount;
+        public int InternalAmmoMax => _internalAmmoMax;
     }
 }
 
@@ -46,6 +48,6 @@ public enum GunStatType
     Accuracy,
     BulletVelocity,
     MaxMagazineCapacity,
-
+    MaxRange,
     Count//enumの末尾に配置、ループや配列長取得用
 }

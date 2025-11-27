@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Bullet : APooledObject, IBullet, IOnFixedUpdate
+public class BulletVisual : APooledObject
 {
     [SerializeField]private AmmoData _ammoData;
     [SerializeField]private TrailRenderer _trailRenderer;
@@ -46,10 +46,24 @@ public class Bullet : APooledObject, IBullet, IOnFixedUpdate
         _trailRenderer.enabled = true;
     }
 
+    public virtual void Active()
+    {
+        _bulletDistance = 0f;
+        _isActive = true;
+        _trailRenderer.emitting = true;
+    }
+
+    public virtual void Deactive()
+    {
+        _isActive = false;
+        _trailRenderer.emitting = false;
+        _trailRenderer.Clear();
+    }
+
     public virtual void OnFixedUpdate()
     {
         //弾の移動（Time.deltaTimeではなく独自管理）
-        Vector3 move = _direction * _speed * _timeScale * Time.fixedDeltaTime;
+        Vector3 move = _direction * _speed * _timeScale;
         _bulletTransform.position += move;
 
         //移動距離計算
@@ -86,7 +100,5 @@ public class Bullet : APooledObject, IBullet, IOnFixedUpdate
     public override void ReturnToPool()
     {
         base.ReturnToPool();
-        _isActive = false;
-        _trailRenderer.enabled = false;
     }
 }

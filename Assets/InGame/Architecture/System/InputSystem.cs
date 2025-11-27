@@ -24,8 +24,6 @@ public class InputSystem : ASystem, IOnPreUpdate
 
         _gameInputs.Enable();
 
-        //_maxVerticalAngle = gameStat.player.MaxVerticalAngle;
-
         _targetLayerMask = gameStat.targetLayerMask;
         _obstacleLayerMask = gameStat.obstacleLayerMask;
         _combinedLayerMask = _targetLayerMask | _obstacleLayerMask;
@@ -124,17 +122,19 @@ public class InputSystem : ASystem, IOnPreUpdate
 
     private void OnAttackStartInput(InputAction.CallbackContext context)
     {
-        
+        gameEvent.attackStartEvent?.Invoke();
+        gameStat.isPressProcessing = true;
     }
 
     private void OnAttackProcessInput(InputAction.CallbackContext context)
     {
-
+        gameEvent.attackProcessEvent?.Invoke();
     }
 
     private void OnAttackEndInput(InputAction.CallbackContext context)
     {
-
+        gameEvent.attackEndEvent?.Invoke();
+        gameStat.isPressProcessing = false;
     }
 
     private void OnInteractInput(InputAction.CallbackContext context)

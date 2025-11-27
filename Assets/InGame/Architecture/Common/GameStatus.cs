@@ -11,6 +11,8 @@ public class GameStatus
     public PlayerController player;
 
     [Header("Inputs")]
+    [HideInInspector]
+    public bool isPressProcessing = false;
     public Vector3 moveDirection = Vector3.zero;
     public Vector2 screenPosition = Vector2.zero;
     public Vector3 worldPosition = Vector3.zero;
@@ -26,10 +28,12 @@ public class GameStatus
 
     [Header("ObjectPool")]
     public Transform bulletPoolTrans;
+    public Transform bulletVisualPoolTrans;
     public Transform gunPoolTrans;
 
     [Header("BulletPrefab")]
     public Bullet bulletPrefab;
+    public BulletVisual bulletVisualPrefab;
 
     [Header("GunPrefab")]
     public Handgun handgunPrefab;
@@ -38,11 +42,13 @@ public class GameStatus
     public SniperRifle sniperRiflePrefab;
     public Shotgun shotgunPrefab;
 
+    public AssultRifle_Ray assultRifleRayPrefab;
+
     [Header("PlayerInventory")]
     //テスト用データ
     public WeaponData playerWeaponData;
     //テスト用ランタイムデータ
-    [System.NonSerialized]public AWeaponRuntimeDataBase playerWeaponRuntimeData;
+    [HideInInspector]public AWeaponRuntimeDataBase playerWeaponRuntimeData;
     //テスト用所持武器オブジェクト
-    [System.NonSerialized]public AWeaponBase playerEquipWeapon;
+    [HideInInspector]public AWeaponBase playerEquipWeapon;
 }

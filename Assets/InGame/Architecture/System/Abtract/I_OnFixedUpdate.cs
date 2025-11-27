@@ -4,5 +4,6 @@ using UnityEngine;
 
 public interface IOnFixedUpdate
 {
+    bool IsActiveForFixedUpdate{get;}
     public void OnFixedUpdate();
 }

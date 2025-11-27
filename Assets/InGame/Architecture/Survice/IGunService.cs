@@ -7,5 +7,6 @@ public interface IGunService
 {
     public bool CanShoot(IGun<GunRuntimeData> gun);
     public void RecordShotTime(IGun<GunRuntimeData> gun);
-    public Bullet GetBullet();
+    public void StartShooting(IGun<GunRuntimeData> gun);
+    public void StopShooting(IGun<GunRuntimeData> gun);
 }

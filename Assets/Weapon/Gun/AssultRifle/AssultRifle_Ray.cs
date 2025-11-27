@@ -1,7 +1,8 @@
 using Game.Data;
 using UnityEngine;
+using System.Collections.Generic;
 
-public class AssultRifle : AGunBase<GunRuntimeData>
+public class AssultRifle_Ray : AGunBase<GunRuntimeData>
 {
     public override void AttackStart()
     {
@@ -25,11 +26,11 @@ public class AssultRifle : AGunBase<GunRuntimeData>
         
         Debug.Log("撃った");
         _gunService.StartShooting(this);
-        SpawnBullet();
-        _gunService.RecordShotTime(this);
-
-        StartCoroutine(InvokeMuzzleFlash());
         
+        SetRayBullet();
+        _gunService.RecordShotTime(this);
+        
+        StartCoroutine(InvokeMuzzleFlash());
     }
     public override void AttackProcess()
     {
@@ -42,14 +43,12 @@ public class AssultRifle : AGunBase<GunRuntimeData>
             if(!TryConsumeBullets())return;
             if(!TryClipCheck())return;
 
-            Debug.Log("撃ってる");
-            SpawnBullet();
+            SetRayBullet();
             _gunService.RecordShotTime(this);
 
             StartCoroutine(InvokeMuzzleFlash());
         }
     }
-
     public override void AttackEnd()
     {
         _gunService.StopShooting(this);
