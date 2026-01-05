@@ -28,36 +28,13 @@
 .back-button-icon {
 }
 
-.inventory__grid-cell {
-    position: relative;
-    width: 46px;
-    height: 46px;
-    margin-top: 1px;
-    margin-right: 1px;
-    margin-bottom: 1px;
-    margin-left: 1px;
-    background-color: rgba(0, 0, 0, 0.2);
-    background-image: url("project://database/Assets/UITest/GridCell.png?fileID=2800000&guid=5773353070be94995987ad1f453a6315&type=3#GridCell");
-}
-
-.inventory__grid-cell:hover {
-    position: relative;
-    width: 46px;
-    height: 46px;
-    background-color: rgb(255, 0, 0);
-    margin-top: 1px;
-    margin-right: 1px;
-    margin-bottom: 1px;
-    margin-left: 1px;
-}
-
 .inventory__equip-weaponslot {
     margin-top: 20px;
     margin-right: 20px;
     margin-bottom: 20px;
     margin-left: 20px;
-    background-color: rgba(255, 255, 255, 0.39);
     flex-grow: 1;
+    width: 100%;
 }
 
 .inventory__header-text {
@@ -72,4 +49,14 @@
     font-size: 24px;
     color: rgb(255, 255, 255);
     -unity-font-style: bold;
+}
+
+.inventory__slot {
+    flex-grow: 1;
+    background-color: rgba(255, 255, 255, 0.39);
+}
+
+.inventory__slot:hover {
+    flex-grow: 1;
+    background-color: rgba(16, 255, 0, 0.39);
 }

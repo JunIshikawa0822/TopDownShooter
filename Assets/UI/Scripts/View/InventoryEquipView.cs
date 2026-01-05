@@ -45,12 +45,12 @@ namespace Game.UI
 
         private void OnPointerEnter(PointerEnterEvent evt)
         {
-            ((VisualElement)evt.currentTarget).style.backgroundColor = new StyleColor(new Color32(255, 0, 0, 100));
+            
         }
 
         private void OnPointerLeave(PointerLeaveEvent evt)
         {
-            ((VisualElement)evt.currentTarget).style.backgroundColor = new StyleColor(new Color32(255, 255, 255, 100));
+            
         }
 
     }

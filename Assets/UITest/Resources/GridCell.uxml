@@ -2,5 +2,6 @@
     <Style src="project://database/Assets/UITest/Inventory.uss?fileID=7433441132597879392&amp;guid=b33633997863f4c9cbe3712c7d36de2a&amp;type=3#Inventory" />
     <Style src="project://database/Assets/UITest/BackButton.uss?fileID=7433441132597879392&amp;guid=c2edbb2f233b74f04b2937f74f88a37e&amp;type=3#BackButton" />
     <Style src="project://database/Assets/UITest/Cursor.uss?fileID=7433441132597879392&amp;guid=fa82a74483d5a4e26a4b5b1ecf855fe9&amp;type=3#Cursor" />
-    <ui:VisualElement name="gridcell__root" class="inventory__grid-cell GridCell" />
+    <Style src="project://database/Assets/UITest/Container.uss?fileID=7433441132597879392&amp;guid=6bb4d475ad30e41a68373b4aac9a3a05&amp;type=3#Container" />
+    <ui:VisualElement name="gridcell__root" class="GridCell containeritem__grid-cell" />
 </ui:UXML>
