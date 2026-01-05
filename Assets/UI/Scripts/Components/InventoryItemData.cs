@@ -1,30 +1,37 @@
 using Game.Data;
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UIElements;
+using System;
 
 public class InventoryItemData
 {
-    int _originX;
-    int _originY;
-    IItemRuntimeData _itemRuntimeData;
-    ItemDirection _direction;
+    private int _gridIndex;
+    private int _originX;
+    private int _originY;
+    private IItemRuntimeData _itemRuntimeData;
+    private ItemDirection _direction;
+    private readonly Guid _itemDataGuid;
 
     public IItemRuntimeData RuntimeData => _itemRuntimeData;
+    public int GridIndex => _gridIndex;
     public int OriginX => _originX;
     public int OriginY => _originY;
     public ItemDirection Direction => _direction;
+    public Guid ItemDataGuid => _itemDataGuid;
 
-    public InventoryItemData(int originX, int originY, IItemRuntimeData itemRuntimeData)
+    public InventoryItemData(int gridIndex, int originX, int originY, IItemRuntimeData itemRuntimeData)
     {
+        _gridIndex = gridIndex;
         _originX = originX;
         _originY = originY;
         _itemRuntimeData = itemRuntimeData;
         _direction = ItemDirection.Up;
+
+        _itemDataGuid = Guid.NewGuid();
     }
 
-    public void SetItemOrigin(int originX, int originY)
+    public void SetItemOrigin(int gridIndex, int originX, int originY)
     {
+        _gridIndex = gridIndex;
         _originX = originX;
         _originY = originY;
     }
@@ -33,6 +40,7 @@ public class InventoryItemData
     {
         _direction = direction;
     }
+
     public IEnumerable<(int x, int y)> GetOccupiedCells()
     {
         // 回転方向に応じてサイズを入れ替え

@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Game.Data
 {
-    [CreateAssetMenu(menuName = "Game/Attachment/MagazineData")]
+    [CreateAssetMenu(menuName = "MyGame/Attachment/MagazineData")]
     public class AttachmentData_Magazine : AttachmentData
     {
         [Header("マガジン設定")]

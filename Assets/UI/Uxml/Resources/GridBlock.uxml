@@ -1,4 +1,0 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
-    <Style src="project://database/Assets/UI/inventory.uss?fileID=7433441132597879392&amp;guid=fce9c49671ac54c19b3da5031d3c14a1&amp;type=3#inventory" />
-    <ui:VisualElement name="inventory-grid-block" class="inventory__grid-block" style="flex-grow: 0; flex-basis: 50%; align-items: center; width: 170px; height: 170px; margin-top: 1px; margin-right: 1px; margin-bottom: 1px; margin-left: 1px; background-image: url(&quot;project://database/Assets/UI/grid-block_default.png?fileID=2800000&amp;guid=0ab38c61a9feb4a6fbffc4bf496dc150&amp;type=3#grid-block_default&quot;);" />
-</ui:UXML>

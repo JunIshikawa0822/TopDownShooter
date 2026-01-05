@@ -1,0 +1,12 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UITest/Inventory.uss?fileID=7433441132597879392&amp;guid=b33633997863f4c9cbe3712c7d36de2a&amp;type=3#Inventory" />
+    <Style src="project://database/Assets/UITest/Container.uss?fileID=7433441132597879392&amp;guid=6bb4d475ad30e41a68373b4aac9a3a05&amp;type=3#Container" />
+    <ui:VisualElement name="inventory__container" style="flex-grow: 1;">
+        <ui:VisualElement name="container__header" class="inventory__header" style="flex-grow: 0;">
+            <ui:Label text="Inventory" name="container__header-text" class="inventory__header-text" />
+        </ui:VisualElement>
+        <ui:VisualElement name="container__body" style="flex-grow: 0; height: 100%; width: 100%;">
+            <ui:ScrollView vertical-scroller-visibility="AlwaysVisible" name="container__scrollview" style="height: 100%; width: 100%; background-color: rgba(0, 0, 0, 0.09);" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

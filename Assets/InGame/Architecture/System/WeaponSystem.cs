@@ -44,8 +44,8 @@ public class WeaponSystem : ASystem, IOnUpdate, IOnFixedUpdate
         WeaponTestDataSet();
         gameStat.playerEquipWeapon = CreateWeapon(gameStat.playerWeaponRuntimeData);
 
-        gameEvent.attackStartEvent += AttackStart;
-        gameEvent.attackEndEvent += AttackEnd;
+        gameEvents.attackStartEvent += AttackStart;
+        gameEvents.attackEndEvent += AttackEnd;
     }
 
     public void OnUpdate()

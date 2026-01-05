@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Game/Item Visual Data", fileName = "NewItemVisualData")]
+[CreateAssetMenu(menuName = "MyGame/Item Visual Data", fileName = "NewItemVisualData")]
 public class ItemVisualData : ScriptableObject
 {
     [Header("表示モデル")]

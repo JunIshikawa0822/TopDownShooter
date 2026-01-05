@@ -1,7 +1,7 @@
 using Game.Data;
 using UnityEngine;
 
-public class PlayerController : A_Entity, IWeaponHandler
+public class PlayerController : AEntity, IWeaponHandler
 {
     //現在装備中の武器（3Dオブジェクト）
     private AWeaponBase _currentWeapon;

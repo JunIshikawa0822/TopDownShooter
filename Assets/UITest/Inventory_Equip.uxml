@@ -1,0 +1,37 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UITest/Inventory.uss?fileID=7433441132597879392&amp;guid=b33633997863f4c9cbe3712c7d36de2a&amp;type=3#Inventory" />
+    <ui:VisualElement name="inventory__equip" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0.2); width: 100%; height: 100%;">
+        <ui:VisualElement name="equip__header" class="inventory__header" style="flex-grow: 0; flex-basis: auto;">
+            <ui:Label text="Equip" name="equip__header-text" style="font-size: 24px; color: rgb(255, 255, 255); -unity-font-style: bold; -unity-text-align: upper-left;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="equip__body" style="flex-grow: 0; width: 100%; height: 100%;">
+            <ui:VisualElement name="equip__container-group-1" style="flex-grow: 4.5; color: rgba(0, 0, 0, 0.85); background-color: rgba(255, 255, 255, 0); border-top-width: 5px; border-right-width: 5px; border-bottom-width: 5px; border-left-width: 5px; border-left-color: rgba(0, 0, 0, 0); border-right-color: rgba(0, 0, 0, 0); border-top-color: rgba(0, 0, 0, 0); border-bottom-color: rgba(0, 0, 0, 0); align-items: center;">
+                <ui:VisualElement name="equip__slot-1" class="inventory__equip-weaponslot" style="flex-grow: 1; flex-wrap: wrap; background-color: rgba(255, 255, 255, 0.39); margin-top: 20px; margin-right: 20px; margin-bottom: 20px; margin-left: 20px; width: 100%;">
+                    <ui:Label text="Weapon" name="equp__element-text-1-1" enabled="true" selectable="false" focusable="false" style="font-size: 24px; -unity-font-style: normal; color: rgb(0, 0, 0);" />
+                </ui:VisualElement>
+                <ui:VisualElement name="equip__slot-2" style="flex-grow: 1; margin-top: 20px; margin-right: 20px; margin-bottom: 20px; margin-left: 20px; background-color: rgba(255, 255, 255, 0.39); width: 100%;">
+                    <ui:Label text="Weapon" name="equp__element-text-1-2" enabled="true" selectable="false" focusable="false" style="font-size: 24px; -unity-font-style: normal; color: rgb(0, 0, 0);" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement name="equip__container-group-2" style="flex-grow: 4.5; background-color: rgba(255, 255, 255, 0); border-left-color: rgba(0, 0, 0, 0); border-right-color: rgba(0, 0, 0, 0); border-top-color: rgba(0, 0, 0, 0); border-bottom-color: rgba(0, 0, 0, 0); border-top-width: 5px; border-right-width: 5px; border-bottom-width: 5px; border-left-width: 5px; align-items: center;">
+                <ui:VisualElement name="equip-__slot-group-2-1" style="flex-grow: 1; flex-direction: row; width: 100%;">
+                    <ui:VisualElement name="equip__slot-3" style="flex-grow: 1; margin-top: 0; margin-right: 10px; margin-bottom: 10px; margin-left: 10px; background-color: rgba(255, 255, 255, 0.39);" />
+                    <ui:VisualElement name="equip__slot-4" style="flex-grow: 1; background-color: rgba(255, 255, 255, 0.39); margin-left: 10px; margin-right: 10px; margin-bottom: 10px;" />
+                    <ui:VisualElement name="equip__slot-5" style="flex-grow: 1; margin-right: 10px; margin-left: 10px; background-color: rgba(255, 255, 255, 0.39); margin-bottom: 10px;" />
+                    <ui:VisualElement name="equip__slot-6" style="flex-grow: 1; background-color: rgba(255, 255, 255, 0.39); margin-top: 0; margin-right: 10px; margin-bottom: 10px; margin-left: 10px;" />
+                </ui:VisualElement>
+                <ui:VisualElement name="equip__slot-group-2-1" style="flex-grow: 1; width: 100%; flex-direction: row;">
+                    <ui:VisualElement name="equip__slot-7" style="flex-grow: 1; margin-top: 0; margin-right: 10px; margin-bottom: 10px; margin-left: 10px; background-color: rgba(255, 255, 255, 0.39);" />
+                    <ui:VisualElement name="equip__slot-8" style="flex-grow: 1; background-color: rgba(255, 255, 255, 0.39); margin-left: 10px; margin-right: 10px; margin-bottom: 10px;" />
+                    <ui:VisualElement name="equip__slot-9" style="flex-grow: 1; margin-right: 10px; margin-left: 10px; background-color: rgba(255, 255, 255, 0.39); margin-bottom: 10px;" />
+                    <ui:VisualElement name="equip__slot-10" style="flex-grow: 1; background-color: rgba(255, 255, 255, 0.39); margin-top: 0; margin-right: 10px; margin-bottom: 10px; margin-left: 10px;" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement name="equip__container-group-3" style="flex-grow: 1; background-color: rgba(255, 255, 255, 0); border-left-color: rgba(0, 0, 0, 0); border-right-color: rgba(0, 0, 0, 0); border-top-color: rgba(0, 0, 0, 0); border-bottom-color: rgba(0, 0, 0, 0); border-top-width: 5px; border-right-width: 5px; border-bottom-width: 5px; border-left-width: 5px; align-items: center;">
+                <ui:VisualElement name="equip__element-container-3" style="flex-grow: 1; width: 100%; height: 100%; border-left-color: rgba(0, 0, 0, 0.39); border-right-color: rgba(0, 0, 0, 0.39); border-top-color: rgba(0, 0, 0, 0.39); border-bottom-color: rgba(0, 0, 0, 0.39); background-color: rgba(255, 255, 255, 0.39);">
+                    <ui:Label text="Other" name="equp-element-text-3" style="border-top-width: 5px; border-right-width: 5px; border-bottom-width: 5px; border-left-width: 5px; -unity-font-style: normal; font-size: 48px;" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

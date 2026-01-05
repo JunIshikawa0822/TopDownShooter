@@ -4,5 +4,5 @@ using UnityEngine;
 
 public interface IAnimationHandler
 {
-    public void OnMove(A_Entity entity);
+    public void OnMove(AEntity entity);
 }

@@ -1,0 +1,20 @@
+.back-button {
+    top: 10px;
+    width: 9%;
+    height: 75%;
+    margin-right: 10px;
+    background-color: rgba(113, 11, 11, 0);
+    -unity-background-scale-mode: scale-to-fit;
+    right: 10px;
+    position: absolute;
+    align-items: flex-end;
+}
+
+.back-button-icon {
+    top: 12.5%;
+    right: 12.5%;
+    width: 75%;
+    height: 75%;
+    background-image: url("project://database/Assets/UITest/UI_atlas.psd?fileID=-97139193&guid=f5331118f6642427b9edc2484b6b74f5&type=3#UI_atlas_28");
+    -unity-background-scale-mode: scale-to-fit;
+}

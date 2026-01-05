@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-public abstract class A_Entity : MonoBehaviour, IDamagable
+public abstract class AEntity : MonoBehaviour, IDamagable
 {
     public abstract Vector3 Velocity { get; }
     public abstract Vector3 MoveDirection { get; }
