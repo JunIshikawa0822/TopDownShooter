@@ -61,13 +61,11 @@ namespace Game.UI
         public void OnPointerEnter(PointerEnterEvent evt)
         {
             OnPointerEnterEvent?.Invoke(_containerGuid);
-            //SetColor(Color.red);
         }
 
         public void OnPointerLeave(PointerLeaveEvent evt)
         {
             OnPointerLeaveEvent?.Invoke(_containerGuid);
-            //SetColor(new Color(0,0,0,0));
         }
 
         // private int ReadWidthFromClass(VisualElement block)

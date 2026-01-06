@@ -84,12 +84,11 @@ namespace Game.UI
         public void OnPointerEnter(PointerEnterEvent evt)
         {
             OnPointerEnterEvent?.Invoke(_gridBlockIndex);
-            //SetColor(Color.green);
         }
 
         public void OnPointerLeave(PointerLeaveEvent evt)
         {
-            //SetColor(new Color(0,0,0,0));
+
         }
     }
 }

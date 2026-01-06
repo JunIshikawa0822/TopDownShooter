@@ -42,13 +42,4 @@ public class InventoryController : AUIController
         _inventoryView.AddContainer(containerData.ContainerAsset, containerData.ContainerBuild, container.Guid);
         _inventoryModel.AddContainer(container);
     }
-
-    public void LoadContainer(Container container)
-    {
-        for(int i = 0; i < container.GridBlockCount; ++i)
-        {
-            InventoryItemData[] datas = container.GetItemsData(i);
-
-        }
-    }
 }

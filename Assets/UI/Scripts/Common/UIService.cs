@@ -18,8 +18,7 @@ public class UIService
     {
         _activeControllers.Clear();
         
-        InventoryEquipUIEvents equipEvents = new();
-        InventoryEquipView equipView = new(_root, equipEvents);
+        InventoryEquipView equipView = new(_root);
 
         //仮。ModelがUIServiceに作成されるのは変だと思うので。
         Inventory inventory = new();

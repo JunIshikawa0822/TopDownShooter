@@ -8,87 +8,70 @@ public class GridBlock
     private readonly InventoryItemData[,] _grid;
     private readonly HashSet<InventoryItemData> _items = new();
     private readonly Dictionary<Guid, InventoryItemData> _guidDic = new();
-
-    private int _gridBlockIndex;
     private int _gridWidth;
     private int _gridHeight;
-    private float _currentWeight;
-
-    public int GridIndex => _gridBlockIndex;
     public int GridWidth => _gridWidth;
     public int GridHeight => _gridHeight;
-    public float CurrentWeight => _currentWeight;
-    public Action<GridBlock> ContentChanged;
-    public InventoryItemData[] AllItemsData => _items.ToArray();
 
-    public GridBlock(int gridIndex, int width, int height)
+    public GridBlock(int width, int height)
     {
-        _gridBlockIndex = gridIndex;
         _gridWidth = width;
         _gridHeight = height;
-        _currentWeight = 0;
 
         _grid = new InventoryItemData[width, height];
     }
 
-    public InventoryItemData[] TryFindItem(string itemID)
+    public bool TryFindItem(string itemID, out InventoryItemData[] items)
     {
-        InventoryItemData[] items = _items.Where(item => item.RuntimeData.BaseData.ID == itemID).ToArray();
-
-        if(items.Length == 0) return null;
-        return items;
+        InventoryItemData[] resultItems = _items.Where(item => item.RuntimeData.BaseData.ID == itemID).ToArray();
+        bool result = resultItems.Length != 0;
+        items = result ? resultItems : Array.Empty<InventoryItemData>();
+        return result;
     }
 
-    public InventoryItemData TryFindItem(Guid itemDataGuid)
+    public bool TryFindItem(Guid itemDataGuid, out InventoryItemData item)
     {
-        InventoryItemData item = _guidDic[itemDataGuid];
-        if(item == null) return null;
-
-        return item;
+        bool result = _guidDic.TryGetValue(itemDataGuid, out InventoryItemData resultItem);
+        item = resultItem;
+        return result;
     }
 
-    public bool TryPlaceItem(InventoryItemData item, int originX, int originY, ItemDirection dir)
+    public InventoryItemData TryFindItem(int x, int y)
     {
-        if (!CanPlace(item, originX, originY, dir)) return false;
-
-        PlaceToGrid(item, originX, originY, dir);
-        _currentWeight += item.RuntimeData.BaseData.Weight * item.RuntimeData.StackCount;
-
-        ContentChanged?.Invoke(this);
-        return true;
+        if (x < 0 || y < 0 || x >= _gridWidth || y >= _gridHeight) return null;
+        return _grid[x, y];
     }
 
-    public bool TryRemoveItem(InventoryItemData item)
-    {
-        if (!_items.Contains(item)) return false;
-
-        RemoveFromGrid(item);
-        _currentWeight -= item.RuntimeData.BaseData.Weight * item.RuntimeData.StackCount;
-
-        ContentChanged?.Invoke(this);
-        return true;
-    }
-
-    public bool TryRemoveItem(int x, int y)
-    {
-        InventoryItemData item = _grid[x, y];
-        if(item == null) return false;
-
-        return TryRemoveItem(item);
-    }
-
-    private bool CanPlace(InventoryItemData item, int x, int y, ItemDirection dir)
+    public bool CanPlace(InventoryItemData item, int x, int y, ItemDirection dir)
     {
         foreach ((int cellX, int cellY) in item.CalculateOccupiedCells(x, y, dir))
         {
-            if (cellX < 0 || cellY < 0 || cellX >= _gridWidth || cellY >= _gridHeight) return false;
-            if (_grid[cellX, cellY] != null && _grid[cellX, cellY] != item) return false;
+            if (cellX < 0 || cellY < 0 || cellX >= _gridWidth || cellY >= _gridHeight) 
+            {
+                Debug.LogWarning("範囲外にアクセスしました");
+                return false;
+            }
+
+            if (_grid[cellX, cellY] != null && _grid[cellX, cellY] != item) 
+            {
+                Debug.LogWarning("自身以外にアクセスしました");
+                return false;
+            }
         }
         return true;
     }
 
-    private void RemoveFromGrid(InventoryItemData item)
+    public bool IsContain(InventoryItemData item)
     {
+        if(item == null) return false;
+        return _items.Contains(item);
+    }
+
+    //単純な排除作業
+    public void RemoveFromGrid(InventoryItemData item)
+    {
+        if(item == null)return;
+
         foreach ((int cellX, int cellY) in item.GetOccupiedCells())
         {
             if (_grid[cellX, cellY] != item)
@@ -104,12 +87,19 @@ public class GridBlock
         _items.Remove(item);
     }
 
-    private void PlaceToGrid(InventoryItemData item, int originX, int originY, ItemDirection dir)
+    public void RemoveFromGrid(int x, int y)
     {
-        item.SetItemOrigin(_gridBlockIndex, originX, originY);
-        item.SetDirection(dir);
+        InventoryItemData item = TryFindItem(x, y);
+        RemoveFromGrid(item);
+    }
 
-        foreach ((int x, int y) in item.GetOccupiedCells()) _grid[x, y] = item;
+    //単純な挿入作業
+    public void PlaceToGrid(InventoryItemData item, int originX, int originY, ItemDirection dir)
+    {
+        foreach ((int x, int y) in item.CalculateOccupiedCells(originX, originY, dir))
+        {
+            _grid[x, y] = item;
+        } 
 
         _guidDic[item.ItemDataGuid] = item;
         _items.Add(item);

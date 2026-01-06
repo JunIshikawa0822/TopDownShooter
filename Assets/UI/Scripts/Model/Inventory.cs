@@ -7,8 +7,7 @@ using System;
 public class Inventory
 {
     private readonly Dictionary<Guid, Container> _containersDic = new();
-    private readonly List<Container> _containersList = new();
-    public List<Container> GetAllContainers => _containersList;
+    public IReadOnlyCollection<Container> Containers => _containersDic.Values;
 
     public void AddContainer(Container container)
     {

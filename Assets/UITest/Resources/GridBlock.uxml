@@ -1,5 +1,0 @@
-<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <ui:VisualElement name="gridblock" style="flex-grow: 1; flex-direction: column; align-items: center;">
-        <ui:VisualElement name="gridblock__root" style="flex-grow: 0; flex-direction: row; flex-wrap: wrap; background-color: rgba(0, 0, 0, 0.13); flex-shrink: 0; background-size: 100% 100%; justify-content: flex-start; align-content: auto; align-items: center; -unity-text-align: upper-left; width: 256px; height: auto; align-self: center;" />
-    </ui:VisualElement>
-</ui:UXML>

@@ -36,6 +36,13 @@ public class InventoryItemData
         _originY = originY;
     }
 
+    public void ClearItemOrigin()
+    {
+        _gridIndex = -1;
+        _originX = -1;
+        _originY = -1;
+    }
+
     public void SetDirection(ItemDirection direction)
     {
         _direction = direction;
@@ -51,7 +58,7 @@ public class InventoryItemData
         {
             for (int dy = 0; dy < height; ++dy)
             {
-                yield return (_originX+ dx, _originY + dy);
+                yield return (_originX + dx, _originY + dy);
             }
         }
     } 

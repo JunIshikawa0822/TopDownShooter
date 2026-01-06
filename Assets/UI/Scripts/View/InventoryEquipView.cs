@@ -7,13 +7,9 @@ namespace Game.UI
 {
     public class InventoryEquipView : AUIView
     {
-        private InventoryEquipUIEvents _equipEvents;
         private VisualElement[] _slots;
 
-        public InventoryEquipView(VisualElement root, InventoryEquipUIEvents equipEvents) : base(root)
-        {
-            _equipEvents = equipEvents;
-        }
+        public InventoryEquipView(VisualElement root) : base(root){}
 
         protected override void SetVisualElements()
         {
