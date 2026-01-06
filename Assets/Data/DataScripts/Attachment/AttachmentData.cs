@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Game/Attachment", fileName = "NewAttachment")]
+[CreateAssetMenu(menuName = "MyGame/Attachment", fileName = "NewAttachment")]
 public abstract class AttachmentData : ItemData
 {
     public AttachmentType attachmentType;

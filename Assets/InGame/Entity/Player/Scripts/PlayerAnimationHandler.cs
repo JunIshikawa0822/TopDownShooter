@@ -13,7 +13,7 @@ public class PlayerAnimationHandler : MonoBehaviour, IAnimationHandler
     [SerializeField] private float _dampTime = 0.01f;
     private float _currentSpeed;
 
-    public void OnMove(A_Entity entity)
+    public void OnMove(AEntity entity)
     {
         float deltaTime = Time.deltaTime * entity.TimeScale;
         _currentSpeed = Mathf.Lerp(_currentSpeed, entity.Velocity.magnitude, deltaTime / _dampTime);

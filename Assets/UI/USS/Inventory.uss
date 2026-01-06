@@ -1,0 +1,62 @@
+.inventory__screen-overlay {
+    position: absolute;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.41);
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    align-content: flex-start;
+}
+
+.inventory__header {
+    position: relative;
+    top: auto;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 80px;
+    background-color: rgba(0, 0, 0, 0.59);
+    margin-bottom: 30px;
+    flex-shrink: 0;
+}
+
+.back-button-icon {
+}
+
+.inventory__equip-weaponslot {
+    margin-top: 20px;
+    margin-right: 20px;
+    margin-bottom: 20px;
+    margin-left: 20px;
+    flex-grow: 1;
+    width: 100%;
+}
+
+.inventory__header-text {
+    margin-top: 4px;
+    margin-right: 4px;
+    margin-bottom: 2px;
+    margin-left: 2px;
+    padding-top: 4px;
+    padding-right: 2px;
+    padding-bottom: 4px;
+    padding-left: 1px;
+    font-size: 24px;
+    color: rgb(255, 255, 255);
+    -unity-font-style: bold;
+}
+
+.inventory__slot {
+    flex-grow: 1;
+    background-color: rgba(255, 255, 255, 0.39);
+}
+
+.inventory__slot:hover {
+    flex-grow: 1;
+    background-color: rgba(16, 255, 0, 0.39);
+}

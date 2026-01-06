@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Game.Data
 {
-    [CreateAssetMenu(menuName = "Game/Weapon/GunData")]
+    [CreateAssetMenu(menuName = "MyGame/Weapon/GunData")]
     public class GunData : WeaponData
     {
         [Header("射撃設定")]
@@ -24,7 +24,7 @@ namespace Game.Data
         [SerializeField] private AttachmentSlotData[] _ableAttachmentSlots;
 
         [Header("マガジンがつかない武器")]
-        //何発送店できるかを定義
+        //何発装填できるかを定義
         [SerializeField] private int _internalAmmoMax;
 
         public FireType FireType => _fireType;

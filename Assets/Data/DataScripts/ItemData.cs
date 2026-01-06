@@ -20,7 +20,7 @@ public abstract class ItemData : ScriptableObject
     [SerializeField] private ItemVisualData _visualData;//別SO参照
 
     // --- プロパティ ---
-    public string Id => _id;
+    public string ID => _id;
     public string DisplayName => _displayName;
     public string Description => _description;
     public float Weight => _weight;

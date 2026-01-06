@@ -122,18 +122,18 @@ public class InputSystem : ASystem, IOnPreUpdate
 
     private void OnAttackStartInput(InputAction.CallbackContext context)
     {
-        gameEvent.attackStartEvent?.Invoke();
+        gameEvents.attackStartEvent?.Invoke();
         gameStat.isPressProcessing = true;
     }
 
     private void OnAttackProcessInput(InputAction.CallbackContext context)
     {
-        gameEvent.attackProcessEvent?.Invoke();
+        gameEvents.attackProcessEvent?.Invoke();
     }
 
     private void OnAttackEndInput(InputAction.CallbackContext context)
     {
-        gameEvent.attackEndEvent?.Invoke();
+        gameEvents.attackEndEvent?.Invoke();
         gameStat.isPressProcessing = false;
     }
 

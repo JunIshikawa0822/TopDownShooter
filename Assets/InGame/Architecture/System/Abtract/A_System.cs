@@ -5,11 +5,11 @@ using UnityEngine;
 public abstract class ASystem
 {
     protected GameStatus gameStat;
-    protected GameEventBus gameEvent;
+    protected GameEventBus gameEvents;
     public void Init(GameStatus gameStat, GameEventBus gameEvent)
     {
         this.gameStat = gameStat;
-        this.gameEvent = gameEvent;
+        this.gameEvents = gameEvent;
     }
     public abstract void OnSetUp();
 }

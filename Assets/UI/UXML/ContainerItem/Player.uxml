@@ -1,0 +1,13 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UITest/Container.uss?fileID=7433441132597879392&amp;guid=6bb4d475ad30e41a68373b4aac9a3a05&amp;type=3#Container" />
+    <ui:VisualElement name="containeritem__root" class="containeritem__root" style="flex-grow: 1;">
+        <ui:VisualElement name="containeritem__header" class="containeritem__header" style="flex-grow: 0;">
+            <ui:Label text="Player" name="containeritem__header-text" class="containeritem__header-text" />
+        </ui:VisualElement>
+        <ui:VisualElement name="containeritem__body" class="containeritem__body" style="flex-grow: 1;">
+            <ui:VisualElement name="space__center" style="flex-grow: 1;">
+                <ui:VisualElement name="gridblock" class="containeritem__gridblock" style="flex-grow: 1;" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
