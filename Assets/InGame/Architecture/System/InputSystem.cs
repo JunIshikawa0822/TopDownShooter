@@ -84,7 +84,7 @@ public class InputSystem : ASystem, IOnPreUpdate
 /// </summary>
 /// <param name="inputDirection">WASDから得られた入力Vector2 (x: 左右, y: 前後)。</param>
 /// <returns>XZ平面上のワールド空間の移動ベクトルVector3。</returns>
-    public Vector3 GetCameraSpaceMovementVector(Vector2 inputDirection, Camera camera)
+    private Vector3 GetCameraSpaceMovementVector(Vector2 inputDirection, Camera camera)
     {
         Transform cameraTransform = camera.transform;
 
@@ -156,5 +156,20 @@ public class InputSystem : ASystem, IOnPreUpdate
     {
         
     }
-}
 
+    public override void OnDispose()
+    {
+        if(_gameInputs != null)
+        {
+            _gameInputs.Player.Move.started -= OnMoveInput;
+            _gameInputs.Player.Move.performed -= OnMoveInput;
+            _gameInputs.Player.Move.canceled -= OnMoveInput;
+
+            _gameInputs.Player.Attack.started -= OnAttackStartInput;
+            _gameInputs.Player.Attack.performed -= OnAttackProcessInput;
+            _gameInputs.Player.Attack.canceled -= OnAttackEndInput;
+
+            _gameInputs.Disable();
+        }
+    }
+}
