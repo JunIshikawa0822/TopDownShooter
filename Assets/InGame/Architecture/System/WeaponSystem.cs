@@ -64,21 +64,21 @@ public class WeaponSystem : ASystem, IOnUpdate, IOnFixedUpdate
         _bulletService.OnFixedUpdate();
     }
 
-    public void AttackStart()
+    private void AttackStart()
     {
         if(gameStat.playerEquipWeapon == null)return;
         gameStat.playerEquipWeapon.AttackStart();
         //Debug.Log("AttackStart");
     }
 
-    public void AttackProcess()
+    private void AttackProcess()
     {
         if(gameStat.playerEquipWeapon == null)return;
         gameStat.playerEquipWeapon.AttackProcess();
         // Debug.Log("AttackProcess");
     }
 
-    public void AttackEnd()
+    private void AttackEnd()
     {
         if(gameStat.playerEquipWeapon == null)return;
         gameStat.playerEquipWeapon.AttackEnd();
@@ -126,7 +126,7 @@ public class WeaponSystem : ASystem, IOnUpdate, IOnFixedUpdate
         }
         else
         {
-//            Debug.Log("銃ではある");
+            // Debug.Log("銃ではある");
             if(gameStat.playerWeaponData is GunData gunData)
             {
                 // Debug.Log("GunTestDataSet");
@@ -134,5 +134,11 @@ public class WeaponSystem : ASystem, IOnUpdate, IOnFixedUpdate
                 gameStat.playerWeaponRuntimeData = new GunRuntimeData(gunData);
             }
         }
+    }
+
+    public override void OnDispose()
+    {
+        gameEvents.attackStartEvent -= AttackStart;
+        gameEvents.attackEndEvent -= AttackEnd;
     }
 }

@@ -6,10 +6,15 @@ public abstract class ASystem
 {
     protected GameStatus gameStat;
     protected GameEventBus gameEvents;
+    protected SceneLoadBus sceneLoadBus;
     public void Init(GameStatus gameStat, GameEventBus gameEvent)
     {
         this.gameStat = gameStat;
         this.gameEvents = gameEvent;
     }
     public abstract void OnSetUp();
+    public virtual void OnDispose()
+    {
+        
+    }
 }
