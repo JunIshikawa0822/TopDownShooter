@@ -45,6 +45,7 @@ public class GameStatus
     public AssultRifle_Ray assultRifleRayPrefab;
 
     [Header("PlayerInventory")]
+    public bool isInventoryOpen = false;
     //テスト用データ
     public WeaponData playerWeaponData;
     //テスト用ランタイムデータ

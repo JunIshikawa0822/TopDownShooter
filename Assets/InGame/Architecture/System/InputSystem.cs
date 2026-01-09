@@ -157,6 +157,11 @@ public class InputSystem : ASystem, IOnPreUpdate
         
     }
 
+    private void OnInventoryInput(InputAction.CallbackContext context)
+    {
+        gameStat.isInventoryOpen = !gameStat.isInventoryOpen;
+    }
+
     public override void OnDispose()
     {
         if(_gameInputs != null)

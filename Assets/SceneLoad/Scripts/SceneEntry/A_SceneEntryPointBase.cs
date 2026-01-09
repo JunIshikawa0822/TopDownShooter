@@ -10,11 +10,16 @@ public abstract class ASceneEntryPointBase : MonoBehaviour, ISceneEntryPoint
     protected virtual void Awake()
     {
         BuildDependencies();
+        OnSetUp();
     }
     /// <summary>
     /// BuildDependencies内で、Registerメソッドを用いて外部に公開する型とインスタンスを登録する
     /// </summary>
     protected abstract void BuildDependencies();
+    protected virtual void OnSetUp()
+    {
+        
+    }
 
     //外部への公開をする型とインスタンスを登録する処理
     protected void RegisterDependency<T>(T instance) where T : class
