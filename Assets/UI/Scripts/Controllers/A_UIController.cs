@@ -3,11 +3,9 @@ using UnityEngine;
 
 public abstract class AUIController
 {
-    protected UIEvents uiEvents;
-
-    protected AUIController(UIEvents uiEvents)
+    protected AUIController()
     {
-        this.uiEvents = uiEvents;
+        
     }
 
     public virtual void Open()

@@ -2,6 +2,6 @@ using System;
 
 public struct SceneLoadRequest
 {
-    public string TargetSceneName;
+    public SceneType TargetSceneName;
     public Action<ISceneEntryPoint> Callback;
 }

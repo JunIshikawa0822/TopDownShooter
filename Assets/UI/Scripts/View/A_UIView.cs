@@ -1,32 +1,36 @@
 using UnityEngine.UIElements;
+using UnityEngine;
 using System;
 
 namespace Game.UI
 {
-    public abstract class AUIView : IDisposable
+    public abstract class AUIView : MonoBehaviour, IDisposable
     {
+        [SerializeField] private UIDocument _uiDocument;
+        protected VisualElement _rootElement;
         //このUIが初期化（Initialize）されたときに、すぐに非表示にするかどうかの設定です。
-        protected bool _hideOnAwake = false;
+        [SerializeField] protected bool _hideOnAwake = false;
 
         //このUIが部分的に透けて背後のUIを見せる「オーバーレイ」として機能するかどうかを示すフラグです。
-        protected bool _isOverlay;
+        [SerializeField] protected bool _isOverlay;
 
         //このクラスが管理するUIコンポーネントのルート要素（一番上の VisualElement）を保持します。UXMLファイルで定義されたUI階層全体への入り口となります。
-        protected VisualElement _topElement;
 
-        // Properties
-        public VisualElement Root => _topElement;
+        //Properties
+        public VisualElement Root => _rootElement;
         public bool IsTransparent => _isOverlay;
-        public bool IsHidden => _topElement.style.display == DisplayStyle.None;
-
-        //コンストラクタで、UIのルート要素である VisualElement を受け取ります
-        public AUIView(VisualElement topElement)
-        {
-            _topElement = topElement ?? throw new ArgumentNullException(nameof(topElement));
-        }
+        public bool IsHidden => _rootElement.style.display == DisplayStyle.None;
 
         public virtual void Initialize()
         {
+            if(_uiDocument == null)
+            {
+                Debug.LogError("UIDocumentを設定してください");
+                return;
+            }
+
+            _rootElement = _uiDocument.rootVisualElement ?? throw new ArgumentNullException(nameof(_rootElement));
+
             if (_hideOnAwake)
             {
                 Hide();
@@ -51,13 +55,13 @@ namespace Game.UI
         //UI表示
         public virtual void Show()
         {
-            _topElement.style.display = DisplayStyle.Flex;
+            _rootElement.style.display = DisplayStyle.Flex;
         }
 
         //UI非表示
         public virtual void Hide()
         {
-            _topElement.style.display = DisplayStyle.None;
+            _rootElement.style.display = DisplayStyle.None;
         }
 
         //登録したイベント解除

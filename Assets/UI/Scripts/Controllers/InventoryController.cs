@@ -15,7 +15,7 @@ public class InventoryController : AUIController
     private Guid _fromContainerGuid;
     private Guid _toContainerGuid;
     private Guid _currentItemGuid;
-    public InventoryController(UIEvents uIEvents) : base(uIEvents){}
+    public InventoryController(){}
 
     public void Initialize(Inventory inventoryModel, InventoryView inventoryView)
     {

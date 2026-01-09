@@ -24,14 +24,9 @@ namespace Game.UI
         
         private readonly Dictionary<Guid, ContainerComponent> _containerUIDic = new();
 
-        public InventoryView(VisualElement root) : base(root)
-        {
-            
-        }
-
         protected override void SetVisualElements()
         {
-            _scrollViewParent = _topElement.Q<ScrollView>("container__scrollview");
+            _scrollViewParent = _rootElement.Q<ScrollView>("container__scrollview");
             _scrollContentContainer = _scrollViewParent.Q<VisualElement>("unity-content-container");
 
             // //グリッドセルのロード

@@ -6,17 +6,17 @@ using UnityEngine.SceneManagement;
 
 public class SceneSystem : ASystem
 {
-    private readonly Dictionary<string, ISceneEntryPoint> _loadedScenes = new();
-    private readonly Dictionary<string, SceneLoadState> _sceneStates = new();
-    private Dictionary<string, List<Action<ISceneEntryPoint>>> _onLoadCallbacks = new();
+    private readonly Dictionary<SceneType, ISceneEntryPoint> _loadedScenes = new();
+    private readonly Dictionary<SceneType, SceneLoadState> _sceneStates = new();
+    private Dictionary<SceneType, List<Action<ISceneEntryPoint>>> _onLoadCallbacks = new();
     
     public override void OnSetUp()
     {
-        sceneLoadBus.OnRequestLoadCallback += RegisterLoadRequest;
+        sceneLoadBus.OnRequestRegisterCallback += RegisterRequest;
     }
 
     //sceneLoadBus経由で他のクラスからシーンロードの際の条件登録を受ける
-    private void RegisterLoadRequest(SceneLoadRequest request)
+    private void RegisterRequest(SceneLoadRequest request)
     {
         if (!_onLoadCallbacks.TryGetValue(request.TargetSceneName, out List<Action<ISceneEntryPoint>> list))
         {
@@ -26,7 +26,7 @@ public class SceneSystem : ASystem
         list.Add(request.Callback);
     }
 
-    public IEnumerator LoadScene(string sceneName)
+    public IEnumerator LoadScene(SceneType sceneName)
     {
         if (_sceneStates.TryGetValue(sceneName, out SceneLoadState state))
         {
@@ -38,10 +38,10 @@ public class SceneSystem : ASystem
         _sceneStates[sceneName] = SceneLoadState.Loading;
 
         //シーンをロード
-        AsyncOperation op = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
+        AsyncOperation op = SceneManager.LoadSceneAsync(sceneName.ToString(), LoadSceneMode.Additive);
         yield return op;
 
-        Scene scene = SceneManager.GetSceneByName(sceneName);
+        Scene scene = SceneManager.GetSceneByName(sceneName.ToString());
 
         //シーンが有効でないのならステータスをNoneに
         if (!scene.IsValid())
@@ -78,7 +78,7 @@ public class SceneSystem : ASystem
         }
     }
 
-    public IEnumerator UnloadScene(string sceneName)
+    public IEnumerator UnloadScene(SceneType sceneName)
     {
         //sceneNameに対応したロードステータスが登録されていないならそもそもアンロードしない
         if (!_sceneStates.TryGetValue(sceneName, out SceneLoadState state))
@@ -91,7 +91,7 @@ public class SceneSystem : ASystem
         //アンロード中
         _sceneStates[sceneName] = SceneLoadState.Unloading;
 
-        AsyncOperation op = SceneManager.UnloadSceneAsync(sceneName);
+        AsyncOperation op = SceneManager.UnloadSceneAsync(sceneName.ToString());
         yield return op;
 
         _loadedScenes.Remove(sceneName);
@@ -100,6 +100,6 @@ public class SceneSystem : ASystem
 
     public override void OnDispose()
     {
-        sceneLoadBus.OnRequestLoadCallback -= RegisterLoadRequest;
+        sceneLoadBus.OnRequestRegisterCallback -= RegisterRequest;
     }
 }
