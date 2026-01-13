@@ -14,6 +14,7 @@ public class GameStatus
     [HideInInspector]
     public bool isPressProcessing = false;
     public Vector3 moveDirection = Vector3.zero;
+    public bool isSprinting = false;
     public Vector2 screenPosition = Vector2.zero;
     public Vector3 worldPosition = Vector3.zero;
     public GameObject cursorTrans;
@@ -48,6 +49,8 @@ public class GameStatus
     public bool isInventoryOpen = false;
     //テスト用データ
     public WeaponData playerWeaponData;
+    //インベントリモデル
+    public Inventory inventoryModel;
     //テスト用ランタイムデータ
     [HideInInspector]public AWeaponRuntimeDataBase playerWeaponRuntimeData;
     //テスト用所持武器オブジェクト

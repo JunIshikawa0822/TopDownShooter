@@ -22,7 +22,13 @@ public class InputSystem : ASystem, IOnPreUpdate
         _gameInputs.Player.Attack.performed += OnAttackProcessInput;
         _gameInputs.Player.Attack.canceled += OnAttackEndInput;
 
-        _gameInputs.Enable();
+        _gameInputs.Player.Sprint.started += OnSprintStartInput;
+        _gameInputs.Player.Sprint.canceled += OnSprintEndInput;
+
+        _gameInputs.System.Inventory.started += OnInventoryInput;
+
+        _gameInputs.System.Enable();
+        SwitchInputMode(gameStat.isInventoryOpen);
 
         _targetLayerMask = gameStat.targetLayerMask;
         _obstacleLayerMask = gameStat.obstacleLayerMask;
@@ -31,15 +37,19 @@ public class InputSystem : ASystem, IOnPreUpdate
 
     public void OnPreUpdate()
     {
+        gameStat.screenPosition = _screenPosition = _gameInputs.Player.Point.ReadValue<Vector2>();
+
+        if (!gameStat.isInventoryOpen)
+        {
         _baseTrans = gameStat.player.AttackBaseTrans;
-        gameStat.screenPosition = _screenPosition = _gameInputs.UI.Point.ReadValue<Vector2>();
-        gameStat.worldPosition = GetCursorPos();
+        gameStat.worldPosition = GetCursorPos(_screenPosition);
         gameStat.cursorTrans.transform.position = gameStat.worldPosition;
+        }
     }
 
-    private Vector3 GetCursorPos()
+    private Vector3 GetCursorPos(Vector2 position)
     {
-        Ray mouseRay = Camera.main.ScreenPointToRay(_screenPosition);
+        Ray mouseRay = Camera.main.ScreenPointToRay(position);
         RaycastHit hit;
         Vector3 basePos = _baseTrans.position;
 
@@ -152,14 +162,43 @@ public class InputSystem : ASystem, IOnPreUpdate
 
     }
     
-    private void OnSprintInput(InputAction.CallbackContext context)
+    private void OnSprintStartInput(InputAction.CallbackContext context)
     {
-        
+        gameStat.isSprinting = true;
+    }
+
+    private void OnSprintEndInput(InputAction.CallbackContext context)
+    {
+        gameStat.isSprinting = false;
     }
 
     private void OnInventoryInput(InputAction.CallbackContext context)
     {
         gameStat.isInventoryOpen = !gameStat.isInventoryOpen;
+        Debug.Log(gameStat.isInventoryOpen);
+
+        SwitchInputMode(gameStat.isInventoryOpen);
+        gameEvents.inventoryActiveEvent?.Invoke();
+    }
+
+    private void SwitchInputMode(bool isInventoryOpen)
+    {
+        if (isInventoryOpen)
+        {
+            //インベントリが開いた時
+            _gameInputs.Player.Disable();//移動・攻撃を無効化
+            _gameInputs.UI.Enable();//UI操作を有効化
+            
+            //移動入力を物理的に止める
+            gameStat.moveDirection = Vector3.zero;
+            gameStat.isPressProcessing = false;
+        }
+        else
+        {
+            // ゲームプレイに戻る時
+            _gameInputs.UI.Disable();
+            _gameInputs.Player.Enable();
+        }
     }
 
     public override void OnDispose()
@@ -173,6 +212,11 @@ public class InputSystem : ASystem, IOnPreUpdate
             _gameInputs.Player.Attack.started -= OnAttackStartInput;
             _gameInputs.Player.Attack.performed -= OnAttackProcessInput;
             _gameInputs.Player.Attack.canceled -= OnAttackEndInput;
+
+            _gameInputs.Player.Sprint.started -= OnSprintStartInput;
+            _gameInputs.Player.Sprint.canceled -= OnSprintEndInput;
+
+            _gameInputs.System.Inventory.started -= OnInventoryInput;
 
             _gameInputs.Disable();
         }

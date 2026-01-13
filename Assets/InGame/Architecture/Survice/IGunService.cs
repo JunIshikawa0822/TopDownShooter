@@ -6,6 +6,7 @@ using UnityEngine;
 public interface IGunService
 {
     public bool CanShoot(IGun<GunRuntimeData> gun);
+    public bool IsBulletConsume();
     public void RecordShotTime(IGun<GunRuntimeData> gun);
     public void StartShooting(IGun<GunRuntimeData> gun);
     public void StopShooting(IGun<GunRuntimeData> gun);

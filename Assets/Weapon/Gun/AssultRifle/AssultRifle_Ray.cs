@@ -12,10 +12,13 @@ public class AssultRifle_Ray : AGunBase<GunRuntimeData>
             return;
         }
         
-        if(!TryConsumeBullets())
+        if(_gunService.IsBulletConsume())
         {
-            Debug.Log("弾の消費に問題");
-            return;
+            if(!TryConsumeBullets())
+            {
+                Debug.Log("弾の消費に問題");
+                return;
+            }
         }
 
         if(!TryClipCheck())

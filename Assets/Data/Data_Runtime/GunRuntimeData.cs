@@ -222,19 +222,19 @@ namespace Game.Data
                 Debug.Log("マガジンがありません");
                 if(GunBaseData.InternalAmmoMax <= 0)
                 {
-                    Debug.Log("Internalも設定されていません");
+                    Debug.Log("Internal（マガジンを用いない弾数管理）も設定されていません");
                     return false;
                 }
                 
                 if(_internalAmmoRemaining <= 0)
                 {
-                    Debug.Log("Internalが設定されています");
+                    Debug.Log("Internal（マガジンを用いない弾数管理）が設定されています");
                     Debug.Log("弾がありません");
                     _currentLoadedAmmoData = null;
                     return false;
                 }
 
-                Debug.Log("Internalが設定されています");
+                Debug.Log("Internal（マガジンを用いない弾数管理）が設定されています");
                 Debug.Log("弾を減らします");
                 _internalAmmoRemaining--;
                 return true;

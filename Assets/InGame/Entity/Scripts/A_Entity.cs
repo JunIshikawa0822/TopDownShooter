@@ -10,6 +10,6 @@ public abstract class AEntity : MonoBehaviour, IDamagable
     public abstract float TimeScale { get; }
 
     public abstract void OnSetUp(IAnimationHandler animationHandler = null);
-    public abstract void Move(Vector3 direction);
+    public abstract void Move(Vector3 direction, bool isSprinting = false);
     public abstract void TakeDamage(float damage);
 }

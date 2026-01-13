@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class GunService : IOnUpdate, IGunService
 {
     public bool IsActiveForUpdate => true;
+    private bool _isBulletConsume = true;
     private Dictionary<IGun<GunRuntimeData>, GunState> _gunStates = new();
 
     public void RegisterGun(IGun<GunRuntimeData> gun)
@@ -24,6 +25,11 @@ public class GunService : IOnUpdate, IGunService
         bool canShoot = Time.time - last >= 1f / gun.RuntimeData.FireRate;
 
         return canShoot;
+    }
+
+    public bool IsBulletConsume()
+    {
+        return _isBulletConsume;
     }
 
     public void RecordShotTime(IGun<GunRuntimeData> gun)

@@ -303,6 +303,56 @@ MonoBehaviour:
   _uiDocument: {fileID: 1957103937}
   _hideOnAwake: 0
   _isOverlay: 0
+--- !u!1 &1753767340
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1753767341}
+  - component: {fileID: 1753767342}
+  m_Layer: 0
+  m_Name: SceneCleaner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1753767341
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1753767340}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 136.00732, y: 0, z: 161.66608}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1753767342
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1753767340}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c73bd460a913440f8faabb55012b7f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AdditiveSceneCleaner
+  targetTypes:
+  - Camera
+  - Light
+  - EventSystem
+  - AudioListener
+  destroyGameObject: 0
 --- !u!1 &1916817908
 GameObject:
   m_ObjectHideFlags: 0
@@ -349,6 +399,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::InventorySceneEntry
   _inventoryView: {fileID: 1978872414}
   _inventoryEquipView: {fileID: 794728127}
+  _sceneCleaner: {fileID: 1753767342}
 --- !u!1 &1957103936
 GameObject:
   m_ObjectHideFlags: 0
@@ -449,8 +500,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.UI.InventoryView
   _uiDocument: {fileID: 1957103937}
-  _hideOnAwake: 0
-  _isOverlay: 0
+  _hideOnAwake: 1
+  _isOverlay: 1
 --- !u!1 &1994582768
 GameObject:
   m_ObjectHideFlags: 0
@@ -795,6 +846,7 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1916817909}
+  - {fileID: 1753767341}
   - {fileID: 1978872413}
   - {fileID: 794728126}
   - {fileID: 554760296}

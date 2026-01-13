@@ -93,10 +93,10 @@ namespace Game.UI
             return gridBlockComponent;
         }
 
-        private ContainerComponent CreateContainerComponent(TemplateContainer containerTemplate, Guid containerGuid)
+        private ContainerComponent CreateContainerComponent(VisualElement containerElement, Guid containerGuid)
         {
             ContainerComponent containerComponent = new ContainerComponent(containerGuid);
-            containerComponent.SetVisualElements(containerTemplate);
+            containerComponent.SetVisualElements(containerElement);
             //OnPointerEnterの登録
             containerComponent.OnPointerEnterEvent += SetSelectingContainerGuid;
             //OnPointerLeaveの登録
@@ -109,9 +109,9 @@ namespace Game.UI
             _containerUIDic[containerGuid].PlaceItem(gridBlockIndex, x, y, rotationDeg, itemComponent);
         }
 
-        public void AddContainer(VisualTreeAsset containerAsset, GridBlockData[] gridBlockDatas, Guid containerGuid)
+        public void AddContainer(VisualElement containerRoot, GridBlockData[] gridBlockDatas, Guid containerGuid)
         {
-            TemplateContainer containerRoot = containerAsset.Instantiate();
+            // TemplateContainer containerRoot = containerAsset.Instantiate();
             List<VisualElement> gridBlockUIs = containerRoot.Query<VisualElement>(className: "GridBlock").ToList();
 
             if(gridBlockDatas.Length != gridBlockUIs.Count)
