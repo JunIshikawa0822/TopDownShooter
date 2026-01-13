@@ -5,6 +5,7 @@ public class InventorySceneEntry : ASceneEntryPointBase
 {
     [SerializeField] private InventoryView _inventoryView;
     [SerializeField] private InventoryEquipView _inventoryEquipView;
+    
     protected override void BuildDependencies()
     {
         RegisterDependency<InventoryView>(_inventoryView);

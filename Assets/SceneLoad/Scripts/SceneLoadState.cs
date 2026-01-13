@@ -6,5 +6,5 @@ public enum SceneLoadState
     Loading,
     Loaded,
     Unloading,
-    UnLoaded,
+    Unloaded,
 }

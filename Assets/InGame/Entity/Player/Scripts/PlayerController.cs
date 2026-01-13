@@ -10,6 +10,7 @@ public class PlayerController : AEntity, IWeaponHandler
     [SerializeField] private Transform _attackBaseTrans;
     //プレイヤーの移動速度倍率
     [SerializeField] private float _moveSpeed = 10f;
+    [SerializeField] private float _sprintMultiplier = 2;
     [SerializeField] private float _rotateSpeed = 500f;
     [SerializeField] private float _weaponRotationSpeed = 20;
     //プレイヤーの時間倍率（プレイヤーのみスローモーションにするなど用)
@@ -38,10 +39,13 @@ public class PlayerController : AEntity, IWeaponHandler
         _rigidbody = GetComponent<Rigidbody>();
     }
 
-    public override void Move(Vector3 direction)
+    public override void Move(Vector3 direction, bool isSprinting)
     {
         _localMoveDirection = GetLocalMovementAxes(direction);
-        _velocity = direction * _moveSpeed * _playerTime * Time.fixedDeltaTime;
+
+        float currentSpeed = isSprinting ? _moveSpeed * _sprintMultiplier : _moveSpeed;
+
+        _velocity = direction * currentSpeed * _playerTime * Time.fixedDeltaTime;
         _rigidbody.linearVelocity = _velocity;
 
         // 直接参照型でアニメーションに通知

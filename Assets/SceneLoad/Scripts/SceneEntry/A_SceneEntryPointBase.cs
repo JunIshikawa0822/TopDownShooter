@@ -6,6 +6,7 @@ using System;
 public abstract class ASceneEntryPointBase : MonoBehaviour, ISceneEntryPoint
 {
     private readonly Dictionary<Type, object> _dependenciesDic = new();
+    [SerializeField] private AdditiveSceneCleaner _sceneCleaner;
 
     protected virtual void Awake()
     {
@@ -18,7 +19,7 @@ public abstract class ASceneEntryPointBase : MonoBehaviour, ISceneEntryPoint
     protected abstract void BuildDependencies();
     protected virtual void OnSetUp()
     {
-        
+        _sceneCleaner.Execute();
     }
 
     //外部への公開をする型とインスタンスを登録する処理

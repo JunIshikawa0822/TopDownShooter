@@ -19,7 +19,7 @@ public class PlayerSystem : ASystem, IOnUpdate, IOnFixedUpdate
 
     public void OnFixedUpdate()
     {
-        gameStat.player.Move(gameStat.moveDirection);
+        gameStat.player.Move(gameStat.moveDirection, gameStat.isSprinting);
         //gameStat.player.Rotate(gameStat.moveDirection);
     }
 }

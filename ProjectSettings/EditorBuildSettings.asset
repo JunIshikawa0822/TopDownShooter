@@ -8,6 +8,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/InGame/Entity/Player/Scene/Player.unity
+    guid: 5e07bb4ade1d44b808f173539f696566
+  - enabled: 1
+    path: Assets/UI/Scene/TetrisInventory.unity
+    guid: 8b725fd22e95b4429b86db28bee7d476
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: be4ae48a7f9f94e3693f29f4303edc5e, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}

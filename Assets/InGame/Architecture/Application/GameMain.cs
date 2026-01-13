@@ -6,6 +6,7 @@ public class GameMain : MonoBehaviour
     [SerializeField]
     GameStatus _gameStat;
     GameEventBus _gameEvent;
+    SceneLoadBus _sceneLoadBus;
     List<ASystem> _allSystemsList;
     List<IOnUpdate> _allUpdateSystemsList;
     List<IOnPreUpdate> _allPreUpdateSystemsList;
@@ -16,12 +17,15 @@ public class GameMain : MonoBehaviour
     {
         _allSystemsList = new List<ASystem>
         {
+            new SceneSystem(),
             new InputSystem(),
             new WeaponSystem(),
-            new PlayerSystem()
+            new PlayerSystem(),
+            new InventorySystem()
         };
 
         _gameEvent = new();
+        _sceneLoadBus = new();
 
         _allUpdateSystemsList = new List<IOnUpdate>();
         _allPreUpdateSystemsList = new List<IOnPreUpdate>();
@@ -30,7 +34,7 @@ public class GameMain : MonoBehaviour
 
         foreach (ASystem system in _allSystemsList)
         {
-            system.Init(_gameStat, _gameEvent);
+            system.Init(_gameStat, _gameEvent, _sceneLoadBus);
 
             if (system is IOnUpdate) _allUpdateSystemsList.Add(system as IOnUpdate);
             if (system is IOnPreUpdate) _allPreUpdateSystemsList.Add(system as IOnPreUpdate);
@@ -59,5 +63,10 @@ public class GameMain : MonoBehaviour
     void LateUpdate()
     {
         foreach(IOnLateUpdate system in _allLateUpdateSystemList) system.OnLateUpdate();
+    }
+
+    void OnDisable()
+    {
+        
     }
 }
