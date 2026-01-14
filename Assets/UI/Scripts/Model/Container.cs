@@ -67,4 +67,35 @@ public class Container
         
         return result;
     }
+
+    /// <summary>
+    /// コンテナ全体からアイテムの空きスペースを探す
+    /// </summary>
+    /// <param name="itemData">配置したいアイテムのデータ</param>
+    /// <param name="allowRotation">回転を考慮するか</param>
+    public bool TryFindSpace(InventoryItemData itemData, bool allowRotation, out int blockIndex, out int x, out int y, out ItemDirection dir)
+    {
+        blockIndex = -1;
+        x = -1;
+        y = -1;
+        dir = ItemDirection.Up;
+
+        // 元のサイズを取得
+        int w = itemData.RuntimeData.BaseData.VisualData.Width;
+        int h = itemData.RuntimeData.BaseData.VisualData.Height;
+
+        for (int i = 0; i < _gridBlocks.Length; i++)
+        {
+            if (_gridBlocks[i].TryFindEmptySpot(w, h, allowRotation, out int fx, out int fy, out ItemDirection fDir))
+            {
+                blockIndex = i;
+                x = fx;
+                y = fy;
+                dir = fDir;
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

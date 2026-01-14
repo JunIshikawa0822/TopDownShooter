@@ -26,6 +26,7 @@ public class GameStatus
     public LayerMask targetLayerMask;
     public LayerMask obstacleLayerMask;
     public LayerMask groundLayerMask;
+    public LayerMask interactableMask;
 
     [Header("ObjectPool")]
     public Transform bulletPoolTrans;

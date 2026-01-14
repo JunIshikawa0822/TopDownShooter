@@ -13,9 +13,11 @@ public class InventorySystem : ASystem
         _inventoryModel = new Inventory();
         gameStat.inventoryModel = _inventoryModel;
 
+        //インベントリのシーンをロード
         sceneLoadBus.RequestRegisterCallback(SceneType.TetrisInventory, LoadUIScene);
         sceneLoadBus.RequestLoadScene(SceneType.TetrisInventory, RequestLoadState.Load);
 
+        //インベントリ表示/非表示メソッド登録
         gameEvents.inventoryActiveEvent += ToggleInventory;
     }
 
