@@ -127,8 +127,8 @@ namespace Game.UI
                 int count = gridBlockDatas[i].width * gridBlockDatas[i].height;
                 List<VisualElement> cellUIs = gridBlockUIs[i].Query<VisualElement>(className: "GridCell").ToList();
 
-                Debug.Log($"{gridBlockUIs.Count}");
-                Debug.Log($"{cellUIs.Count}個のcell");
+                //Debug.Log($"{gridBlockUIs.Count}");
+                //Debug.Log($"{cellUIs.Count}個のcell");
                 if(count != cellUIs.Count)
                 {
                     Debug.LogError($"{i}番めのgridblockでデータとUIが異なります");

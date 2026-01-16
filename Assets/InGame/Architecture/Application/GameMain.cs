@@ -21,7 +21,9 @@ public class GameMain : MonoBehaviour
             new InputSystem(),
             new WeaponSystem(),
             new PlayerSystem(),
-            new InventorySystem()
+            new InventorySystem(),
+            new InteractSystem(),
+            new ItemSystem()
         };
 
         _gameEvent = new();

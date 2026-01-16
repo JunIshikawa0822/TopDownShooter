@@ -22,8 +22,8 @@ public abstract class AGunBase<TRuntimeData> : AWeaponBase<TRuntimeData>, IGun<T
     public override void Initialize(TRuntimeData gunData)
     {
         base.Initialize(gunData);
-        Debug.Log("Initialized");
-        Debug.Log(RuntimeData.GunBaseData.BulletSpawnPos);
+        //Debug.Log("Initialized");
+        //Debug.Log(RuntimeData.GunBaseData.BulletSpawnPos);
         _muzzleTrans.localPosition = RuntimeData.GunBaseData.BulletSpawnPos;
 
         _muzzleLight.enabled = false;
@@ -77,18 +77,18 @@ public abstract class AGunBase<TRuntimeData> : AWeaponBase<TRuntimeData>, IGun<T
         return true;
     }
 
-
     //マガジンで給弾するかどうか　trueで給弾、falseは直接
-    protected virtual void SpawnBullet()
-    {
-        Bullet bullet = _bulletSurvice.GetBullet();
-        if (bullet == null)return;
+    // protected virtual void SpawnBullet()
+    // {
+    //     Bullet bullet = _bulletSurvice.GetBullet();
+    //     if (bullet == null)return;
 
-        bullet.transform.position = _muzzleTrans.position;
-        bullet.transform.SetPositionAndRotation(_muzzleTrans.position, _muzzleTrans.rotation);
-        bullet.Init(_weaponRuntimeData.CurrentAmmoData, _muzzleTrans.forward, _weaponRuntimeData.BulletVelocity, _weaponRuntimeData.MaxRange);
-    }
+    //     bullet.transform.position = _muzzleTrans.position;
+    //     bullet.transform.SetPositionAndRotation(_muzzleTrans.position, _muzzleTrans.rotation);
+    //     bullet.Init(_weaponRuntimeData.CurrentAmmoData, _muzzleTrans.forward, _weaponRuntimeData.BulletVelocity, _weaponRuntimeData.MaxRange);
+    // }
 
+    //計算で弾を飛ばすのに必要
     protected Vector3 GetDestination(Vector3 startPos, Vector3 dir)
     {
         Vector3 destination = dir * _weaponRuntimeData.MaxRange;
@@ -100,28 +100,31 @@ public abstract class AGunBase<TRuntimeData> : AWeaponBase<TRuntimeData>, IGun<T
         return destination;
     }
 
-    protected void SetRayBullet()
+    //計算で弾を飛ばすのに必要
+    protected void SetBullet()
     {
-        Vector3 destination = GetDestination(_muzzleTrans.position, _muzzleTrans.forward);
-        float range = Vector3.Distance(_muzzleTrans.position, destination);
+        Vector3 destinationPoint = GetDestination(_muzzleTrans.position, _muzzleTrans.forward);
+        float range = Vector3.Distance(_muzzleTrans.position, destinationPoint);
+
+        // _bulletSurvice.BulletInit
+        // (
+        //     _muzzleTrans.position,
+        //     _muzzleTrans.forward,
+        //     range,
+        //     _weaponRuntimeData.BulletVelocity,
+        //     _collideLayerMask,
+        //     DamageInvoke
+        // );
 
         _bulletSurvice.BulletInit
         (
+            _weaponRuntimeData.CurrentAmmoData,
             _muzzleTrans.position,
             _muzzleTrans.forward,
             range,
             _weaponRuntimeData.BulletVelocity,
-            _collideLayerMask,
-            DamageInvoke
+            _collideLayerMask
         );
-    }
-
-    protected void DamageInvoke(RaycastHit opponent)
-    {
-        if(opponent.transform.TryGetComponent<IDamagable>(out IDamagable  damagable))
-        {
-            
-        }
     }
 
     protected IEnumerator InvokeMuzzleFlash()
@@ -129,7 +132,7 @@ public abstract class AGunBase<TRuntimeData> : AWeaponBase<TRuntimeData>, IGun<T
         // コルーチンが開始された瞬間にライトをONにするため、VFXと同時になる
         _muzzleLight.enabled = true; // ★ライト点灯★
         _muzzleFlash.SendEvent("OnPlay");
-        Debug.Log("ライト");
+//        Debug.Log("ライト");
 
         // LIGHT_DURATION (例: 0.05秒) 待機
         yield return new WaitForSeconds(0.15f);

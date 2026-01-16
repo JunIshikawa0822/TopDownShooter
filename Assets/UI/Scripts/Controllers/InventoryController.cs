@@ -43,7 +43,7 @@ public class InventoryController : AUIController
 
     public void CraetePlayerContainer()
     {
-        ContainerData playerContainerData = Resources.Load<ContainerData>("Player_Test");
+        ContainerData playerContainerData = Resources.Load<ContainerData>("BackPack_1");
         AddContainer(playerContainerData);
     }
 

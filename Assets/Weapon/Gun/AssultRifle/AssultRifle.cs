@@ -1,5 +1,6 @@
 using Game.Data;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class AssultRifle : AGunBase<GunRuntimeData>
 {
@@ -11,10 +12,13 @@ public class AssultRifle : AGunBase<GunRuntimeData>
             return;
         }
         
-        if(!TryConsumeBullets())
+        if(_gunService.IsBulletConsume())
         {
-            Debug.Log("弾の消費に問題");
-            return;
+            if(!TryConsumeBullets())
+            {
+                Debug.Log("弾の消費に問題");
+                return;
+            }
         }
 
         if(!TryClipCheck())
@@ -23,13 +27,13 @@ public class AssultRifle : AGunBase<GunRuntimeData>
             return;
         }
         
-        Debug.Log("撃った");
+//        Debug.Log("撃った");
         _gunService.StartShooting(this);
-        SpawnBullet();
-        _gunService.RecordShotTime(this);
-
-        StartCoroutine(InvokeMuzzleFlash());
         
+        SetBullet();
+        _gunService.RecordShotTime(this);
+        
+        StartCoroutine(InvokeMuzzleFlash());
     }
     public override void AttackProcess()
     {
@@ -42,14 +46,12 @@ public class AssultRifle : AGunBase<GunRuntimeData>
             if(!TryConsumeBullets())return;
             if(!TryClipCheck())return;
 
-            Debug.Log("撃ってる");
-            SpawnBullet();
+            SetBullet();
             _gunService.RecordShotTime(this);
 
             StartCoroutine(InvokeMuzzleFlash());
         }
     }
-
     public override void AttackEnd()
     {
         _gunService.StopShooting(this);

@@ -23,7 +23,8 @@ namespace Game.Data
         public IReadOnlyList<AttachmentSlotRuntimeData> Slots => _slots;
         
         public float FireRate => _currentStats[(int)GunStatType.FireRate];
-        public float Recoil => _currentStats[(int)GunStatType.Recoil];
+        public float HorizontalRecoil => _currentStats[(int)GunStatType.HorizontalRecoil];
+        public float VerticalRecoil => _currentStats[(int)GunStatType.VerticalRecoil];
         public float Accuracy => _currentStats[(int)GunStatType.Accuracy];
         public float BulletVelocity => _currentStats[(int)GunStatType.BulletVelocity];
         public float MaxRange => _currentStats[(int)GunStatType.MaxRange];
@@ -40,7 +41,7 @@ namespace Game.Data
 
             // // ---ベース値を配列に格納---
             _baseStats[(int)GunStatType.FireRate] = baseData.FireRate;
-            _baseStats[(int)GunStatType.Recoil] = baseData.Recoil;
+            _baseStats[(int)GunStatType.HorizontalRecoil] = baseData.HorizontalRecoil;
             _baseStats[(int)GunStatType.Accuracy] = baseData.Accuracy;
             _baseStats[(int)GunStatType.BulletVelocity] = baseData.BulletVelocity;
             _baseStats[(int)GunStatType.MaxRange] = baseData.MaxRange;
@@ -219,7 +220,7 @@ namespace Game.Data
             //最初からmagazineがデータに設定されていない
             if(slotData == null)
             {
-                Debug.Log("マガジンがありません");
+//                Debug.Log("マガジンがありません");
                 if(GunBaseData.InternalAmmoMax <= 0)
                 {
                     Debug.Log("Internal（マガジンを用いない弾数管理）も設定されていません");
@@ -234,8 +235,8 @@ namespace Game.Data
                     return false;
                 }
 
-                Debug.Log("Internal（マガジンを用いない弾数管理）が設定されています");
-                Debug.Log("弾を減らします");
+//                Debug.Log("Internal（マガジンを用いない弾数管理）が設定されています");
+//                Debug.Log("弾を減らします");
                 _internalAmmoRemaining--;
                 return true;
             }

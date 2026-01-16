@@ -2,6 +2,6 @@ using UnityEngine;
 
 public enum SceneType
 {
-    TetrisInventory
-
+    TetrisInventory,
+    InteractUI
 }

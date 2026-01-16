@@ -34,7 +34,7 @@ public class Container
 
         _gridBlocks[gridBlockIndex].PlaceToGrid(item, x, y, dir);
 
-        _currentWeight += item.RuntimeData.BaseData.Weight * item.RuntimeData.StackCount;
+        _currentWeight += item.RuntimeData.CurrentWeight;
 
         return true;
     }
