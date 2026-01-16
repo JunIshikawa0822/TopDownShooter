@@ -27,10 +27,11 @@ MonoBehaviour:
   _fireType: 2
   _burstCount: 0
   _fireRate: 5
-  _recoil: 10
+  _horizontalRecoil: 0
+  _verticalRecoil: 0
   _accuracy: 10
-  _bulletVelocity: 3
-  _maxRange: 0
+  _bulletVelocity: 100
+  _maxRange: 20
   _bulletSpawnPos: {x: 0, y: 0.061, z: 0.777}
   _ableAttachmentSlots:
   - _slotID: Scope

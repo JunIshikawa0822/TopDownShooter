@@ -38,12 +38,12 @@ public class AdditiveSceneCleaner : MonoBehaviour
                 {
                     if (destroyGameObject)
                     {
-                        Debug.Log($"[Cleaner] 重複を検知して削除しました: {comp.gameObject.name} ({typeName})");
+                        //Debug.Log($"[Cleaner] 重複を検知して削除しました: {comp.gameObject.name} ({typeName})");
                         Destroy(comp.gameObject);
                     }
                     else
                     {
-                        Debug.Log($"[Cleaner] 重複を検知してSetActiveをオフにしました: {comp.gameObject.name} ({typeName})");
+                        //Debug.Log($"[Cleaner] 重複を検知してSetActiveをオフにしました: {comp.gameObject.name} ({typeName})");
                         comp.gameObject.SetActive(false);
                     }  
                 }

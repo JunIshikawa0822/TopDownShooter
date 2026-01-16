@@ -10,6 +10,7 @@ public class InputSystem : ASystem, IOnPreUpdate
     private LayerMask _targetLayerMask;
     private LayerMask _obstacleLayerMask;
     private LayerMask _combinedLayerMask;
+    private bool _prevInventoryOpen;
     public override void OnSetUp()
     {
         _gameInputs = new InputSystem_Actions();
@@ -25,9 +26,13 @@ public class InputSystem : ASystem, IOnPreUpdate
         _gameInputs.Player.Sprint.started += OnSprintStartInput;
         _gameInputs.Player.Sprint.canceled += OnSprintEndInput;
 
+        _gameInputs.Player.Interact.started += OnInteractInput;
+
         _gameInputs.System.Inventory.started += OnInventoryInput;
 
         _gameInputs.System.Enable();
+
+        _prevInventoryOpen = gameStat.isInventoryOpen;
         SwitchInputMode(gameStat.isInventoryOpen);
 
         _targetLayerMask = gameStat.targetLayerMask;
@@ -41,9 +46,15 @@ public class InputSystem : ASystem, IOnPreUpdate
 
         if (!gameStat.isInventoryOpen)
         {
-        _baseTrans = gameStat.player.AttackBaseTrans;
-        gameStat.worldPosition = GetCursorPos(_screenPosition);
-        gameStat.cursorTrans.transform.position = gameStat.worldPosition;
+            _baseTrans = gameStat.player.AttackBaseTrans;
+            gameStat.worldPosition = GetCursorPos(_screenPosition);
+            gameStat.cursorTrans.transform.position = gameStat.worldPosition;
+        }
+
+        if (_prevInventoryOpen != gameStat.isInventoryOpen)
+        {
+            SwitchInputMode(gameStat.isInventoryOpen);
+            _prevInventoryOpen = gameStat.isInventoryOpen;
         }
     }
 
@@ -149,7 +160,9 @@ public class InputSystem : ASystem, IOnPreUpdate
 
     private void OnInteractInput(InputAction.CallbackContext context)
     {
-
+        Debug.Log("Fを押した");
+        gameEvents.interactEvent?.Invoke();
+        Debug.Log($"インベントリは{gameStat.isInventoryOpen}");
     }
 
     private void OnCrouchInput(InputAction.CallbackContext context)
@@ -175,27 +188,21 @@ public class InputSystem : ASystem, IOnPreUpdate
     private void OnInventoryInput(InputAction.CallbackContext context)
     {
         gameStat.isInventoryOpen = !gameStat.isInventoryOpen;
-        Debug.Log(gameStat.isInventoryOpen);
-
-        SwitchInputMode(gameStat.isInventoryOpen);
-        gameEvents.inventoryActiveEvent?.Invoke();
+        gameEvents.inventoryToggleEvent?.Invoke();
     }
 
     private void SwitchInputMode(bool isInventoryOpen)
     {
         if (isInventoryOpen)
         {
-            //インベントリが開いた時
-            _gameInputs.Player.Disable();//移動・攻撃を無効化
-            _gameInputs.UI.Enable();//UI操作を有効化
+            _gameInputs.Player.Disable();
+            _gameInputs.UI.Enable();
             
-            //移動入力を物理的に止める
             gameStat.moveDirection = Vector3.zero;
             gameStat.isPressProcessing = false;
         }
         else
         {
-            // ゲームプレイに戻る時
             _gameInputs.UI.Disable();
             _gameInputs.Player.Enable();
         }

@@ -104,4 +104,82 @@ public class GridBlock
         _guidDic[item.ItemDataGuid] = item;
         _items.Add(item);
     }
+
+    /// <summary>
+    /// 指定されたサイズの空きスペースを探す。
+    /// </summary>
+    /// <param name="allowRotation">回転を考慮するかどうか</param>
+    public bool TryFindEmptySpot(int itemWidth, int itemHeight, bool allowRotation, out int x, out int y, out ItemDirection finalDir)
+    {
+        x = -1;
+        y = -1;
+        finalDir = ItemDirection.Up;
+
+        // 1. デフォルトの向き (Up) で探索
+        if (SearchAtDirection(itemWidth, itemHeight, out x, out y))
+        {
+            finalDir = ItemDirection.Up;
+            return true;
+        }
+
+        // 2. 回転を許可する場合、横向き (Right) で探索
+        if (allowRotation && itemWidth != itemHeight) // 正方形なら回転不要
+        {
+            if (SearchAtDirection(itemHeight, itemWidth, out x, out y))
+            {
+                finalDir = ItemDirection.Right;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// 特定の向き・サイズでグリッド内を走査する内部メソッド
+    /// </summary>
+    private bool SearchAtDirection(int searchWidth, int searchHeight, out int foundX, out int foundY)
+    {
+        foundX = -1;
+        foundY = -1;
+
+        // ループ範囲を最初からはみ出さない範囲に限定 (最適化)
+        int endX = _gridWidth - searchWidth;
+        int endY = _gridHeight - searchHeight;
+
+        for (int j = 0; j <= endY; ++j)
+        {
+            for (int i = 0; i <= endX; ++i)
+            {
+                if (CheckAreaEmpty(i, j, searchWidth, searchHeight))
+                {
+                    foundX = i;
+                    foundY = j;
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// 指定された範囲が完全に空いているかチェックする共通ロジック
+    /// </summary>
+    private bool CheckAreaEmpty(int startX, int startY, int itemWidth, int itemHeight)
+    {
+        // ループ範囲外のアクセスがないか念のためのガード
+        if (startX < 0 || startY < 0 || startX + itemWidth > _gridWidth || startY + itemHeight > _gridHeight) return false;
+
+        for (int dy = 0; dy < itemHeight; ++dy)
+        {
+            for (int dx = 0; dx < itemWidth; ++dx)
+            {
+                if (_grid[startX + dx, startY + dy] != null)
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 }

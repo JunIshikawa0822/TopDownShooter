@@ -26,10 +26,8 @@ public class WeaponSystem : ASystem, IOnUpdate, IOnFixedUpdate
             {WeaponType.Handgun, new ObjectPool<AWeaponBase>(gameStat.gunPoolTrans, new Factory_Handgun(gameStat.handgunPrefab/*, _bulletPool*/), "Handgun")},
             {WeaponType.AssultRifle, new ObjectPool<AWeaponBase>(gameStat.gunPoolTrans, new Factory_AssultRifle(gameStat.assultRiflePrefab/*, _bulletPool*/), "AssultRifle")},
             {WeaponType.SniperRifle, new ObjectPool<AWeaponBase>(gameStat.gunPoolTrans, new Factory_SniperRifle(gameStat.sniperRiflePrefab/*, _bulletPool*/), "SnipeRifle")},
-            {WeaponType.SubMachineGun, new ObjectPool<AWeaponBase>(gameStat.gunPoolTrans, new Factory_SubMachinegun(gameStat.subMachinegunPrefab/*, _bulletPool*/), "SubMachinegun")},
+            {WeaponType.SubMachinegun, new ObjectPool<AWeaponBase>(gameStat.gunPoolTrans, new Factory_SubMachinegun(gameStat.subMachinegunPrefab/*, _bulletPool*/), "SubMachinegun")},
             {WeaponType.Shotgun, new ObjectPool<AWeaponBase>(gameStat.gunPoolTrans, new Factory_Shotgun(gameStat.shotgunPrefab/*, _bulletPool*/), "Shotgun")},
-
-            {WeaponType.AssultRifle_Ray, new ObjectPool<AWeaponBase>(gameStat.gunPoolTrans, new Factory_AssultRifle_Ray(gameStat.assultRifleRayPrefab/*, _bulletPool*/), "AssultRifle_Ray")},
         };
 
         foreach(KeyValuePair<WeaponType, IObjectPool<AWeaponBase>> set in _weaponFactories)
@@ -37,7 +35,7 @@ public class WeaponSystem : ASystem, IOnUpdate, IOnFixedUpdate
             set.Value.PoolSetUp(2);
         }
 
-        _bulletService = new(_bulletPool, _bulletVisualPool);
+        _bulletService = new(/*_bulletPool,*/ _bulletVisualPool);
         _gunService = new();
 
         //こっからテスト用コード

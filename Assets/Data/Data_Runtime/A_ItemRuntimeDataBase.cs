@@ -11,6 +11,7 @@ namespace Game.Data
 
         public ItemData BaseData => _itemData;
         public int StackCount => _stackCount;
+        public float CurrentWeight => _stackCount * BaseData.Weight;
         public int MaxStack => BaseData.MaxStack;
         public ItemType ItemType => BaseData.ItemType;
         public bool CanStack => MaxStack > 1;

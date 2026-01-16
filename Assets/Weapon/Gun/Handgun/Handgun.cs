@@ -10,7 +10,7 @@ public class Handgun : AGunBase<GunRuntimeData>
         if(!TryConsumeBullets())return;
         if(!TryClipCheck())return;
         
-        SpawnBullet();
+        SetBullet();
         _gunService.RecordShotTime(this);
         
     }
@@ -24,7 +24,7 @@ public class Handgun : AGunBase<GunRuntimeData>
             if(!TryConsumeBullets())return;
             if(!TryClipCheck())return;
 
-            SpawnBullet();
+            SetBullet();
             _gunService.RecordShotTime(this);
             
         }

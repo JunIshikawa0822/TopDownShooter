@@ -1,5 +1,6 @@
 using System;
 using Game.Data;
+using Game.UI;
 using UnityEngine;
 
 [System.Serializable]
@@ -26,6 +27,7 @@ public class GameStatus
     public LayerMask targetLayerMask;
     public LayerMask obstacleLayerMask;
     public LayerMask groundLayerMask;
+    public LayerMask interactableMask;
 
     [Header("ObjectPool")]
     public Transform bulletPoolTrans;
@@ -43,16 +45,22 @@ public class GameStatus
     public SniperRifle sniperRiflePrefab;
     public Shotgun shotgunPrefab;
 
-    public AssultRifle_Ray assultRifleRayPrefab;
+    //public AssultRifle_Ray assultRifleRayPrefab;
 
     [Header("PlayerInventory")]
-    public bool isInventoryOpen = false;
     //テスト用データ
     public WeaponData playerWeaponData;
-    //インベントリモデル
-    public Inventory inventoryModel;
+    [HideInInspector]public bool isInventoryOpen = false;
+    
     //テスト用ランタイムデータ
     [HideInInspector]public AWeaponRuntimeDataBase playerWeaponRuntimeData;
     //テスト用所持武器オブジェクト
     [HideInInspector]public AWeaponBase playerEquipWeapon;
+
+    //シーンのロードに関する部分
+    //インベントリモデル
+    [HideInInspector] public Inventory inventoryModel;
+    [HideInInspector] public InventoryView inventoryView;
+    [HideInInspector] public InventoryEquipView inventoryEquipView;
+    [HideInInspector] public InteractView interactView;
 }

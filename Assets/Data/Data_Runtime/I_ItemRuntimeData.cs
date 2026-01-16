@@ -8,6 +8,7 @@ namespace Game.Data
         ItemData BaseData { get; } // 元の ScriptableObject データ
         int StackCount { get; }    // 現在のスタック数
         int MaxStack { get; }      // スタック上限
+        float CurrentWeight{get;} //重量
         ItemType ItemType { get; } // アイテムの種類
         bool CanStack { get; }     // スタック可能か
 

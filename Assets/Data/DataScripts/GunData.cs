@@ -10,9 +10,10 @@ namespace Game.Data
         [Header("射撃設定")]
         [SerializeField] private FireType _fireType;//射撃タイプ（セミ・フル・バーストなど）
         [SerializeField] private int _burstCount;//バーストの場合、何連か
-        [SerializeField] private float _fireRate;//発射間隔（1秒間に何発打てるか）
-        [SerializeField] private float _recoil;//反動値
-        [SerializeField] private float _accuracy;//命中精度
+        [SerializeField] private int _fireRate;//発射間隔（1秒間に何発打てるか）
+        [SerializeField] private float _horizontalRecoil;//水平反動値
+        [SerializeField] private float _verticalRecoil;//垂直反動値
+        [SerializeField] private float _accuracy;//命中精度？？？
         [SerializeField] private float _bulletVelocity;//弾速
         [SerializeField] private float _maxRange;//射程距離
 
@@ -29,8 +30,8 @@ namespace Game.Data
 
         public FireType FireType => _fireType;
         public int BurstCount => _burstCount;
-        public float FireRate => _fireRate;
-        public float Recoil => _recoil;
+        public int FireRate => _fireRate;
+        public float HorizontalRecoil => _horizontalRecoil;
         public float Accuracy => _accuracy;
         public float BulletVelocity => _bulletVelocity;
         public float MaxRange => _maxRange;
@@ -44,7 +45,8 @@ namespace Game.Data
 public enum GunStatType
 {
     FireRate,
-    Recoil,
+    HorizontalRecoil,
+    VerticalRecoil,
     Accuracy,
     BulletVelocity,
     MaxMagazineCapacity,
