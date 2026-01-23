@@ -8,7 +8,7 @@ namespace Game.Data
     [Serializable]
     public class GunRuntimeData : AWeaponRuntimeDataBase
     {
-        private readonly List<AttachmentSlotRuntimeData> _slots = new List<AttachmentSlotRuntimeData>();
+        private readonly List<GunAttachmentSlotRuntimeData> _slots = new List<GunAttachmentSlotRuntimeData>();
         private readonly float[] _baseStats = new float[(int)GunStatType.Count];
         private readonly float[] _currentStats = new float[(int)GunStatType.Count];
         private FireType _fireType;//射撃モード
@@ -20,7 +20,7 @@ namespace Game.Data
 
         #region プロパティ
         public GunData GunBaseData => BaseData as GunData;
-        public IReadOnlyList<AttachmentSlotRuntimeData> Slots => _slots;
+        public IReadOnlyList<GunAttachmentSlotRuntimeData> Slots => _slots;
         
         public float FireRate => _currentStats[(int)GunStatType.FireRate];
         public float HorizontalRecoil => _currentStats[(int)GunStatType.HorizontalRecoil];
@@ -48,17 +48,17 @@ namespace Game.Data
 
             Array.Copy(_baseStats, _currentStats, _baseStats.Length);
 
-            foreach (AttachmentSlotData slot in baseData.AbleAttachmentSlots)
+            foreach (GunAttachmentSlotData slot in baseData.AbleAttachmentSlots)
             {
-                AttachmentRuntimeData defaultAttachment = null;
+                GunAttachmentRuntimeData defaultAttachment = null;
 
                 if (slot.DefaultAttachmentData != null)
                 {
                     //デフォルトアタッチメントのデータが存在する場合のみ、インスタンスを生成
-                    defaultAttachment = new AttachmentRuntimeData(slot.DefaultAttachmentData);
+                    defaultAttachment = new GunAttachmentRuntimeData(slot.DefaultAttachmentData);
                 }
 
-                AttachmentSlotRuntimeData runtimeSlot = new AttachmentSlotRuntimeData
+                GunAttachmentSlotRuntimeData runtimeSlot = new GunAttachmentSlotRuntimeData
                 (
                     slot,
                     slot.SlotID,
@@ -82,9 +82,9 @@ namespace Game.Data
             float[] addBuffer = new float[_currentStats.Length];
             float[] mulBuffer = new float[_currentStats.Length];
 
-            foreach (AttachmentSlotRuntimeData slot in _slots)
+            foreach (GunAttachmentSlotRuntimeData slot in _slots)
             {
-                AttachmentRuntimeData attachment = slot.EquippedAttachment;
+                GunAttachmentRuntimeData attachment = slot.EquippedAttachment;
                 if (attachment == null || attachment.Modifiers == null)
                     continue;
 
@@ -102,12 +102,12 @@ namespace Game.Data
         }
 
         //標準的なアタッチメント装着　スロットIDを指定して入れ替え
-        public bool TryEquipAttachment(string slotID, AttachmentRuntimeData attachment)
+        public bool TryEquipAttachment(string slotID, GunAttachmentRuntimeData attachment)
         {
             if (attachment == null) return false;
 
             // 対応するスロットを探す
-            AttachmentSlotRuntimeData slot = _slots.FirstOrDefault(s => s.SlotId == slotID);
+            GunAttachmentSlotRuntimeData slot = _slots.FirstOrDefault(s => s.SlotId == slotID);
             if (slot == null) return false;
 
             bool equipped = slot.Equip(attachment);
@@ -115,38 +115,38 @@ namespace Game.Data
         }
 
         //標準的なアタッチメント取り外し
-        public AttachmentRuntimeData UnEquipAttachmentByID(string slotID)
+        public GunAttachmentRuntimeData UnEquipAttachmentByID(string slotID)
         {
-            AttachmentSlotRuntimeData slot = FindSlotByID(slotID);
-            if(slot.EquippedAttachment is AttachmentRuntimeData_Magazine)_currentLoadedAmmoData = null;
+            GunAttachmentSlotRuntimeData slot = FindSlotByID(slotID);
+            if(slot.EquippedAttachment is GunAttachmentRuntimeData_Magazine)_currentLoadedAmmoData = null;
             if (slot == null) return null;
 
-            AttachmentRuntimeData data = slot.UnEquip();
+            GunAttachmentRuntimeData data = slot.UnEquip();
             return data;
         }
 
-        public AttachmentRuntimeData UnEquipAttachmentByType(AttachmentType type)
+        public GunAttachmentRuntimeData UnEquipAttachmentByType(AttachmentType type)
         {
-            AttachmentSlotRuntimeData slot = FindSlotByType(type);
-            if(slot.EquippedAttachment is AttachmentRuntimeData_Magazine)_currentLoadedAmmoData = null;
+            GunAttachmentSlotRuntimeData slot = FindSlotByType(type);
+            if(slot.EquippedAttachment is GunAttachmentRuntimeData_Magazine)_currentLoadedAmmoData = null;
             if (slot == null) return null;
 
-            AttachmentRuntimeData data = slot.UnEquip();
+            GunAttachmentRuntimeData data = slot.UnEquip();
             return data;
         }
 
         //マガジンを使う場合のリロード
-        public AttachmentRuntimeData Reload(AttachmentRuntimeData_Magazine newMagazine)
+        public GunAttachmentRuntimeData Reload(GunAttachmentRuntimeData_Magazine newMagazine)
         {
-            if (newMagazine == null || newMagazine.AttachmentData.attachmentType != AttachmentType.Magazine)
+            if (newMagazine == null || newMagazine.AttachmentData.AttachmentType != AttachmentType.Magazine)
                 return null;
 
             //マガジンスロットを取得
-            AttachmentSlotRuntimeData slot = FindSlotByType(AttachmentType.Magazine);
+            GunAttachmentSlotRuntimeData slot = FindSlotByType(AttachmentType.Magazine);
             if (slot == null) return null;
 
             // 既存マガジンを退避
-            AttachmentRuntimeData oldMagazine = slot.UnEquip();
+            GunAttachmentRuntimeData oldMagazine = slot.UnEquip();
 
             // 新しいマガジンを装着
             slot.Equip(newMagazine);
@@ -165,27 +165,27 @@ namespace Game.Data
             return loadAmmoNum - loadCount;
         }
 
-        private AttachmentSlotRuntimeData FindSlotByID(string slotID)
+        private GunAttachmentSlotRuntimeData FindSlotByID(string slotID)
         {
             return _slots.FirstOrDefault(s => s.SlotId == slotID);
         }
 
-        private AttachmentSlotRuntimeData FindSlotByType(AttachmentType type)
+        private GunAttachmentSlotRuntimeData FindSlotByType(AttachmentType type)
         {
             return _slots.FirstOrDefault(s => s.SlotType == type);
         }
 
-        public AttachmentRuntimeData GetAttachmentByID(string slotID)
+        public GunAttachmentRuntimeData GetAttachmentByID(string slotID)
         {
-            AttachmentSlotRuntimeData slot = FindSlotByID(slotID);
+            GunAttachmentSlotRuntimeData slot = FindSlotByID(slotID);
             if (slot == null) return null;
 
             return slot.EquippedAttachment;
         }
 
-        public AttachmentRuntimeData GetAttachmentByType(AttachmentType type)
+        public GunAttachmentRuntimeData GetAttachmentByType(AttachmentType type)
         {
-            AttachmentSlotRuntimeData slot = FindSlotByType(type);
+            GunAttachmentSlotRuntimeData slot = FindSlotByType(type);
             if (slot == null) return null;
 
             return slot.EquippedAttachment;
@@ -193,7 +193,7 @@ namespace Game.Data
 
         public Vector3 GetAttachmentPos(AttachmentType type)
         {
-            AttachmentSlotRuntimeData slot = FindSlotByType(type);
+            GunAttachmentSlotRuntimeData slot = FindSlotByType(type);
             if (slot == null) return Vector3.zero;
 
             return slot.BaseData.SlotPosition;
@@ -201,7 +201,7 @@ namespace Game.Data
 
         public Quaternion GetAttachmentRot(AttachmentType type)
         {
-            AttachmentSlotRuntimeData slot = FindSlotByType(type);
+            GunAttachmentSlotRuntimeData slot = FindSlotByType(type);
             if (slot == null) return Quaternion.identity;
 
             return slot.BaseData.SlotRotation;
@@ -210,7 +210,7 @@ namespace Game.Data
         public bool TryConsumeRuntimeBullets()
         {
             //magazineがある？
-            AttachmentSlotRuntimeData slotData = FindSlotByType(AttachmentType.Magazine);
+            GunAttachmentSlotRuntimeData slotData = FindSlotByType(AttachmentType.Magazine);
             // if(_currentLoadedAmmoData == null)
             // {
             //     Debug.Log("AmmoDataがないよ");
@@ -242,7 +242,7 @@ namespace Game.Data
             }
 
             Debug.Log("マガジンが設定されています");
-            if(slotData.EquippedAttachment is AttachmentRuntimeData_Magazine magazine)
+            if(slotData.EquippedAttachment is GunAttachmentRuntimeData_Magazine magazine)
             {
                 bool canConsume = magazine.ConsumeBullet();
                 if(!canConsume)

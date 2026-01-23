@@ -10,6 +10,7 @@ namespace Game.Data
         private readonly ItemData _itemData;
 
         public ItemData BaseData => _itemData;
+        public ItemVisualData VisualData => _itemData.VisualData;
         public int StackCount => _stackCount;
         public float CurrentWeight => _stackCount * BaseData.Weight;
         public int MaxStack => BaseData.MaxStack;

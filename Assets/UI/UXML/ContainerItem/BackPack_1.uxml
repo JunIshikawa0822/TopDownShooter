@@ -1,6 +1,6 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <ui:Template name="GridCell" src="project://database/Assets/UITest/Resources/GridCell.uxml?fileID=9197481963319205126&amp;guid=497836bd179d749e591828875b43d820&amp;type=3#GridCell" />
-    <Style src="project://database/Assets/UITest/Container.uss?fileID=7433441132597879392&amp;guid=6bb4d475ad30e41a68373b4aac9a3a05&amp;type=3#Container" />
+    <ui:Template name="GridCell" src="project://database/Assets/UI/UXML/GridCell.uxml?fileID=9197481963319205126&amp;guid=497836bd179d749e591828875b43d820&amp;type=3#GridCell" />
+    <Style src="project://database/Assets/UI/USS/Container.uss?fileID=7433441132597879392&amp;guid=6bb4d475ad30e41a68373b4aac9a3a05&amp;type=3#Container" />
     <ui:VisualElement name="containeritem__root" class="containeritem__root" style="flex-grow: 0; margin-bottom: 20px; width: 100%;">
         <ui:VisualElement name="containerItem__header" class="containeritem__header" style="flex-grow: 0;">
             <ui:Label text="BackPack_1" name="containeritem__header-text" class="containeritem__header-text" />

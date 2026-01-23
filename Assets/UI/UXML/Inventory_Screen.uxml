@@ -1,6 +1,6 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <ui:Template name="Inventory_Equip" src="project://database/Assets/UITest/Inventory_Equip.uxml?fileID=9197481963319205126&amp;guid=a330e00881c3c478aae73ca22e618fe3&amp;type=3#Inventory_Equip" />
-    <ui:Template name="Inventory_Container" src="project://database/Assets/UITest/Inventory_Container.uxml?fileID=9197481963319205126&amp;guid=75b18708462c347d9b9699f417b0e67a&amp;type=3#Inventory_Container" />
+    <ui:Template name="Inventory_Equip" src="project://database/Assets/UI/UXML/Inventory_Equip.uxml?fileID=9197481963319205126&amp;guid=a330e00881c3c478aae73ca22e618fe3&amp;type=3#Inventory_Equip" />
+    <ui:Template name="Inventory_Container" src="project://database/Assets/UI/UXML/Inventory_Container.uxml?fileID=9197481963319205126&amp;guid=75b18708462c347d9b9699f417b0e67a&amp;type=3#Inventory_Container" />
     <ui:VisualElement name="inventory__screen" style="flex-grow: 1; position: absolute; width: 100%; height: 100%; flex-direction: row; align-items: stretch;">
         <ui:Instance template="Inventory_Equip" style="flex-grow: 1; flex-basis: 0%;" />
         <ui:VisualElement name="gap" style="flex-grow: 1; flex-basis: 0%;" />

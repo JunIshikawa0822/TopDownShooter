@@ -51,8 +51,8 @@ public class InventoryItemData
     public IEnumerable<(int x, int y)> GetOccupiedCells()
     {
         // 回転方向に応じてサイズを入れ替え
-        int width  = _direction == ItemDirection.Up ? RuntimeData.BaseData.VisualData.Width  :  RuntimeData.BaseData.VisualData.Height;
-        int height = _direction == ItemDirection.Up ? RuntimeData.BaseData.VisualData.Height : RuntimeData.BaseData.VisualData.Width;
+        int width  = _direction == ItemDirection.Up ? RuntimeData.VisualData.Width  :  RuntimeData.VisualData.Height;
+        int height = _direction == ItemDirection.Up ? RuntimeData.VisualData.Height : RuntimeData.VisualData.Width;
 
         for (int dx = 0; dx < width; ++dx)
         {
@@ -66,8 +66,8 @@ public class InventoryItemData
     public IEnumerable<(int x, int y)> CalculateOccupiedCells(int originX, int originY, ItemDirection direction)
     {
         // 回転方向に応じてサイズを入れ替え
-        int width  = direction == ItemDirection.Up ? RuntimeData.BaseData.VisualData.Width  :  RuntimeData.BaseData.VisualData.Height;
-        int height = direction == ItemDirection.Up ? RuntimeData.BaseData.VisualData.Height : RuntimeData.BaseData.VisualData.Width;
+        int width  = direction == ItemDirection.Up ? RuntimeData.VisualData.Width  :  RuntimeData.VisualData.Height;
+        int height = direction == ItemDirection.Up ? RuntimeData.VisualData.Height : RuntimeData.VisualData.Width;
 
         for (int dx = 0; dx < width; ++dx)
         {

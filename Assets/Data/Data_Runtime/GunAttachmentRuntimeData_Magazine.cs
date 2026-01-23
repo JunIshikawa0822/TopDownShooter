@@ -3,20 +3,20 @@ using System.Collections.Generic;
 
 namespace Game.Data
 {
-    public class AttachmentRuntimeData_Magazine : AttachmentRuntimeData
+    public class GunAttachmentRuntimeData_Magazine : GunAttachmentRuntimeData
     {
         private uint _capacity;
         private uint _remaining;
         private readonly AmmoCaliberType _supportedCaliber;
         private AmmoData _loadedAmmoData;
 
-        public AttachmentData_Magazine AttachmentData_Magazine => BaseData as AttachmentData_Magazine;
+        public GunAttachmentData_Magazine AttachmentData_Magazine => BaseData as GunAttachmentData_Magazine;
         public AmmoCaliberType SupportedCaliber => _supportedCaliber;
         public uint Capacity => _capacity;
         public uint Remaining => _remaining;
         public AmmoData LoadedAmmoData => _loadedAmmoData;
 
-        public AttachmentRuntimeData_Magazine(AttachmentData_Magazine baseData, int initialCount = 1) : base(baseData, initialCount)
+        public GunAttachmentRuntimeData_Magazine(GunAttachmentData_Magazine baseData, int initialCount = 1) : base(baseData, initialCount)
         {
             _supportedCaliber = baseData.CompatibleCaliber;
             _capacity = baseData.Capacity;

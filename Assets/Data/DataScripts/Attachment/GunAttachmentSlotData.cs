@@ -4,12 +4,12 @@ using UnityEngine;
 
 //「どの部位に」「どんなタイプのアタッチメントを装着できるか」を定義するテンプレート。
 [Serializable]
-public class AttachmentSlotData
+public class GunAttachmentSlotData
 {
     [SerializeField] private string _slotID;
     [SerializeField] private AttachmentType _slotType;
     [SerializeField] private string[] _allowedTags;
-    [SerializeField] private AttachmentData _defaultAttachmentData;//null許容
+    [SerializeField] private GunAttachmentData _defaultAttachmentData;//null許容
 
     [Header("スロット座標")]
     [SerializeField] private Vector3 _slotPosition;
@@ -18,7 +18,7 @@ public class AttachmentSlotData
     public string SlotID => _slotID;
     public AttachmentType SlotType => _slotType;
     public IReadOnlyList<string> AllowedTags => _allowedTags;//違う方法で許可を表せる（optional）
-    public AttachmentData DefaultAttachmentData => _defaultAttachmentData;
+    public GunAttachmentData DefaultAttachmentData => _defaultAttachmentData;
     public Vector3 SlotPosition => _slotPosition;
     public Quaternion SlotRotation => _slotRotation;
 }

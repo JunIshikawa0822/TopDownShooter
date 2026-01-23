@@ -3,21 +3,21 @@ using System;
 
 namespace Game.Data
 {
-    public class AttachmentSlotRuntimeData
+    public class GunAttachmentSlotRuntimeData
     {
-        private AttachmentSlotData _slotData;
+        private GunAttachmentSlotData _slotData;
         private string _slotID;
         private readonly AttachmentType _slotType;
-        private AttachmentRuntimeData _equippedAttachment;
+        private GunAttachmentRuntimeData _equippedAttachment;
 
         public event Action onChanged;
 
-        public AttachmentSlotData BaseData => _slotData;
+        public GunAttachmentSlotData BaseData => _slotData;
         public string SlotId => _slotID;
         public AttachmentType SlotType => _slotType;
-        public AttachmentRuntimeData EquippedAttachment => _equippedAttachment;
+        public GunAttachmentRuntimeData EquippedAttachment => _equippedAttachment;
 
-        public AttachmentSlotRuntimeData(AttachmentSlotData slodData, string slotId, AttachmentType slotType, AttachmentRuntimeData defaultAttachment = null)
+        public GunAttachmentSlotRuntimeData(GunAttachmentSlotData slodData, string slotId, AttachmentType slotType, GunAttachmentRuntimeData defaultAttachment = null)
         {
             _slotData = slodData;
             _slotID = slotId;
@@ -25,7 +25,7 @@ namespace Game.Data
             _equippedAttachment = defaultAttachment;
         }
         
-        public bool Equip(AttachmentRuntimeData attachment)
+        public bool Equip(GunAttachmentRuntimeData attachment)
         {
             if (!CanAttach(attachment)) return false;
 
@@ -35,20 +35,20 @@ namespace Game.Data
         }
 
         //外したアタッチメントを返す
-        public AttachmentRuntimeData UnEquip()
+        public GunAttachmentRuntimeData UnEquip()
         {
-            AttachmentRuntimeData removed = _equippedAttachment;
+            GunAttachmentRuntimeData removed = _equippedAttachment;
             _equippedAttachment = null;
             onChanged?.Invoke();
             return removed;
         }
 
         //すでに埋まっている場合は外してから出ないと装着不可
-        public bool CanAttach(AttachmentRuntimeData attachment)
+        public bool CanAttach(GunAttachmentRuntimeData attachment)
         {
             if (attachment == null) return false;
             if (_equippedAttachment != null) return false;
-            if (attachment.AttachmentData.attachmentType != _slotType)
+            if (attachment.AttachmentData.AttachmentType != _slotType)
                 return false;
 
             return true;

@@ -3,19 +3,24 @@ using UnityEngine;
 
 public class Factory_AssultRifle : IFactory<AWeaponBase>
 {
-    // private IObjectPool<Bullet> _bulletPool;
-    private AssultRifle _assultRiflePrefab;
-    public Factory_AssultRifle(AssultRifle assultRiflePrefab/*, IObjectPool<Bullet> bulletPool*/)
+    private AssultRifle _gunPrefab;
+    private GunService _gunService;
+    private BulletService _bulletService;
+    public Factory_AssultRifle(AssultRifle gunPrefab, GunService gunService, BulletService bulletService)
     {
-        _assultRiflePrefab = assultRiflePrefab;
-        // _bulletPool = bulletPool;
+        _gunPrefab = gunPrefab;
+        _gunService = gunService;
+        _bulletService = bulletService;
     }
 
     public AWeaponBase ObjectInstantiate()
     {
-        AssultRifle newAssultRifle = GameObject.Instantiate(_assultRiflePrefab);
-        // newAssultRifle.SetBulletPool(_bulletPool);
+        AssultRifle gun = GameObject.Instantiate(_gunPrefab);
 
-        return newAssultRifle;
+        _gunPrefab.SetGunSurvice(_gunService);
+        _gunPrefab.SetBulletSurvice(_bulletService);
+        _gunService.RegisterGun(gun);
+
+        return gun;
     }
 }

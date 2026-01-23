@@ -10,19 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: Weapons
+  m_Name: Effect
   m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
-  m_GroupName: Weapons
-  m_GUID: ef18704df989f474e86b4829ef8f9d33
-  m_SerializeEntries:
-  - m_GUID: 8095ef38caf3d1f459ef19d91b36d73e
-    m_Address: Assets/ImportAssets/Low Poly AR Weapon Pack 3/Prefabs/Weapons/AR_L.prefab
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
+  m_GroupName: Effect
+  m_GUID: 60928cbab55ea41f99ca2fe678bf2f7b
+  m_SerializeEntries: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: c0d2bd686d5e34c83b35bcd65e2def8c, type: 2}
   m_SchemaSet:
-    m_Schemas:
-    - {fileID: 11400000, guid: cc0738f5e602442038eb8d7189fc6a28, type: 2}
-    - {fileID: 11400000, guid: 85a64254b7dc645bdb6c3e26592e7d14, type: 2}
+    m_Schemas: []

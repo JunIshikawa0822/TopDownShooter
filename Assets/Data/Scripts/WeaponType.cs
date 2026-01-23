@@ -6,6 +6,5 @@ public enum WeaponType
     AssultRifle,
     SniperRifle,
     Shotgun,
-    Melee, 
-    AssultRifle_Ray
+    Melee
 }

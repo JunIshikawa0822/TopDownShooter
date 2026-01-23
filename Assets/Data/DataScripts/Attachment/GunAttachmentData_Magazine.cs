@@ -3,7 +3,7 @@ using UnityEngine;
 namespace Game.Data
 {
     [CreateAssetMenu(menuName = "MyGame/Attachment/MagazineData")]
-    public class AttachmentData_Magazine : AttachmentData
+    public class GunAttachmentData_Magazine : GunAttachmentData
     {
         [Header("マガジン設定")]
         [Min(1), SerializeField] private uint _capacity;

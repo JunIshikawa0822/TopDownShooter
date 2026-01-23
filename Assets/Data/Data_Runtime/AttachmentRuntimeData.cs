@@ -3,13 +3,13 @@ using System.Collections.Generic;
 
 namespace Game.Data
 {
-    public class AttachmentRuntimeData : AItemRuntimeDataBase
+    public class GunAttachmentRuntimeData : AItemRuntimeDataBase
     {
-        public AttachmentData AttachmentData => BaseData as AttachmentData;
-        public AttachmentType AttachmentType => AttachmentData.attachmentType;
-        public IReadOnlyList<GunStatModifier> Modifiers => AttachmentData.modifiers;
+        public GunAttachmentData AttachmentData => BaseData as GunAttachmentData;
+        public AttachmentType AttachmentType => AttachmentData.AttachmentType;
+        public IReadOnlyList<GunStatModifier> Modifiers => AttachmentData.Modifiers;
 
-        public AttachmentRuntimeData(AttachmentData baseData, int initialCount = 1) : base(baseData, initialCount)
+        public GunAttachmentRuntimeData(GunAttachmentData baseData, int initialCount = 1) : base(baseData, initialCount)
         {
             
         }

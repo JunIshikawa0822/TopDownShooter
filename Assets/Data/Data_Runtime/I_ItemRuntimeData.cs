@@ -6,6 +6,7 @@ namespace Game.Data
     public interface IItemRuntimeData
     {
         ItemData BaseData { get; } // 元の ScriptableObject データ
+        ItemVisualData VisualData { get; }
         int StackCount { get; }    // 現在のスタック数
         int MaxStack { get; }      // スタック上限
         float CurrentWeight{get;} //重量

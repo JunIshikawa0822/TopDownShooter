@@ -3,19 +3,24 @@ using UnityEngine;
 
 public class Factory_SubMachinegun : IFactory<AWeaponBase>
 {
-    //private IObjectPool<Bullet> _bulletPool;
-    private SubMachinegun _subMachinegunPrefab;
-    public Factory_SubMachinegun(SubMachinegun subMachinegunPrefab/*, IObjectPool<Bullet> bulletPool*/)
+    private SubMachinegun _gunPrefab;
+    private GunService _gunService;
+    private BulletService _bulletService;
+    public Factory_SubMachinegun(SubMachinegun gunPrefab, GunService gunService, BulletService bulletService)
     {
-        _subMachinegunPrefab = subMachinegunPrefab;
-        //_bulletPool = bulletPool;
+        _gunPrefab = gunPrefab;
+        _gunService = gunService;
+        _bulletService = bulletService;
     }
 
     public AWeaponBase ObjectInstantiate()
     {
-        SubMachinegun newSubMachinegun = GameObject.Instantiate(_subMachinegunPrefab);
-        //newSubMachinegun.SetBulletPool(_bulletPool);
+        SubMachinegun gun = GameObject.Instantiate(_gunPrefab);
 
-        return newSubMachinegun;
+        _gunPrefab.SetGunSurvice(_gunService);
+        _gunPrefab.SetBulletSurvice(_bulletService);
+        _gunService.RegisterGun(gun);
+
+        return gun;
     }
 }

@@ -22,7 +22,7 @@ namespace Game.Data
 
         [Header("アタッチメント設定")]
         //どんなアタッチメントがつけられるかを定義
-        [SerializeField] private AttachmentSlotData[] _ableAttachmentSlots;
+        [SerializeField] private GunAttachmentSlotData[] _ableAttachmentSlots;
 
         [Header("マガジンがつかない武器")]
         //何発装填できるかを定義
@@ -37,7 +37,7 @@ namespace Game.Data
         public float MaxRange => _maxRange;
 
         public Vector3 BulletSpawnPos => _bulletSpawnPos;
-        public IReadOnlyList<AttachmentSlotData> AbleAttachmentSlots => _ableAttachmentSlots;
+        public IReadOnlyList<GunAttachmentSlotData> AbleAttachmentSlots => _ableAttachmentSlots;
         public int InternalAmmoMax => _internalAmmoMax;
     }
 }
