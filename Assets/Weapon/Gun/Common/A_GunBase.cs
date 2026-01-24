@@ -19,12 +19,16 @@ public abstract class AGunBase<TRuntimeData> : AWeaponBase<TRuntimeData>, IGun<T
 
     public GunRuntimeData GunRuntimeData => RuntimeData;
 
-    public override void Initialize(TRuntimeData gunData)
+    public override void Initialize(AWeaponRuntimeDataBase weaponData)
     {
-        base.Initialize(gunData);
-        //Debug.Log("Initialized");
-        //Debug.Log(RuntimeData.GunBaseData.BulletSpawnPos);
-        _muzzleTrans.localPosition = RuntimeData.GunBaseData.BulletSpawnPos;
+        base.Initialize(weaponData);
+    }
+
+    protected override void WeaponSetUp(TRuntimeData weaponRuntimeData)
+    {
+        base.WeaponSetUp(weaponRuntimeData);
+
+        _muzzleTrans.localPosition = GetAnchor(WeaponAnchorType.Muzzle).position;
 
         _muzzleLight.enabled = false;
         _muzzleFlash.Reinit();

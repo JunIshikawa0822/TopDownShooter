@@ -6,7 +6,7 @@ using UnityEditor;
 using UnityEditor.AddressableAssets;
 using UnityEditor.AddressableAssets.Settings;
 
-public abstract class ItemImportBase
+public abstract class DataImportBase
 {
     protected Dictionary<string, int> _columnMap;
 

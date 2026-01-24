@@ -19,6 +19,10 @@ public class WeaponSystem : ASystem, IOnUpdate, IOnFixedUpdate
         _bulletVisualPool = new ObjectPool<BulletVisual>(gameStat.bulletVisualPoolTrans, new Factory_BulletVisual(gameStat.bulletVisualPrefab), "BulletVisual");
         _bulletVisualPool.PoolSetUp(20);
 
+        _bulletService = new(_bulletVisualPool);
+        _gunService = new();
+        _weaponVisualLoader = new();
+
         _weaponFactories = new()
         {
             {WeaponType.Handgun, new ObjectPool<AWeaponBase>(gameStat.gunPoolTrans, new Factory_Handgun(gameStat.handgunPrefab, _gunService, _bulletService), "Handgun")},
@@ -28,20 +32,15 @@ public class WeaponSystem : ASystem, IOnUpdate, IOnFixedUpdate
             {WeaponType.Shotgun, new ObjectPool<AWeaponBase>(gameStat.gunPoolTrans, new Factory_Shotgun(gameStat.shotgunPrefab,_gunService, _bulletService), "Shotgun")},
         };
 
-        _weaponVisualLoader = new();
-
         foreach(KeyValuePair<WeaponType, IObjectPool<AWeaponBase>> set in _weaponFactories)
         {
             set.Value.PoolSetUp(2);
         }
 
-        _bulletService = new(_bulletVisualPool);
-        _gunService = new();
-
         gameEvents.attackStartEvent += AttackStart;
         gameEvents.attackEndEvent += AttackEnd;
 
-        WeaponTest();
+        //WeaponTest();
     }
 
     public void OnUpdate()

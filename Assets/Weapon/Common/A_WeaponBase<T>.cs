@@ -22,9 +22,11 @@ public abstract class AWeaponBase<TRuntimeData> : AWeaponBase, IWeapon<TRuntimeD
         {
             Debug.LogError($"型が合いません！ {typeof(TRuntimeData)} が必要です。");
         }
+
+        base.Initialize(data);
     }
 
-    public virtual void Initialize(TRuntimeData weaponRuntimeData)
+    protected virtual void WeaponSetUp(TRuntimeData weaponRuntimeData)
     {
         _weaponRuntimeData = weaponRuntimeData;
     }

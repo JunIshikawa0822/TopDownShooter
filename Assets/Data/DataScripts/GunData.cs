@@ -17,9 +17,6 @@ namespace Game.Data
         [SerializeField] private float _bulletVelocity;//弾速
         [SerializeField] private float _maxRange;//射程距離
 
-        [Header("弾が出る場所")]
-        [SerializeField] private Vector3 _bulletSpawnPos;
-
         [Header("アタッチメント設定")]
         //どんなアタッチメントがつけられるかを定義
         [SerializeField] private GunAttachmentSlotData[] _ableAttachmentSlots;
@@ -35,8 +32,6 @@ namespace Game.Data
         public float Accuracy => _accuracy;
         public float BulletVelocity => _bulletVelocity;
         public float MaxRange => _maxRange;
-
-        public Vector3 BulletSpawnPos => _bulletSpawnPos;
         public IReadOnlyList<GunAttachmentSlotData> AbleAttachmentSlots => _ableAttachmentSlots;
         public int InternalAmmoMax => _internalAmmoMax;
     }
