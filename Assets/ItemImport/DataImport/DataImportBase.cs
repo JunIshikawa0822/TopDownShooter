@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using System.Collections.Generic;
 using System.Reflection;
 using System;
@@ -6,6 +7,7 @@ using UnityEditor;
 using UnityEditor.AddressableAssets;
 using UnityEditor.AddressableAssets.Settings;
 
+#if UNITY_EDITOR
 public abstract class DataImportBase
 {
     protected Dictionary<string, int> _columnMap;
@@ -30,20 +32,19 @@ public abstract class DataImportBase
         
         //ここからはVisualDataをセットする場所
         if (!_columnMap.TryGetValue("_visualData", out int index)) return;
-        string path = fields[index];
+        string addressableName = fields[index];
+        if (string.IsNullOrEmpty(addressableName)) return;
 
-        ItemVisualData visual = DataObjectFactory.GetOrCreate<ItemVisualData>(path);
+        ItemVisualData visual = DataObjectFactory.GetOrCreate(typeof(ItemVisualData), addressableName, "") as ItemVisualData;
 
         if (visual != null)
         {
-            SetAddressableField(visual, "_prefab", fields);
-            
+            SetField(visual, "_prefab", fields);
             SetField(visual, "_width", fields);
             SetField(visual, "_height", fields);
-
-            SetAddressableField(visual, "_icon", fields);
-            SetAddressableField(visual, "_pickupSound", fields);
-            SetAddressableField(visual, "_useSound", fields);
+            SetField(visual, "_icon", fields);
+            SetField(visual, "_pickupSound", fields);
+            SetField(visual, "_useSound", fields);
 
             EditorUtility.SetDirty(visual);
 
@@ -52,84 +53,113 @@ public abstract class DataImportBase
         }
     }
 
-    //列名から値を安全に取得し、リフレクションでセットする補助関数
+    //シートの「列名」を指定して、セルから値を取ってセットする
     protected void SetField(object obj, string fieldName, string[] fields)
     {
         if (!_columnMap.TryGetValue(fieldName, out int index) || index >= fields.Length) return;
-        string val = fields[index];
         
+        //中身は「文字列」であることが確定している
+        string val = fields[index];
         if (string.IsNullOrEmpty(val)) return;
 
+        ApplyToField(obj, fieldName, val);
+    }
+
+    //すでに生成済みの「オブジェクト」を直接セットする
+    protected void SetFieldDirect(object obj, string fieldName, object value)
+    {
+        if (value == null) return;
+        ApplyToField(obj, fieldName, value);
+    }
+
+    private void ApplyToField(object obj, string fieldName, object value)
+    {
         FieldInfo field = FindFieldIncludingBase(obj.GetType(), fieldName);
         if (field == null) return;
 
-        // 型変換してセット
-        field.SetValue(obj, ConvertValue(field.FieldType, val));
+        // ここで一括変換
+        object finalValue = ConvertValue(field.FieldType, value);
+        field.SetValue(obj, finalValue);
     }
 
-    //すでに型が確定しているインスタンスをリフレクションで無理やり変数に突っ込む
-    protected void SetFieldDirect(object obj, string fieldName, object value)
+    protected virtual object ConvertValue(Type targetType, object value)
     {
-        FieldInfo field = FindFieldIncludingBase(obj.GetType(), fieldName);
-        if (field != null) field.SetValue(obj, value);
-    }
+        if (value == null) return null;
+        string stringVal = value.ToString();
 
-    protected void SetAddressableField(object obj, string fieldName, string[] fields)
-    {
-        if (!_columnMap.TryGetValue(fieldName, out int index)) return;
-        string address = fields[index];
+        //空文字や「None」の処理
+        if (string.IsNullOrEmpty(stringVal) || stringVal.Equals("None", System.StringComparison.OrdinalIgnoreCase))
+            return null;
 
-        //セルが完全に空、または「None」と書かれていたら、正常な「何もしない」として扱う
-        if (string.IsNullOrEmpty(address) || address.Equals("None", StringComparison.OrdinalIgnoreCase)) return;
-
-        AddressableAssetSettings settings = AddressableAssetSettingsDefaultObject.Settings;
-        AddressableAssetEntry entry = settings.FindAssetEntry(address);
-
-        if (entry != null)
+        //基本型への変換
+        if (targetType == typeof(string)) return stringVal;
+        if (targetType == typeof(int)) return int.Parse(stringVal);
+        if (targetType == typeof(float)) return float.Parse(stringVal);
+        if (targetType == typeof(bool)) return bool.Parse(stringVal);
+        if (targetType.IsEnum) return Enum.Parse(targetType, stringVal, true);
+        if (targetType == typeof(Vector3))
         {
-            FieldInfo field = FindFieldIncludingBase(obj.GetType(), fieldName);
-            if (field == null) return;
+            string[] s = stringVal.Replace(" ", "").Split(',');
+            if (s.Length < 3)
+            {
+                Debug.LogWarning($"x, y, zの3種が指定されていません");
+                return Vector3.zero;
+            }
 
-            // Activatorを使って適切なAssetReference型（GameObject用、Sprite用等）を生成
-            object assetRef = Activator.CreateInstance(field.FieldType, entry.guid);
-            field.SetValue(obj, assetRef);
+            return new Vector3(float.Parse(s[0]), float.Parse(s[1]), float.Parse(s[2]));
         }
-        else
+
+        //変換対象が値ではなくAssetReferenceだった場合
+        //valueがAddressableNameになる
+        if (typeof(AssetReference).IsAssignableFrom(targetType))
         {
-            Debug.LogError($"[Import] Addressable 「{address}」 がないよ??");
+            // 1. まず、オブジェクト実体（VisualDataなど）が直接渡された場合を先にチェック
+            if (value is ScriptableObject so)
+            {
+                string path = AssetDatabase.GetAssetPath(so);
+                string guid = AssetDatabase.AssetPathToGUID(path);
+                if (!string.IsNullOrEmpty(guid))
+                {
+                    return Activator.CreateInstance(targetType, guid);
+                }
+            }
+
+            // 2. 次に、文字列（Address名）として渡された場合をチェック
+            string address = value.ToString();
+            if (!string.IsNullOrEmpty(address))
+            {
+                AddressableAssetSettings settings = AddressableAssetSettingsDefaultObject.Settings;
+                AddressableAssetEntry entry = settings.FindAssetEntry(address);
+                if (entry != null)
+                {
+                    return Activator.CreateInstance(targetType, entry.guid);
+                }
+                // 実体でもなく、Address名でもない場合のみ警告を出す
+                Debug.LogWarning($"[Import] '{address}' を AssetReference に変換できません。Address登録がないか、実体が不正です。");
+            }
+            return null;
         }
+
+        //そのまま代入可能なオブジェクト（VisualData等）の場合
+        if (targetType.IsAssignableFrom(value.GetType())) return value;
+
+        return null;
     }
 
     private FieldInfo FindFieldIncludingBase(Type type, string fieldName)
     {
         while (type != null)
         {
-            //fieldを探すが、有効範囲はそのクラスまで
+            //fieldを探すメソッドの有効範囲は「そのクラス」まで
             FieldInfo field = type.GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
             if (field != null) return field;
-            //親クラスにまで遡る必要あり
+            //親クラスにまで遡ることで全てのフィールドを調べる
             type = type.BaseType;
         }
-        return null;
-    }
 
-    protected virtual object ConvertValue(Type type, string val)
-    {
-        if (type == typeof(string)) return val;
-        if (type == typeof(int)) return int.Parse(val);
-        if (type == typeof(float)) return float.Parse(val);
-        if (type == typeof(bool)) return bool.Parse(val);
-        
-        // Enum & Flags 対応
-        if (type.IsEnum) return Enum.Parse(type, val, true);
-
-        // Vector3 対応 (x, y, z)
-        if (type == typeof(Vector3))
-        {
-            string[] s = val.Replace(" ", "").Split(',');
-            return new Vector3(float.Parse(s[0]), float.Parse(s[1]), float.Parse(s[2]));
-        }
-
+        Debug.Log($"{fieldName}が見つかりません 誤記？");
         return null;
     }
 }
+
+#endif

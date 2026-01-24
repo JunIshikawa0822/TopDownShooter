@@ -18,6 +18,7 @@ public class ItemImportTool : EditorWindow
         public string key; // "Gun", "Ammo" などの識別名
         public string url; // スプレッドシートのURL
         public string targetTypeName;
+        public string savePath = "Assets/GameData/Items"; // 追加: 保存パス
     }
 
     [Serializable]
@@ -40,7 +41,11 @@ public class ItemImportTool : EditorWindow
     [MenuItem("Tools/Item Import Tool")]
     public static void ShowWindow()
     {
-        GetWindow<ItemImportTool>("Item Importer");
+        ItemImportTool window = GetWindow<ItemImportTool>("Item Importer");
+        
+        // ウィンドウの最小サイズを制限する (横, 縦)
+        // 要素が全て表示しきる幅を最小値に設定
+        window.minSize = new Vector2(850f, 300f);
     }
 
     //ウィンドウが開いたとき（またはコンパイル後）に呼ばれる
@@ -100,22 +105,26 @@ public class ItemImportTool : EditorWindow
                 // 2. テキストボックスを描画（第一引数に空文字を入れるのがコツ）
                 _settingList.settings[i].key = EditorGUILayout.TextField("", setting.key, GUILayout.Width(150));
 
-                EditorGUILayout.Space(10); //少しだけ隙間を空けてURLへ
+                EditorGUILayout.Space(5); //少しだけ隙間を空けてURLへ
 
-                // URL側も同様に
-                EditorGUILayout.LabelField("URL", GUILayout.Width(35));
+                //URL側も同様
+                EditorGUILayout.LabelField("URL", GUILayout.Width(35), GUILayout.ExpandWidth(false));
                 _settingList.settings[i].url = EditorGUILayout.TextField("", setting.url);
 
-                // --- [変更] Typeプルダウン ---
+                //Typeプルダウン ---
                 EditorGUILayout.LabelField("Type", GUILayout.Width(35));
 
-                // 現在の保存されている名前がリストの何番目か探す
+                //現在の保存されている名前がリストの何番目か探す
                 int currentTypeIndex = Array.IndexOf(_availableTypeNames, setting.targetTypeName);
                 if (currentTypeIndex < 0) currentTypeIndex = 0;
 
-                // プルダウンを表示
+                //プルダウンを表示
                 int newTypeIndex = EditorGUILayout.Popup(currentTypeIndex, _availableTypeNames, GUILayout.Width(100));
                 setting.targetTypeName = _availableTypeNames[newTypeIndex];
+
+                //保存先指定
+                EditorGUILayout.LabelField("Path", GUILayout.Width(35));
+                setting.savePath = EditorGUILayout.TextField(setting.savePath, GUILayout.Width(150));
 
                 // 削除ボタン
                 if (GUILayout.Button("delete", GUILayout.Width(45)))
@@ -124,7 +133,7 @@ public class ItemImportTool : EditorWindow
                     // リスト構造が変わるので、一旦描画を終了して次のフレームで再描画させる
                     GUIUtility.ExitGUI();
                 }
-
+                
                 EditorGUILayout.EndHorizontal();
             }
 
@@ -187,12 +196,12 @@ public class ItemImportTool : EditorWindow
     private async UniTaskVoid OnPressImportButton(SheetSetting setting)
     {
         if (string.IsNullOrEmpty(setting.url)) return;
-
         Debug.Log($"[{setting.key}] ({setting.targetTypeName}) インポート開始...");
-        string csvUrl = SpreadsheetLoader.ConvertToCsvUrl(setting.url);
-
         try
         {
+            EditorUtility.DisplayProgressBar("Importing", "Downloading CSV...", 0.1f);
+
+            string csvUrl = SpreadsheetLoader.ConvertToCsvUrl(setting.url);
             string csvText = await SpreadsheetLoader.DownloadCsvAsync(csvUrl);
             List<string[]> rows = SpreadsheetLoader.ParseCsv(csvText);
 
@@ -200,10 +209,56 @@ public class ItemImportTool : EditorWindow
 
             //TODO: ここで作成済みのScriptableObjectを探す、または新規作成して流し込む
             //次のステップでこの 'setting.targetTypeName' を使ったクラス分離処理を実装します
+
+            if (rows.Count < 3) throw new Exception("シートにデータが足りません（最低3行必要です）");
+
+            //ヘッダー解析 (1行目)
+            Dictionary<string, int> columnMap = new Dictionary<string, int>();
+            string[] header = rows[0];
+            for (int i = 0; i < header.Length; i++) columnMap[header[i]] = i;
+
+            //Dataの種類に合わせたインポーターの生成
+            //TODO: 名前でクラス指定するの危ないよな
+            string importerName = setting.targetTypeName + "Import";
+
+            //アセンブリを横断してクラスを見つけ出す
+            Type t = AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(a => a.GetTypes())
+                .FirstOrDefault(x => x.Name == importerName);
+
+            if (t == null) throw new Exception($"{importerName} クラスが見つかりません");
+            DataImportBase importer = (DataImportBase)Activator.CreateInstance(t);
+            importer.SetMap(columnMap);
+
+            //データループ (3行目以降)
+            //_idがあるのが何列目か
+            int idIdx = columnMap["_id"];
+            Type assetType = AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(a => a.GetTypes()).First(x => x.Name == setting.targetTypeName);
+
+            for (int i = 2; i < rows.Count; i++)
+            {
+                //そもそもidがないとすすまないっぽい
+                string id = rows[i][idIdx];
+                if (string.IsNullOrEmpty(id)) continue;
+
+                //DataObjectFactory に動的に型と保存パスを渡すように拡張
+                ItemData asset = DataObjectFactory.GetOrCreate(assetType, id, setting.savePath) as ItemData;
+                importer.Apply(asset, rows[i]);
+                EditorUtility.SetDirty(asset);
+            }
+
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+            Debug.Log($"<color=cyan>[{setting.key}] インポート完了！</color>");
         }
         catch (Exception ex)
         {
             Debug.LogError($"[{setting.key}] エラー: {ex.Message}");
+        }
+        finally 
+        { 
+            EditorUtility.ClearProgressBar(); 
         }
     }
 

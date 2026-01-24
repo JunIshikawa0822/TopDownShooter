@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 public abstract class ItemData : ScriptableObject
 {
     [Header("基本情報")]

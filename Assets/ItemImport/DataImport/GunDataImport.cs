@@ -18,15 +18,5 @@ public class GunDataImport : WeaponDataImport
         SetField(gunData, "_bulletVelocity", fields);
         SetField(gunData, "_maxRange", fields);
         SetField(gunData, "_bulletSpawnPos", fields);
-        SetAddressableField(gunData, "_weaponAnimation", fields);
-        
-        //TODO: 付帯可能エンチャントの変換とScriptableObjectへのセット
-        //SetField(weapon, "_attachableEnchants", fields);
-    }
-
-    protected override object ConvertValue(Type type, string val)
-    {
-        //TODO: 付帯可能エンチャントをシートから読み込んで変換する工程
-        return base.ConvertValue(type, val);
     }
 }

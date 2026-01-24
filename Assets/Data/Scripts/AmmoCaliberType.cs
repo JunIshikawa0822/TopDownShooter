@@ -9,5 +9,4 @@ public enum AmmoCaliberType
     _762x39mm,
     _12Gauge,
     _50BMG,
-
 }

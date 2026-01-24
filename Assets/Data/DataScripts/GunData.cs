@@ -10,6 +10,7 @@ namespace Game.Data
         [Header("射撃設定")]
         [SerializeField] private FireType _fireType;//射撃タイプ（セミ・フル・バーストなど）
         [SerializeField] private int _burstCount;//バーストの場合、何連か
+        //TODO: RPMで表す方法に移行したいな〜
         [SerializeField] private int _fireRate;//発射間隔（1秒間に何発打てるか）
         [SerializeField] private float _horizontalRecoil;//水平反動値
         [SerializeField] private float _verticalRecoil;//垂直反動値

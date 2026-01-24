@@ -10,15 +10,15 @@ public class WeaponDataImport : DataImportBase
         if (!(asset is WeaponData weapon))return;
         
         SetField(weapon, "_weaponType", fields);
-        SetAddressableField(weapon, "_weaponAnimation", fields);
+        SetField(weapon, "_weaponAnimation", fields);
         
         //TODO: 付帯可能エンチャントの変換とScriptableObjectへのセット
         //SetField(weapon, "_attachableEnchants", fields);
     }
 
-    protected override object ConvertValue(Type type, string val)
+    protected override object ConvertValue(Type targetType, object value)
     {
         //TODO: 付帯可能エンチャントをシートから読み込んで変換する工程
-        return base.ConvertValue(type, val);
-    }
+        return base.ConvertValue(targetType, value);
+    }   
 }
