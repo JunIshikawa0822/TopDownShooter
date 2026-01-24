@@ -65,6 +65,11 @@ public class ItemImportTool : EditorWindow
         RefreshAvailableTypes();
     }
 
+    private void OnDisable()
+    {
+        SaveSettings();
+    }
+
     // [追加] リフレクションで ItemData 継承クラスを探す
     private void RefreshAvailableTypes()
     {
@@ -130,8 +135,11 @@ public class ItemImportTool : EditorWindow
                 if (GUILayout.Button("delete", GUILayout.Width(45)))
                 {
                     _settingList.settings.RemoveAt(i);
+                    SaveSettings();
+                    EditorGUILayout.EndHorizontal();
                     // リスト構造が変わるので、一旦描画を終了して次のフレームで再描画させる
                     GUIUtility.ExitGUI();
+                    return;
                 }
                 
                 EditorGUILayout.EndHorizontal();
@@ -147,8 +155,10 @@ public class ItemImportTool : EditorWindow
                 // 新規追加時はリストの先頭の型をデフォルトに設定
                 string defaultType = _availableTypeNames.Length > 0 ? _availableTypeNames[0] : "";
                 _settingList.settings.Add(new SheetSetting { key = "New Key", url = "", targetTypeName = defaultType });
+                SaveSettings();
             }
         }
+        
         if (EditorGUI.EndChangeCheck())
         {
             SaveSettings();
@@ -265,8 +275,11 @@ public class ItemImportTool : EditorWindow
     // --- 内部処理 ---
     private void SaveSettings()
     {
+        if (_settingList == null) return;
+
         string json = JsonUtility.ToJson(_settingList);
         EditorPrefs.SetString(SAVE_KEY_DATA, json);
+        EditorPrefs.SetInt(SAVE_KEY_INDEX, _selectedSheetIndex);
         Debug.Log("設定を保存しました。");
     }
 }
