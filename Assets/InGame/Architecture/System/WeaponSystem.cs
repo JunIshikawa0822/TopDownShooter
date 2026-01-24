@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Game.Data;
 using UnityEngine;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 
 public class WeaponSystem : ASystem, IOnUpdate, IOnFixedUpdate
 {
@@ -81,17 +81,34 @@ public class WeaponSystem : ASystem, IOnUpdate, IOnFixedUpdate
         //Debug.Log("AttackEnd");
     }
 
-    private async Task<AWeaponBase> CreateWeapon(AWeaponRuntimeDataBase weaponRuntimeData)
+    //例えば「武器Aのロード中に、プレイヤーが急いで武器Bに切り替えた」場合、
+    //TODO: 武器Aのロードを中断しないと、後から武器Aの見た目が届いて上書きされてしまうというバグの可能性有り
+    private async UniTask<AWeaponBase> CreateWeapon(AWeaponRuntimeDataBase weaponRuntimeData)
     {
-        if(weaponRuntimeData == null)return null;
+        if (weaponRuntimeData == null) return null;
         AWeaponBase weapon = _weaponFactories[weaponRuntimeData.WeaponBaseData.WeaponType].GetFromPool();
-        if(weapon == null) return null;
+        if (weapon == null) return null;
 
-        GameObject weaponVisualInstance = await _weaponVisualLoader.LoadVisualAsync(weaponRuntimeData.VisualData.Prefab);
-        weapon.VisualSet(weaponVisualInstance);
-        weapon.Initialize(weaponRuntimeData);
+        try
+        {
+            //見た目のロード（ここで待機が発生）
+            //キャンセルを考慮するなら .WithCancellation を推奨
+            GameObject visualInstance = await _weaponVisualLoader.LoadVisualAsync(weaponRuntimeData.VisualData.Prefab);
 
-        return weapon;
+            //組み立て
+            weapon.VisualSet(visualInstance);
+            weapon.Initialize(weaponRuntimeData);
+
+            return weapon;
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError($"武器の生成に失敗しました: {e.Message}");
+            
+            //失敗した場合は、確保していた挙動オブジェクトをプールに返して掃除
+            weapon.ReturnToPool();
+            return null;
+        }
     }
 
     //private IMelee<MeleeTuntimeData> CreateMelee(MeleeRuntimeData meleeRuntimeData)

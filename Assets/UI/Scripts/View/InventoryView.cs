@@ -65,9 +65,12 @@ namespace Game.UI
         private InventoryItemComponent CreateItemComponent(TemplateContainer itemTemplate, ItemVisualData visualData, Guid itemGuid)
         {
             InventoryItemComponent itemComponent = new InventoryItemComponent(itemTemplate, itemGuid);
-            itemComponent.SetVisualData(visualData, _cellSize);
-            //OnPointerEnterの登録
-            //OnPointerLeaveの登録
+
+            //TODO:AddressableでSpriteロードしなきゃ！！
+            Sprite sprite = null;
+            itemComponent.SetVisualData(sprite, visualData.Width, visualData.Height, _cellSize);
+            //TODO: OnPointerEnterの登録
+            //TODO: OnPointerLeaveの登録
 
             return itemComponent;
         }

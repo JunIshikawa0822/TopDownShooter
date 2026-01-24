@@ -1,14 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using System.Text.RegularExpressions;
 using UnityEngine;
 
 public static class SpreadsheetLoader
 {
     // フェーズ2: 非同期通信で文字列を取得
-    public static async Task<string> DownloadCsvAsync(string url)
+    public static async UniTask<string> DownloadCsvAsync(string url)
     {
         using (HttpClient client = new HttpClient())
         {

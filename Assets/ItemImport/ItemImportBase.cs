@@ -40,16 +40,15 @@ public abstract class ItemImportBase
             
             SetField(visual, "_width", fields);
             SetField(visual, "_height", fields);
-            
-            // PrefabやIconなどは名前検索でセット
-            // SetAssetField<GameObject>(visual, "_prefab", fields);
-            // SetAssetField<Sprite>(visual, "_icon", fields);
+
+            SetAddressableField(visual, "_icon", fields);
+            SetAddressableField(visual, "_pickupSound", fields);
+            SetAddressableField(visual, "_useSound", fields);
 
             EditorUtility.SetDirty(visual);
 
-            // 5. ItemData本体に紐づける
-            // ※リフレクションで ItemData の private field "_visualData" に代入
-            //SetFieldDirect(asset, "_visualData", visual);
+            //ItemData本体に紐づける
+            SetFieldDirect(asset, "_visualData", visual);
         }
     }
 
@@ -68,12 +67,20 @@ public abstract class ItemImportBase
         field.SetValue(obj, ConvertValue(field.FieldType, val));
     }
 
+    //すでに型が確定しているインスタンスをリフレクションで無理やり変数に突っ込む
+    protected void SetFieldDirect(object obj, string fieldName, object value)
+    {
+        FieldInfo field = FindFieldIncludingBase(obj.GetType(), fieldName);
+        if (field != null) field.SetValue(obj, value);
+    }
+
     protected void SetAddressableField(object obj, string fieldName, string[] fields)
     {
         if (!_columnMap.TryGetValue(fieldName, out int index)) return;
         string address = fields[index];
 
-        if (string.IsNullOrEmpty(address)) return;
+        //セルが完全に空、または「None」と書かれていたら、正常な「何もしない」として扱う
+        if (string.IsNullOrEmpty(address) || address.Equals("None", StringComparison.OrdinalIgnoreCase)) return;
 
         AddressableAssetSettings settings = AddressableAssetSettingsDefaultObject.Settings;
         AddressableAssetEntry entry = settings.FindAssetEntry(address);
@@ -89,18 +96,9 @@ public abstract class ItemImportBase
         }
         else
         {
-            Debug.LogWarning($"[Import] Addressable '{address}' not found in settings.");
+            Debug.LogError($"[Import] Addressable 「{address}」 がないよ??");
         }
     }
-
-    // 直接オブジェクトを代入するための補助関数
-    // protected void SetField(object obj, string fieldName, object value)
-    // {
-    //     FieldInfo field = FindFieldIncludingBase(obj.GetType(), fieldName);
-    //     if (field == null)return;
-        
-    //     field.SetValue(obj, value);
-    // }
 
     private FieldInfo FindFieldIncludingBase(Type type, string fieldName)
     {

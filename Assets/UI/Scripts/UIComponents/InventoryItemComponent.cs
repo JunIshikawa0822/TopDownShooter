@@ -35,11 +35,11 @@ public class InventoryItemComponent
         _itemDataGuid = itemDataGuid;
         _icon = inventoryItemElement.Q("inventoryitem__container");
     }
-    public virtual void SetVisualData(ItemVisualData itemVisualData, int cellSize)
+    public virtual void SetVisualData(Sprite icon, int width, int height, int cellSize)
     {
-        _icon.style.backgroundImage = new StyleBackground(itemVisualData.Icon);
-        _icon.style.width  = itemVisualData.Width  * cellSize;
-        _icon.style.height = itemVisualData.Height * cellSize;
+        _icon.style.backgroundImage = new StyleBackground(icon);
+        _icon.style.width  = width * cellSize;
+        _icon.style.height = height * cellSize;
     }
 
     public void RegisterPointerCallbacks()

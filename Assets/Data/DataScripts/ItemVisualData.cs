@@ -11,7 +11,7 @@ public class ItemVisualData : ScriptableObject
     [SerializeField] private int _height;
 
     [Header("UI用アイコン")]
-    [SerializeField] private Sprite _icon;
+    [SerializeField] private AssetReferenceSprite _icon;
 
     [Header("サウンドなど")]
     [SerializeField] private AssetReferenceT<AudioClip> _pickupSound;
@@ -20,7 +20,7 @@ public class ItemVisualData : ScriptableObject
     public AssetReferenceGameObject Prefab => _prefab;
     public int Width => _width;
     public int Height => _height;
-    public Sprite Icon => _icon;
+    public AssetReferenceSprite Icon => _icon;
     public AssetReferenceT<AudioClip> PickupSound => _pickupSound;
     public AssetReferenceT<AudioClip> UseSound => _useSound;
 }

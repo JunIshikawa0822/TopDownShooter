@@ -2,8 +2,8 @@ using UnityEngine;
 using System.Collections.Generic;
 using System;
 using System.Linq;
-using System.Net.Http; //通信用に追加
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
+
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -174,7 +174,7 @@ public class ItemImportTool : EditorWindow
             if (GUILayout.Button($"{sheetNames[_selectedSheetIndex]} をインポート開始", GUILayout.Height(40)))
             {
                 SheetSetting target = _settingList.settings[_selectedSheetIndex];
-                OnPressImportButton(target);
+                OnPressImportButton(target).Forget();
             }
             GUI.color = Color.white;
         }
@@ -184,7 +184,7 @@ public class ItemImportTool : EditorWindow
         }
     }
 
-    private async void OnPressImportButton(SheetSetting setting)
+    private async UniTaskVoid OnPressImportButton(SheetSetting setting)
     {
         if (string.IsNullOrEmpty(setting.url)) return;
 
@@ -198,12 +198,12 @@ public class ItemImportTool : EditorWindow
 
             Debug.Log($"[{setting.key}] ダウンロード成功。行数: {rows.Count}");
 
-            // TODO: ここで作成済みのScriptableObjectを探す、または新規作成して流し込む
-            // 次のステップでこの 'setting.targetTypeName' を使ったクラス分離処理を実装します
+            //TODO: ここで作成済みのScriptableObjectを探す、または新規作成して流し込む
+            //次のステップでこの 'setting.targetTypeName' を使ったクラス分離処理を実装します
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            Debug.LogError($"[{setting.key}] エラー: {e.Message}");
+            Debug.LogError($"[{setting.key}] エラー: {ex.Message}");
         }
     }
 
