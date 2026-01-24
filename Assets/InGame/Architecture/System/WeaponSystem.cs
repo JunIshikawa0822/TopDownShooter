@@ -3,7 +3,6 @@ using Game.Data;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 
-
 public class WeaponSystem : ASystem, IOnUpdate, IOnFixedUpdate
 {
     //private List<IOnUpdate> _updatableList = new();
@@ -97,7 +96,7 @@ public class WeaponSystem : ASystem, IOnUpdate, IOnFixedUpdate
             Debug.Log(visualInstance);
             //組み立て
             weapon.VisualSet(visualInstance);
-            //weapon.Initialize(weaponRuntimeData);
+            weapon.Initialize(weaponRuntimeData);
 
             return weapon;
         }
@@ -118,6 +117,7 @@ public class WeaponSystem : ASystem, IOnUpdate, IOnFixedUpdate
         //こっからテスト用コード
         WeaponTestDataSet();
         gameStat.playerEquipWeapon = await CreateWeapon(gameStat.playerWeaponRuntimeData);
+        gameStat.player.Equip(gameStat.playerEquipWeapon);
     }
 
     private void WeaponTestDataSet()

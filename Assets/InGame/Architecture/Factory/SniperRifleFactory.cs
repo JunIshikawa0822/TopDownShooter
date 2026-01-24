@@ -17,8 +17,8 @@ public class Factory_SniperRifle : IFactory<AWeaponBase>
     {
         SniperRifle gun = GameObject.Instantiate(_gunPrefab);
 
-        _gunPrefab.SetGunSurvice(_gunService);
-        _gunPrefab.SetBulletSurvice(_bulletService);
+        gun.SetGunSurvice(_gunService);
+        gun.SetBulletSurvice(_bulletService);
         _gunService.RegisterGun(gun);
 
         return gun;

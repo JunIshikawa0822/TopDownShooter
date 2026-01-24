@@ -28,7 +28,7 @@ public abstract class AGunBase<TRuntimeData> : AWeaponBase<TRuntimeData>, IGun<T
     {
         base.WeaponSetUp(weaponRuntimeData);
 
-        _muzzleTrans.localPosition = GetAnchor(WeaponAnchorType.Muzzle).position;
+        _muzzleTrans.localPosition = GetAnchor(WeaponAnchorType.Muzzle).localPosition;
 
         _muzzleLight.enabled = false;
         _muzzleFlash.Reinit();
