@@ -9,7 +9,7 @@ public class PlayerSystem : ASystem, IOnUpdate, IOnFixedUpdate
         IAnimationHandler playerAnimHandler = gameStat.player.GetComponent<PlayerAnimationHandler>();
 
         gameStat.player.OnSetUp(playerAnimHandler);
-        gameStat.player.Equip(gameStat.playerEquipWeapon);
+        //gameStat.player.Equip(gameStat.playerEquipWeapon);
     }
 
     public void OnUpdate()

@@ -3,6 +3,7 @@ using Game.Data;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 
+
 public class WeaponSystem : ASystem, IOnUpdate, IOnFixedUpdate
 {
     //private List<IOnUpdate> _updatableList = new();
@@ -40,7 +41,7 @@ public class WeaponSystem : ASystem, IOnUpdate, IOnFixedUpdate
         gameEvents.attackStartEvent += AttackStart;
         gameEvents.attackEndEvent += AttackEnd;
 
-        //WeaponTest();
+        WeaponTest().Forget();
     }
 
     public void OnUpdate()
@@ -93,10 +94,10 @@ public class WeaponSystem : ASystem, IOnUpdate, IOnFixedUpdate
             //見た目のロード（ここで待機が発生）
             //キャンセルを考慮するなら .WithCancellation を推奨
             GameObject visualInstance = await _weaponVisualLoader.LoadVisualAsync(weaponRuntimeData.VisualData.Prefab);
-
+            Debug.Log(visualInstance);
             //組み立て
             weapon.VisualSet(visualInstance);
-            weapon.Initialize(weaponRuntimeData);
+            //weapon.Initialize(weaponRuntimeData);
 
             return weapon;
         }
@@ -112,7 +113,7 @@ public class WeaponSystem : ASystem, IOnUpdate, IOnFixedUpdate
 
     //private IMelee<MeleeTuntimeData> CreateMelee(MeleeRuntimeData meleeRuntimeData)
 
-    private async void WeaponTest()
+    private async UniTaskVoid WeaponTest()
     {
         //こっからテスト用コード
         WeaponTestDataSet();

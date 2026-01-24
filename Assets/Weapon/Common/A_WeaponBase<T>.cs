@@ -13,10 +13,10 @@ public abstract class AWeaponBase<TRuntimeData> : AWeaponBase, IWeapon<TRuntimeD
     // ここで一度だけ型チェックを行い、安全なら本来の初期化を呼ぶ
     public override void Initialize(AWeaponRuntimeDataBase data)
     {
-        // ここで一度だけ型チェックを行い、安全なら本来の初期化を呼ぶ
+        // ここで一度だけ型チェックを行い、安全なら武器の初期化を呼ぶ
         if (data is TRuntimeData specificData)
         {
-            Initialize(specificData);
+            WeaponSetUp(specificData);
         }
         else
         {
