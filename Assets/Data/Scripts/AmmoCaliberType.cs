@@ -1,12 +1,9 @@
 using UnityEngine;
 
-public enum AmmoCaliberType
+public enum AmmoType
 {
     None = 0,
-    _9mm,
-    _45ACP,
-    _556x45mmNATO,
-    _762x39mm,
-    _12Gauge,
-    _50BMG,
+    Light = 1,
+    Middle = 2,
+    Heavy = 3
 }

@@ -7,34 +7,50 @@ namespace Game.Data
     [CreateAssetMenu(menuName = "MyGame/Weapon/GunData")]
     public class GunData : WeaponData
     {
-        [Header("射撃設定")]
-        [SerializeField] private FireType _fireType;//射撃タイプ（セミ・フル・バーストなど）
-        [SerializeField] private int _burstCount;//バーストの場合、何連か
-        //TODO: RPMで表す方法に移行したいな〜
-        [SerializeField] private int _fireRate;//発射間隔（1秒間に何発打てるか）
-        [SerializeField] private float _horizontalRecoil;//水平反動値
-        [SerializeField] private float _verticalRecoil;//垂直反動値
-        [SerializeField] private float _accuracy;//命中精度？？？
-        [SerializeField] private float _bulletVelocity;//弾速
-        [SerializeField] private float _maxRange;//射程距離
+        [Header("装填設定")]
+        [SerializeField] private AmmoType _targetAmmo;//必須：どの弾丸を使えるか
+        [SerializeField] private bool _isInternalMagazine = false;//マガジンを必要としないタイプか
+        [SerializeField] private int _internalCapacity;//基本装填数
 
-        [Header("アタッチメント設定")]
-        //どんなアタッチメントがつけられるかを定義
-        [SerializeField] private GunAttachmentSlotData[] _ableAttachmentSlots;
+        [Header("射撃ロジック")]
+        [SerializeField] private FireType _fireType;
+        [SerializeField] private int _burstCount = 3;
+        [SerializeField] private float _rpm; //rounds per minute
 
-        [Header("マガジンがつかない武器")]
-        //何発装填できるかを定義
-        [SerializeField] private int _internalAmmoMax;
+        [Header("反動・精度")]
+        [SerializeField] private float _velocity;//射出速度
+        [SerializeField] private float _horizontalRecoil;//水平反動値 左右のブレの絶対値
+        [SerializeField] private float _verticalRecoil;//垂直反動値 上下のブレの絶対値　下向きの制御はコード側で行う
+        //照準の中心から「半径何メートル（または角度何度）の円の中に弾が飛ぶか」という円の大きさ（半径）を表す。
+        // 単位は一般的にDegree
+        [SerializeField] private float _baseSpread;
+        [SerializeField] private float _spreadIncriment;//連射時の拡散増加量
+        [SerializeField] private float _maxSpread = 3.0f;//連射時の拡散増加量上限
 
+        [Header("取り回し")]
+        [SerializeField] private float _reloadTime;
+        [SerializeField] private float _ergonimics; //取り回し（ADSへの移行時間に関わる数値）
+
+        [SerializeField] private float _maxRange;//有効射程距離
+
+        public AmmoType TargetAmmo => _targetAmmo;
+        public bool IsInternalMagazine => _isInternalMagazine;
+        public int MagazineCapacity => _internalCapacity;
+        
         public FireType FireType => _fireType;
         public int BurstCount => _burstCount;
-        public int FireRate => _fireRate;
+        public float FireInterval => _rpm > 0 ? 60f / _rpm : 0.1f;
+
+        public float Velocity => _velocity;
         public float HorizontalRecoil => _horizontalRecoil;
-        public float Accuracy => _accuracy;
-        public float BulletVelocity => _bulletVelocity;
+        public float VerticalRecoil => _verticalRecoil;
+        public float BaseSpread => _baseSpread;
+        public float SpreadIncriment => _spreadIncriment;
+        public float MaxSpread => _maxSpread;
+        
+        public float ReloadTime => _reloadTime;
+        public float Ergonomics => _ergonimics;
         public float MaxRange => _maxRange;
-        public IReadOnlyList<GunAttachmentSlotData> AbleAttachmentSlots => _ableAttachmentSlots;
-        public int InternalAmmoMax => _internalAmmoMax;
     }
 }
 

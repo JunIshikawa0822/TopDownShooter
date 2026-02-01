@@ -158,7 +158,7 @@ public class ItemImportTool : EditorWindow
                 SaveSettings();
             }
         }
-        
+
         if (EditorGUI.EndChangeCheck())
         {
             SaveSettings();

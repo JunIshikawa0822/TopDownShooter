@@ -35,7 +35,6 @@ public class GameStatus
     public Transform gunPoolTrans;
 
     [Header("BulletPrefab")]
-    public Bullet bulletPrefab;
     public BulletVisual bulletVisualPrefab;
 
     [Header("GunPrefab")]
