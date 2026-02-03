@@ -59,6 +59,7 @@ public abstract class AGunBase<TRuntime> : AWeaponBase<TRuntime>, IGun<TRuntime>
         if (GunRuntime.FireType == FireType.Burst) BurstFire().Forget();
         if (GunRuntime.FireType == FireType.FullAuto || GunRuntime.FireType == FireType.Semi)
         {
+            Debug.Log(CanShoot());
             if (!CanShoot()) return;
 
             _gunService.StartShooting(this);
@@ -113,7 +114,9 @@ public abstract class AGunBase<TRuntime> : AWeaponBase<TRuntime>, IGun<TRuntime>
     protected virtual bool CanShoot()
     {
         if (!TryClipCheck()) return false;
+        Debug.Log(_gunService.CanShoot(this));
         if (!_gunService.CanShoot(this)) return false;
+        Debug.Log(GunRuntime.CanConsume(_gunService.IsBulletConsume));
         if (!GunRuntime.CanConsume(_gunService.IsBulletConsume)) return false;
         return true;
     }
@@ -159,6 +162,7 @@ public abstract class AGunBase<TRuntime> : AWeaponBase<TRuntime>, IGun<TRuntime>
     }
 
     //計算で弾を飛ばすのに必要
+    //TODO: 弾のブレを考慮する計算を追加する
     protected void SetBullet(Vector3 dir)
     {
         Vector3 destinationPoint = GetDestination(_muzzleTrans.position, dir);

@@ -51,6 +51,8 @@ public class GunRuntime : AWeaponRuntimeBase
             { KEY_ERGONOMICS, gunData.Ergonomics },
             { KEY_MAX_RANGE, gunData.MaxRange }
         };
+
+        _internalAmmoRemaining = (uint)GunData.InternalCapacity;
     }
     //アタッチメント付け替えがすでに手動リロード処理になっているので、ここでは書かない
     //代わりに、自動リロードにあたる処理追加

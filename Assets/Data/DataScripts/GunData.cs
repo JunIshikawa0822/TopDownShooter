@@ -35,7 +35,7 @@ namespace Game.Data
 
         public AmmoType TargetAmmo => _targetAmmo;
         public bool IsInternalMagazine => _isInternalMagazine;
-        public int MagazineCapacity => _internalCapacity;
+        public int InternalCapacity => _internalCapacity;
 
         public FireType FireType => _fireType;
         public int BurstCount => _burstCount;

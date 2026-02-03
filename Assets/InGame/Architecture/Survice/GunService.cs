@@ -12,7 +12,7 @@ public class GunService : IOnUpdate, IGunService
 
     public void RegisterGun(IGun<GunRuntime> gun)
     {
-        GunState state = new() { Gun = gun, IsShooting = false };
+        GunState state = new() { Gun = gun, IsShooting = false, LastShotTime = -999f };
         _gunStates.Add(gun, state);
     }
 
@@ -24,6 +24,7 @@ public class GunService : IOnUpdate, IGunService
     public bool CanShoot(IGun<GunRuntime> gun)
     {
         float last = _gunStates.TryGetValue(gun, out GunState t) ? t.LastShotTime : -999f;
+        Debug.Log($"{gun.GunRuntime.FireInterval}");
         bool canShoot = Time.time - last >= gun.GunRuntime.FireInterval;
 
         return canShoot;

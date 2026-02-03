@@ -15,35 +15,30 @@ MonoBehaviour:
   _id: ar_test
   _displayName: AR_L
   _description: Description of AR_L
+  _rank: 1
   _weight: 2
-  _price: 5000
+  _basePrice: 0
   _stackableNumber: 1
   _itemType: 4
-  _tags: 1
+  _actionTags: 0
+  _traitTags: 0
   _visualData: {fileID: 11400000, guid: 48e4ad5cbed8646e0951ed4d6b4af39e, type: 2}
   _weaponType: 3
   _weaponAnimation: {fileID: 0}
+  _equippableTypes: 
   _attachableEnchants: []
+  _targetAmmo: 2
+  _isInternalMagazine: 1
+  _internalCapacity: 60
   _fireType: 2
   _burstCount: 0
-  _fireRate: 5
+  _rpm: 10
+  _velocity: 10
   _horizontalRecoil: 0
   _verticalRecoil: 0
-  _accuracy: 10
-  _bulletVelocity: 100
+  _baseSpread: 0
+  _spreadIncriment: 0
+  _maxSpread: 3
+  _reloadTime: 0
+  _ergonimics: 0
   _maxRange: 20
-  _bulletSpawnPos: {x: 0, y: 0.061, z: 0.777}
-  _ableAttachmentSlots:
-  - _slotID: Scope
-    _slotType: 4
-    _allowedTags: []
-    _defaultAttachmentData: {fileID: 0}
-    _slotPosition: {x: 0, y: 0.129, z: 0.071}
-    _slotRotation: {x: 0, y: 0, z: 0, w: 0}
-  - _slotID: Magdehanai
-    _slotType: 5
-    _allowedTags: []
-    _defaultAttachmentData: {fileID: 0}
-    _slotPosition: {x: 0, y: -0.049999997, z: 0.1225}
-    _slotRotation: {x: 0, y: 0, z: 0, w: 0}
-  _internalAmmoMax: 90
