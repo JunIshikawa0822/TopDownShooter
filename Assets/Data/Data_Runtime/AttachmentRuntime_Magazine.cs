@@ -5,7 +5,7 @@ namespace Game.Data
 {
     public class AttachmentRuntime_Magazine : AttachmentRuntime
     {
-        private uint _remaining;
+        private uint _remaining = 0;
         private AmmoData _loadedAmmoData;
 
         public AttachmentData_Magazine MagazineData => AttachmentData as AttachmentData_Magazine;
@@ -22,7 +22,7 @@ namespace Game.Data
             if(item == null) return false;
             if(!(item is AmmoRuntime ammo)) return false;//そもそも弾薬か
             if(ammo.AmmoData == null || ammo.AmmoType != MagazineData.TargetAmmo) return false;//マッチする口径か
-            if(_remaining > 0 && _loadedAmmoData != null) return false;//すでに違う種類の弾が入っている
+            if(_remaining > 0 && ammo.AmmoData != LoadedAmmoData) return false;//すでに違う種類の弾が入っている
             if (_remaining >= MagazineData.Capacity)return false;//もう弾が入らない
 
             return true;
@@ -66,16 +66,15 @@ namespace Game.Data
         /// <summary>
         /// 発射時の消費処理
         /// </summary>
-        /// <param name="consumeRemaining">マガジン内の弾を減らすかどうか（拠点でも射撃感覚のために減らすならtrue）</param>
-        public bool Consume(bool consumeRemaining = true)
+        public bool TryConsume(bool isConsume = true)
         {
             if (_remaining <= 0) return false;
 
-            if (consumeRemaining)
+            if(isConsume)
             {
                 _remaining--;
             }
-
+            
             if (_remaining <= 0)
             {
                 _loadedAmmoData = null;

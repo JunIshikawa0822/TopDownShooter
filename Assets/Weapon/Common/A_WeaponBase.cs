@@ -9,12 +9,12 @@ public abstract class AWeaponBase : APooledObject
 {
     [SerializeField] protected Transform _visualTrans;
     protected GameObject _visualInstance;
-    protected AWeaponRuntimeDataBase _weaponBaseData;
+    // protected AWeaponRuntimeBase _weaponRuntime;
     protected readonly Dictionary<WeaponAnchorType, Transform> _anchorCache = new();
 
-    public virtual void Initialize(AWeaponRuntimeDataBase data)
+    public virtual void Initialize(AWeaponRuntimeBase runtime)
     {
-        _weaponBaseData = data;
+        //_weaponRuntime = runtime;
     }
 
     public virtual void VisualSet(GameObject visualInstance)

@@ -9,9 +9,5 @@ namespace Game.Data
         {
             
         }
-        protected override AItemRuntimeBase CreateCopy(int initialCount)
-        {
-            return new MeleeRuntime(MeleeData, initialCount);
-        }
     }
 }

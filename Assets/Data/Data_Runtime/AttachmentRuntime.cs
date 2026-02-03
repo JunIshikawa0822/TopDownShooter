@@ -24,10 +24,5 @@ namespace Game.Data
         }
 
         public IEnumerable<StatModifier> GetModifiers() => AttachmentData.Modifiers;
-
-        protected override AItemRuntimeBase CreateCopy(int initialCount)
-        {
-            return new AttachmentRuntime(AttachmentData, initialCount);
-        }
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Game.Data;
 using UnityEngine;
 
-public interface IItem<out TRuntimeData> where TRuntimeData : AItemRuntimeDataBase
+public interface IItem<out TRuntime> where TRuntime : AItemRuntimeBase
 {
-    TRuntimeData RuntimeData { get; }
+    TRuntime Runtime { get; }
 }

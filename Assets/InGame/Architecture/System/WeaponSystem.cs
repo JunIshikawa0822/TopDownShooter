@@ -82,10 +82,10 @@ public class WeaponSystem : ASystem, IOnUpdate, IOnFixedUpdate
 
     //例えば「武器Aのロード中に、プレイヤーが急いで武器Bに切り替えた」場合、
     //TODO: 武器Aのロードを中断しないと、後から武器Aの見た目が届いて上書きされてしまうというバグの可能性有り
-    private async UniTask<AWeaponBase> CreateWeapon(AWeaponRuntimeDataBase weaponRuntimeData)
+    private async UniTask<AWeaponBase> CreateWeapon(AWeaponRuntimeBase weaponRuntimeData)
     {
         if (weaponRuntimeData == null) return null;
-        AWeaponBase weapon = _weaponFactories[weaponRuntimeData.WeaponBaseData.WeaponType].GetFromPool();
+        AWeaponBase weapon = _weaponFactories[weaponRuntimeData.WeaponData.WeaponType].GetFromPool();
         if (weapon == null) return null;
 
         try
@@ -128,7 +128,7 @@ public class WeaponSystem : ASystem, IOnUpdate, IOnFixedUpdate
         {
             if(gameStat.playerWeaponData is MeleeData meleeData)
             {
-                gameStat.playerWeaponRuntimeData = new MeleeRuntimeData(meleeData);
+                gameStat.playerWeaponRuntimeData = new MeleeRuntime(meleeData);
                 //Debug.Log("MeleeTestDataSet");
             }
         }
@@ -139,7 +139,7 @@ public class WeaponSystem : ASystem, IOnUpdate, IOnFixedUpdate
             {
                 // Debug.Log("GunTestDataSet");
                 // Debug.Log("やあ" + gunData);
-                gameStat.playerWeaponRuntimeData = new GunRuntimeData(gunData);
+                gameStat.playerWeaponRuntimeData = new GunRuntime(gunData);
             }
         }
     }

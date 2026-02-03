@@ -4,7 +4,7 @@ using Game.Data;
 using NUnit.Framework.Constraints;
 using UnityEngine;
 
-public interface IWeapon<TRuntimeData> : IItem<TRuntimeData> where TRuntimeData : AWeaponRuntimeDataBase
+public interface IWeapon<out TRuntimeData> : IItem<TRuntimeData> where TRuntimeData : AWeaponRuntimeBase
 {
     WeaponType WeaponType { get; }
     RuntimeAnimatorController WeaponAnim { get; } //武器専用AnimatorOverrideController

@@ -1,7 +1,4 @@
-using Game.Data;
-using UnityEngine;
-
-public class SniperRifle : AGunBase<GunRuntimeData>
+public class SniperRifle : AGunBase<GunRuntime>
 {
-    
+
 }

@@ -9,17 +9,17 @@ namespace Game.Data
         //**********ベース値を管理する層**********
         protected Dictionary<string, float> _baseStats;
         //**********装備による一時的な値の変化量を管理する層**********
-        protected StatHandlerEquipment _statHandlerEquipment = new();
-        protected AttachmentSlot[] _attachmentSlots;//素の状態で存在するスロット
+        private StatHandlerEquipment _statHandlerEquipment = new();
+        private AttachmentSlot[] _attachmentSlots;//素の状態で存在するスロット
         //UIを表示する際、リストにはアタッチメントが並ぶ、
         //同種のアイテムスロットがある場合、位置が区別できない
         //TODO: いまのところは問題ないが、スロット位置が重要（3Dモデルへの反映）を行う場合は区別がいる
-        protected List<AttachmentSlot> _availableSlots = new();//拡張も含めたすべてのスロット
+        private List<AttachmentSlot> _availableSlots = new();//拡張も含めたすべてのスロット
         //**********最終的な値を計算する層**********
-        protected Dictionary<string, float> _finalizeStats = new();
-        protected HashSet<string> _dirtyStats = new();//どのステータスが再計算必要か
+        //private Dictionary<string, float> _finalizeStats = new();
+        //private bool _isDirtyStats = true; //再計算必要か
         //**********プロパティ**********
-        public WeaponData WeaponData =>  ItemData as WeaponData;
+        public WeaponData WeaponData => ItemData as WeaponData;
         public WeaponType WeaponType => WeaponData.WeaponType;
         public AWeaponRuntimeBase(WeaponData weaponData, int initialCount) : base(weaponData, initialCount)
         {
@@ -27,7 +27,7 @@ namespace Game.Data
             if (weaponData.EquippableTypes != null)
             {
                 _attachmentSlots = new AttachmentSlot[weaponData.EquippableTypes.Length];
-                for(int i = 0; i < _attachmentSlots.Length; ++i)
+                for (int i = 0; i < _attachmentSlots.Length; ++i)
                 {
                     _attachmentSlots[i] = new AttachmentSlot(weaponData.EquippableTypes[i]);
                 }
@@ -56,14 +56,14 @@ namespace Game.Data
 
             slot.SetAttachment(attachment);
             _statHandlerEquipment.AddEquipmentProvider(attachment);//Providerを追加
-            
+
             swapAttachment = oldAttachment;
             RecalculateSlots();//スロット再計算
             return true;
         }
 
         public virtual AttachmentRuntime UnEquipAttachment(AttachmentSlot slot)
-        {          
+        {
             // 実際に外れたものを取得
             AttachmentRuntime removedItem = slot.RemoveAttachment();
 
@@ -89,7 +89,7 @@ namespace Game.Data
         private List<AttachmentSlot> GetAllAvailableSlots()
         {
             List<AttachmentSlot> allSlots = new List<AttachmentSlot>();
-            
+
             //本体のスロットを追加
             foreach (AttachmentSlot slot in _attachmentSlots)
             {
@@ -123,9 +123,10 @@ namespace Game.Data
         #endregion
 
         #region 値に関するメソッド
-        protected virtual float GetWeaponStat(string statName)
+        //基本的な加算
+        protected virtual float GetEquipOffsetStat(string statName)
         {
-            return _baseStats[statName] + _statHandlerEquipment.GetOffsetValue(statName, _baseStats[statName]);
+            return _statHandlerEquipment.GetOffsetValue(statName, _baseStats[statName]);
         }
         #endregion
 

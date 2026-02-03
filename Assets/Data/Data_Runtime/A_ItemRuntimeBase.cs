@@ -58,17 +58,20 @@ namespace Game.Data
             return other.Stack <= 0;
         }
 
-        public IItemRuntime Split(int amount)
-        {
-            if(amount <= 0 || amount >= _stackCount) return null;
+        //アイテム生成はFactoryが管理する。
+        //アイテム自身は「自分を複製する機能」を捨て、純粋に「自分の数を減らす」という責任だけを持つ。
 
-            IItemRuntime newItem = CreateCopy(amount);
+        // public IItemRuntime Split(int amount)
+        // {
+        //     if(amount <= 0 || amount >= _stackCount) return null;
 
-            //生成が成功してはじめて数を減らす
-            _stackCount -= amount;
+        //     IItemRuntime newItem = CreateCopy(amount);
 
-            return newItem;
-        }
+        //     //生成が成功してはじめて数を減らす
+        //     _stackCount -= amount;
+
+        //     return newItem;
+        // }
 
         public bool IsSameType(IItemRuntime other)
         {
@@ -78,6 +81,7 @@ namespace Game.Data
             return _data.ItemID == other.ItemData.ItemID;
         }
 
-        protected abstract AItemRuntimeBase CreateCopy(int initialCount);
+        //アイテム生成はFactoryが管理する。
+        //protected abstract AItemRuntimeBase CreateCopy(int initialCount);
     }
 }

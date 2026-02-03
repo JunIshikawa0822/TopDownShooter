@@ -36,9 +36,10 @@ namespace Game.Data
         public AmmoType TargetAmmo => _targetAmmo;
         public bool IsInternalMagazine => _isInternalMagazine;
         public int MagazineCapacity => _internalCapacity;
-        
+
         public FireType FireType => _fireType;
         public int BurstCount => _burstCount;
+        //射撃間隔（秒）
         public float FireInterval => _rpm > 0 ? 60f / _rpm : 0.1f;
 
         public float Velocity => _velocity;
@@ -47,7 +48,7 @@ namespace Game.Data
         public float BaseSpread => _baseSpread;
         public float SpreadIncriment => _spreadIncriment;
         public float MaxSpread => _maxSpread;
-        
+
         public float ReloadTime => _reloadTime;
         public float Ergonomics => _ergonimics;
         public float MaxRange => _maxRange;

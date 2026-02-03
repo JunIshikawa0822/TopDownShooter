@@ -52,7 +52,7 @@ public class GameStatus
     [HideInInspector]public bool isInventoryOpen = false;
     
     //テスト用ランタイムデータ
-    [HideInInspector]public AWeaponRuntimeDataBase playerWeaponRuntimeData;
+    [HideInInspector]public AWeaponRuntimeBase playerWeaponRuntimeData;
     //テスト用所持武器オブジェクト
     [HideInInspector]public AWeaponBase playerEquipWeapon;
 

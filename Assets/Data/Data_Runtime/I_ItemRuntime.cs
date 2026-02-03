@@ -8,7 +8,7 @@ namespace Game.Data
         ItemVisualData VisualData { get; }
         int Stack { get; }//現在のスタック数
         int MaxStack { get; }//最大スタック数
-        float Weight{get;} //重量
+        float Weight { get; } //重量
         ItemType ItemType { get; }//アイテムの種類
 
         /// <summary>
@@ -24,18 +24,11 @@ namespace Game.Data
         /// <param name="amount">引きたい量</param>
         /// <returns></returns>  
         int ReduceStack(int amount);
-        
+
         /// <summary>
         /// 別のスタックと結合する。完全に結合できたらtrue できなかったらfalse
         /// </summary>
         bool Merge(IItemRuntime other);
-
-        /// <summary>
-        /// アイテムを分割し、新しい塊を生成する
-        /// </summary>
-        /// <param name="amount">新しい塊に含まれるアイテム個数</param>
-        /// <returns></returns>
-        IItemRuntime Split(int amount);
 
         /// <summary>
         /// 同種のアイテムであるかを調べる。同一性は無視。

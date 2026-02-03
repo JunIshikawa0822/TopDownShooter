@@ -11,11 +11,6 @@ namespace Game.Data
         {
             
         }
-
-        protected override AItemRuntimeBase CreateCopy(int initialCount)
-        {
-            return new AmmoRuntime(AmmoData, initialCount);
-        }
     }
 }
 
