@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using Game.Data;
 
 public class Container
 {
@@ -16,7 +17,7 @@ public class Container
         GridBlockData[] gridBlockDatas = containerData.ContainerBuild;
         _gridBlocks = new GridBlock[gridBlockDatas.Length];
 
-        for(int i = 0; i < gridBlockDatas.Length; ++i)
+        for (int i = 0; i < gridBlockDatas.Length; ++i)
         {
             _gridBlocks[i] = new GridBlock(gridBlockDatas[i].width, gridBlockDatas[i].height);
         }
@@ -26,8 +27,8 @@ public class Container
 
     public bool TryPlaceItem(int gridBlockIndex, InventoryItemData item, int x, int y, ItemDirection dir)
     {
-        if(!IsValidBlockIndex(gridBlockIndex)) return false;
-        if(!_gridBlocks[gridBlockIndex].CanPlace(item, x, y, dir)) return false;
+        if (!IsValidBlockIndex(gridBlockIndex)) return false;
+        if (!_gridBlocks[gridBlockIndex].CanPlace(item, x, y, dir)) return false;
 
         item.SetItemOrigin(gridBlockIndex, x, y);
         item.SetDirection(dir);
@@ -41,8 +42,8 @@ public class Container
 
     public bool TryRemoveItem(int gridBlockIndex, InventoryItemData item)
     {
-        if(!IsValidBlockIndex(gridBlockIndex)) return false;
-        if(!_gridBlocks[gridBlockIndex].IsContain(item)) return false;
+        if (!IsValidBlockIndex(gridBlockIndex)) return false;
+        if (!_gridBlocks[gridBlockIndex].IsContain(item)) return false;
 
         item.ClearItemOrigin();
 
@@ -53,18 +54,18 @@ public class Container
 
     public bool TryRemoveItem(int gridBlockIndex, int x, int y)
     {
-        if(!IsValidBlockIndex(gridBlockIndex)) return false;
+        if (!IsValidBlockIndex(gridBlockIndex)) return false;
         //当該マスにアイテムがあるかを確認
         InventoryItemData item = _gridBlocks[gridBlockIndex].TryFindItem(x, y);
-        
+
         return TryRemoveItem(gridBlockIndex, item);
     }
 
     private bool IsValidBlockIndex(int gridBlockIndex)
     {
         bool result = gridBlockIndex >= 0 && gridBlockIndex < _gridBlocks.Length;
-        if(result == false) Debug.LogError("Indexがおかしいですよ");
-        
+        if (result == false) Debug.LogError("Indexがおかしいですよ");
+
         return result;
     }
 

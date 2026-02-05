@@ -6,11 +6,30 @@ using System;
 using UnityEditor;
 using UnityEditor.AddressableAssets;
 using UnityEditor.AddressableAssets.Settings;
+using Game.Data;
 
 #if UNITY_EDITOR
 public abstract class DataImportBase
 {
     protected Dictionary<string, int> _columnMap;
+    public const string KEY_ITEMID = "_id";
+    public const string KEY_ITEMDISPLAYNAME = "_displayName";
+    public const string KEY_ITEMDESCRIPTION = "_description";
+    public const string KEY_ITEMRANK = "_rank";
+    public const string KEY_ITEMWEIGHT = "_weight";
+    public const string KEY_ITEMBASEPRICE = "_basePrice";
+    public const string KEY_ITEMSTACKABLENUMBER = "_stackableNumber";
+    public const string KEY_ITEMTYPE = "_itemType";
+    public const string KEY_ITEMACTIONTAGS = "_actionTags";
+    public const string KEY_ITEMTRAITTAGS = "_traitTags";
+    public const string KEY_ITEMVISUALDATA = "_visualData";
+
+    public const string KEY_ITEMPREFAB = "_prefab";
+    public const string KEY_ITEMWIDTH = "_width";
+    public const string KEY_ITEMHEIGHT = "_height";
+    public const string KEY_ITEMICON = "_icon";
+    public const string KEY_ITEMPICKUPSOUND = "_pickupSound";
+    public const string KEY_ITEMUSESOUND = "_useSound";
 
     // 窓口から辞書を受け取る
     public void SetMap(Dictionary<string, int> map)
@@ -21,17 +40,19 @@ public abstract class DataImportBase
     // 全てのデータの基本となる変換
     public virtual void Apply(ItemData asset, string[] fields)
     {
-        SetField(asset, "_id", fields);
-        SetField(asset, "_displayName", fields);
-        SetField(asset, "_description", fields);
-        SetField(asset, "_weight", fields);
-        SetField(asset, "_price", fields);
-        SetField(asset, "_stackableNumber", fields);
-        SetField(asset, "_itemType", fields);
-        SetField(asset, "_tags", fields);
-        
+        SetField(asset, KEY_ITEMID, fields);
+        SetField(asset, KEY_ITEMDISPLAYNAME, fields);
+        SetField(asset, KEY_ITEMDESCRIPTION, fields);
+        SetField(asset, KEY_ITEMRANK, fields);
+        SetField(asset, KEY_ITEMWEIGHT, fields);
+        SetField(asset, KEY_ITEMBASEPRICE, fields);
+        SetField(asset, KEY_ITEMSTACKABLENUMBER, fields);
+        SetField(asset, KEY_ITEMTYPE, fields);
+        SetField(asset, KEY_ITEMACTIONTAGS, fields);
+        SetField(asset, KEY_ITEMTRAITTAGS, fields);
+
         //ここからはVisualDataをセットする場所
-        if (!_columnMap.TryGetValue("_visualData", out int index)) return;
+        if (!_columnMap.TryGetValue(KEY_ITEMVISUALDATA, out int index)) return;
         string addressableName = fields[index];
         if (string.IsNullOrEmpty(addressableName)) return;
 
@@ -39,17 +60,17 @@ public abstract class DataImportBase
 
         if (visual != null)
         {
-            SetField(visual, "_prefab", fields);
-            SetField(visual, "_width", fields);
-            SetField(visual, "_height", fields);
-            SetField(visual, "_icon", fields);
-            SetField(visual, "_pickupSound", fields);
-            SetField(visual, "_useSound", fields);
+            SetField(visual, KEY_ITEMPREFAB, fields);
+            SetField(visual, KEY_ITEMWIDTH, fields);
+            SetField(visual, KEY_ITEMHEIGHT, fields);
+            SetField(visual, KEY_ITEMICON, fields);
+            SetField(visual, KEY_ITEMPICKUPSOUND, fields);
+            SetField(visual, KEY_ITEMUSESOUND, fields);
 
             EditorUtility.SetDirty(visual);
 
             //ItemData本体に紐づける
-            SetFieldDirect(asset, "_visualData", visual);
+            SetFieldDirect(asset, KEY_ITEMVISUALDATA, visual);
         }
     }
 
@@ -57,7 +78,7 @@ public abstract class DataImportBase
     protected void SetField(object obj, string fieldName, string[] fields)
     {
         if (!_columnMap.TryGetValue(fieldName, out int index) || index >= fields.Length) return;
-        
+
         //中身は「文字列」であることが確定している
         string val = fields[index];
         if (string.IsNullOrEmpty(val)) return;

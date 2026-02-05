@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using System.Threading;
+using Game.Data;
 
 public class Shotgun : AGunBase<GunRuntime>
 {

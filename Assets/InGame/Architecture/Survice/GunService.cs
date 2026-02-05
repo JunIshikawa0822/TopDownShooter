@@ -24,7 +24,6 @@ public class GunService : IOnUpdate, IGunService
     public bool CanShoot(IGun<GunRuntime> gun)
     {
         float last = _gunStates.TryGetValue(gun, out GunState t) ? t.LastShotTime : -999f;
-        Debug.Log($"{gun.GunRuntime.FireInterval}");
         bool canShoot = Time.time - last >= gun.GunRuntime.FireInterval;
 
         return canShoot;

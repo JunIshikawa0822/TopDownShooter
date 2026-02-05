@@ -1,6 +1,4 @@
-using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
 
 namespace Game.Data
 {
@@ -29,7 +27,7 @@ namespace Game.Data
 
         [Header("取り回し")]
         [SerializeField] private float _reloadTime;
-        [SerializeField] private float _ergonimics; //取り回し（ADSへの移行時間に関わる数値）
+        [SerializeField] private float _ergonomics; //取り回し（ADSへの移行時間に関わる数値）
 
         [SerializeField] private float _maxRange;//有効射程距離
 
@@ -42,7 +40,7 @@ namespace Game.Data
         //射撃間隔（秒）
         public float FireInterval => _rpm > 0 ? 60f / _rpm : 0.1f;
 
-        public float Velocity => _velocity;
+        public float Velocity => _velocity > 0 ? _velocity : 10;
         public float HorizontalRecoil => _horizontalRecoil;
         public float VerticalRecoil => _verticalRecoil;
         public float BaseSpread => _baseSpread;
@@ -50,8 +48,8 @@ namespace Game.Data
         public float MaxSpread => _maxSpread;
 
         public float ReloadTime => _reloadTime;
-        public float Ergonomics => _ergonimics;
-        public float MaxRange => _maxRange;
+        public float Ergonomics => _ergonomics;
+        public float MaxRange => _maxRange > 5 ? _maxRange : 5;
     }
 }
 

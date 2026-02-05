@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Game.Data;
 using System;
 public class BulletService : IBulletService, IOnFixedUpdate, IOnUpdate
 {

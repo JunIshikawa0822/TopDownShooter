@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 using Cysharp.Threading.Tasks;
+using Game.Data;
 
 
 #if UNITY_EDITOR
@@ -42,7 +43,7 @@ public class ItemImportTool : EditorWindow
     public static void ShowWindow()
     {
         ItemImportTool window = GetWindow<ItemImportTool>("Item Importer");
-        
+
         // ウィンドウの最小サイズを制限する (横, 縦)
         // 要素が全て表示しきる幅を最小値に設定
         window.minSize = new Vector2(850f, 300f);
@@ -94,7 +95,7 @@ public class ItemImportTool : EditorWindow
     {
         EditorGUILayout.LabelField("1. Spreadsheet Settings", EditorStyles.boldLabel);
         EditorGUILayout.HelpBox("スプレッドシートのURLを登録してください。Keyはシートの種類を識別する名前です。", MessageType.None);
-        
+
         EditorGUILayout.Space();
 
         //ここから1. Spreadsheet Settingsの編集セクション
@@ -104,7 +105,7 @@ public class ItemImportTool : EditorWindow
             {
                 SheetSetting setting = _settingList.settings[i];
                 EditorGUILayout.BeginHorizontal();
-                
+
                 //ラベルだけを描画（幅を30〜40くらいに固定すると密着します）
                 EditorGUILayout.LabelField("Key", GUILayout.Width(35));
                 // 2. テキストボックスを描画（第一引数に空文字を入れるのがコツ）
@@ -141,7 +142,7 @@ public class ItemImportTool : EditorWindow
                     GUIUtility.ExitGUI();
                     return;
                 }
-                
+
                 EditorGUILayout.EndHorizontal();
             }
 
@@ -266,9 +267,9 @@ public class ItemImportTool : EditorWindow
         {
             Debug.LogError($"[{setting.key}] エラー: {ex.Message}");
         }
-        finally 
-        { 
-            EditorUtility.ClearProgressBar(); 
+        finally
+        {
+            EditorUtility.ClearProgressBar();
         }
     }
 

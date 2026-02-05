@@ -1,9 +1,13 @@
-public enum AttachmentType
+namespace Game.Data
 {
-    Grip,
-    Magazine,
-    Stock,
-    Muzzle,
-    Scope,
-    None
+    public enum AttachmentType
+    {
+        None,
+        Grip,
+        Magazine,
+        Stock,
+        Muzzle,
+        Scope,
+    }
 }
+

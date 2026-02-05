@@ -1,10 +1,14 @@
-public enum WeaponType
+namespace Game.Data
 {
-    None,
-    Handgun,
-    SubMachinegun,
-    AssultRifle,
-    SniperRifle,
-    Shotgun,
-    Melee
+    public enum WeaponType
+    {
+        None,
+        Handgun,
+        SubMachinegun,
+        AssultRifle,
+        SniperRifle,
+        Shotgun,
+        Melee
+    }
 }
+
