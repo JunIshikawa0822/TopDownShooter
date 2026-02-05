@@ -7,9 +7,9 @@ public class ObjectPool<T> : IObjectPool<T> where T : APooledObject
     private Stack<T> _pool;
     private GameObject _parent;
     private Transform _transform;
-    private IFactory<T> _factory;
+    private IObjectFactory<T> _factory;
 
-    public ObjectPool(Transform poolTransform, IFactory<T> factory, string name = "")
+    public ObjectPool(Transform poolTransform, IObjectFactory<T> factory, string name = "")
     {
         _pool = new Stack<T>();
         _parent = new GameObject(name);
@@ -33,7 +33,7 @@ public class ObjectPool<T> : IObjectPool<T> where T : APooledObject
         {
             T instance = ObjectInstantiate();
             // Debug.Log(instance);
-            if(instance == null)return;
+            if (instance == null) return;
 
             instance.gameObject.transform.SetParent(_parent.transform);
             instance.gameObject.SetActive(false);
@@ -43,7 +43,7 @@ public class ObjectPool<T> : IObjectPool<T> where T : APooledObject
 
     public T GetFromPool()
     {
-        if(_factory == null)
+        if (_factory == null)
         {
             return null;
         }
@@ -52,7 +52,7 @@ public class ObjectPool<T> : IObjectPool<T> where T : APooledObject
         if (_pool.Count < 1)
         {
             T newInstance = ObjectInstantiate();
-            if(newInstance == null)return null;
+            if (newInstance == null) return null;
 
             newInstance.gameObject.transform.SetParent(_parent.transform);
             return newInstance;
@@ -71,7 +71,7 @@ public class ObjectPool<T> : IObjectPool<T> where T : APooledObject
         instance.SetPoolAction<T>(ReturnToPool);
         return instance;
     }
-    
+
     // 弾をプールに戻す
     public void ReturnToPool(T pooledObject)
     {

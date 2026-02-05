@@ -1,12 +1,12 @@
 using System;
 using UnityEngine;
 
-public class Factory_SubMachinegun : IFactory<AWeaponBase>
+public class Factory_Shotgun : IObjectFactory<AWeaponBase>
 {
-    private SubMachinegun _gunPrefab;
+    private Shotgun _gunPrefab;
     private GunService _gunService;
     private BulletService _bulletService;
-    public Factory_SubMachinegun(SubMachinegun gunPrefab, GunService gunService, BulletService bulletService)
+    public Factory_Shotgun(Shotgun gunPrefab, GunService gunService, BulletService bulletService)
     {
         _gunPrefab = gunPrefab;
         _gunService = gunService;
@@ -15,7 +15,7 @@ public class Factory_SubMachinegun : IFactory<AWeaponBase>
 
     public AWeaponBase ObjectInstantiate()
     {
-        SubMachinegun gun = GameObject.Instantiate(_gunPrefab);
+        Shotgun gun = GameObject.Instantiate(_gunPrefab);
 
         gun.SetGunSurvice(_gunService);
         gun.SetBulletSurvice(_bulletService);

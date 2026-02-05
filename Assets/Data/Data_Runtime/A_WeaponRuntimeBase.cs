@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace Game.Data
 {
@@ -21,7 +22,7 @@ namespace Game.Data
         //**********プロパティ**********
         public WeaponData WeaponData => ItemData as WeaponData;
         public WeaponType WeaponType => WeaponData.WeaponType;
-        public AWeaponRuntimeBase(WeaponData weaponData, int initialCount) : base(weaponData, initialCount)
+        public AWeaponRuntimeBase(WeaponData weaponData, int initialCount, Guid? runtimeGuid = null) : base(weaponData, initialCount, runtimeGuid)
         {
             //Data側で定義された基本スロット
             if (weaponData.EquippableTypes != null)

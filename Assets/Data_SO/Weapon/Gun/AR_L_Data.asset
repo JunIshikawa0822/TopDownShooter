@@ -32,13 +32,13 @@ MonoBehaviour:
   _internalCapacity: 60
   _fireType: 2
   _burstCount: 0
-  _rpm: 10
-  _velocity: 10
+  _rpm: 450
+  _velocity: 60
   _horizontalRecoil: 0
   _verticalRecoil: 0
   _baseSpread: 0
   _spreadIncriment: 0
   _maxSpread: 3
   _reloadTime: 0
-  _ergonimics: 0
+  _ergonomics: 0
   _maxRange: 20

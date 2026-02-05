@@ -14,11 +14,11 @@ namespace Game.Data
         public int Stack => _stackCount;
         public int MaxStack => _data.MaxStack;
         public float Weight => _stackCount * _data.Weight;
-        public AItemRuntimeBase(ItemData itemData, int initialCount)
+        public AItemRuntimeBase(ItemData itemData, int initialCount, Guid? runtimeGuid = null)
         {
             _data = itemData ?? throw new ArgumentNullException(nameof(itemData));
-            _runtimeID = Guid.NewGuid();
-            
+            _runtimeID = runtimeGuid ?? Guid.NewGuid();
+
             int count = (initialCount <= 0) ? 1 : initialCount;
             _stackCount = Math.Min(count, MaxStack);
         }
@@ -75,7 +75,7 @@ namespace Game.Data
 
         public bool IsSameType(IItemRuntime other)
         {
-            if(other == null) return false;
+            if (other == null) return false;
 
             //参照する静的データが同じかどうか
             return _data.ItemID == other.ItemData.ItemID;

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System;
 using Game.Data;
 
 public class GunRuntime : AWeaponRuntimeBase
@@ -37,7 +38,7 @@ public class GunRuntime : AWeaponRuntimeBase
     public float Ergonomics => _baseStats[KEY_ERGONOMICS] + GetEquipOffsetStat(KEY_ERGONOMICS);
     public float MaxRange => _baseStats[KEY_MAX_RANGE] + GetEquipOffsetStat(KEY_MAX_RANGE);
 
-    public GunRuntime(GunData gunData, int initialCount = 1) : base(gunData, initialCount)
+    public GunRuntime(GunData gunData, int initialCount = 1, Guid? runtimeGuid = null) : base(gunData, initialCount, runtimeGuid)
     {
         _baseStats = new()
         {

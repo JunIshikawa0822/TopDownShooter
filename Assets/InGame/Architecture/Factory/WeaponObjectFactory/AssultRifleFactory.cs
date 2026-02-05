@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class Factory_AssultRifle : IFactory<AWeaponBase>
+public class Factory_AssultRifle : IObjectFactory<AWeaponBase>
 {
     private AssultRifle _gunPrefab;
     private GunService _gunService;

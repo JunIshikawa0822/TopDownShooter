@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Game.Data;
 
-public class AttachmentSlot 
+public class AttachmentSlot
 {
 
     private readonly AttachmentType _equippableType;

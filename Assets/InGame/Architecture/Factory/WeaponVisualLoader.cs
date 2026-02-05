@@ -19,7 +19,7 @@ public class WeaponVisualLoader
     //     // 3. 代わりのCubeを生成して返す
     //     GameObject dummy = GameObject.CreatePrimitive(PrimitiveType.Cube);
     //     dummy.name = "Dummy_Weapon_Visual";
-        
+
     //     Debug.Log("--- LoadVisualAsync: Success with Dummy Cube ---");
     //     return dummy;
     // }
@@ -41,5 +41,5 @@ public class WeaponVisualLoader
             Debug.LogError("Addressable Instantiate Failed");
             return null;
         }
-    }  
+    }
 }

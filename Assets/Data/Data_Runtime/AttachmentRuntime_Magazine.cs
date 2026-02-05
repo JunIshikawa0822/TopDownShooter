@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 using System.Collections.Generic;
 
 namespace Game.Data
@@ -12,22 +13,22 @@ namespace Game.Data
         public uint Remaining => _remaining;
         public AmmoData LoadedAmmoData => _loadedAmmoData;
 
-        public AttachmentRuntime_Magazine(AttachmentData_Magazine magazineData, int initialCount = 1) : base(magazineData, initialCount)
+        public AttachmentRuntime_Magazine(AttachmentData_Magazine magazineData, int initialCount = 1, Guid? runtimeGuid = null) : base(magazineData, initialCount, runtimeGuid)
         {
-            
+
         }
 
         public bool CanLoad(IItemRuntime item)
         {
-            if(item == null) return false;
-            if(!(item is AmmoRuntime ammo)) return false;//そもそも弾薬か
-            if(ammo.AmmoData == null || ammo.AmmoType != MagazineData.TargetAmmo) return false;//マッチする口径か
-            if(_remaining > 0 && ammo.AmmoData != LoadedAmmoData) return false;//すでに違う種類の弾が入っている
-            if (_remaining >= MagazineData.Capacity)return false;//もう弾が入らない
+            if (item == null) return false;
+            if (!(item is AmmoRuntime ammo)) return false;//そもそも弾薬か
+            if (ammo.AmmoData == null || ammo.AmmoType != MagazineData.TargetAmmo) return false;//マッチする口径か
+            if (_remaining > 0 && ammo.AmmoData != LoadedAmmoData) return false;//すでに違う種類の弾が入っている
+            if (_remaining >= MagazineData.Capacity) return false;//もう弾が入らない
 
             return true;
         }
-        
+
         /// <summary>
         /// 装填の実行
         /// </summary>
@@ -39,7 +40,7 @@ namespace Game.Data
             if (!CanLoad(item)) return false;
 
             AmmoRuntime ammoStack = (AmmoRuntime)item;
-            
+
             // マガジンの空き容量を計算
             uint space = MagazineData.Capacity - _remaining;
             if (space <= 0) return false;
@@ -60,7 +61,7 @@ namespace Game.Data
         //TODO: UnLoadの仕組みを作る際、だれがAmmoRuntimeを作成するのか問題
         // public AmmoRuntime UnLoad()
         // {
-            
+
         // }
 
         /// <summary>
@@ -70,11 +71,11 @@ namespace Game.Data
         {
             if (_remaining <= 0) return false;
 
-            if(isConsume)
+            if (isConsume)
             {
                 _remaining--;
             }
-            
+
             if (_remaining <= 0)
             {
                 _loadedAmmoData = null;

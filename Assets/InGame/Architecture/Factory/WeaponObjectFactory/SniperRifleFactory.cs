@@ -1,14 +1,12 @@
 using System;
-using Game.Data;
 using UnityEngine;
 
-public class Factory_Handgun : IFactory<AWeaponBase>
+public class Factory_SniperRifle : IObjectFactory<AWeaponBase>
 {
-    //private IObjectPool<Bullet> _bulletPool;
-    private Handgun _gunPrefab;
+    private SniperRifle _gunPrefab;
     private GunService _gunService;
     private BulletService _bulletService;
-    public Factory_Handgun(Handgun gunPrefab, GunService gunService, BulletService bulletService)
+    public Factory_SniperRifle(SniperRifle gunPrefab, GunService gunService, BulletService bulletService)
     {
         _gunPrefab = gunPrefab;
         _gunService = gunService;
@@ -17,7 +15,7 @@ public class Factory_Handgun : IFactory<AWeaponBase>
 
     public AWeaponBase ObjectInstantiate()
     {
-        Handgun gun = GameObject.Instantiate(_gunPrefab);
+        SniperRifle gun = GameObject.Instantiate(_gunPrefab);
 
         gun.SetGunSurvice(_gunService);
         gun.SetBulletSurvice(_bulletService);
