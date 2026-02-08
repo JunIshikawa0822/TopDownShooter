@@ -1,9 +1,15 @@
 using UnityEngine;
-
-[CreateAssetMenu(menuName = "MyGame/Attachment", fileName = "NewAttachment")]
-public abstract class AttachmentData : ItemData
+namespace Game.Data
 {
-    public AttachmentType attachmentType;
-    public GunStatModifier[] modifiers; // 小さな構造体で修正値を定義
-    public ItemVisualData visual; // optional 見た目SO
+    [CreateAssetMenu(menuName = "MyGame/Attachment", fileName = "NewAttachment")]
+    public abstract class AttachmentData : ItemData
+    {
+        [SerializeField] private AttachmentType _attachmentType;
+        [SerializeField] private StatModifier[] _modifiers;
+        [Header("装備可能なアタッチメント")]
+        [SerializeField] private AttachmentType[] _equippableTypes;
+        public AttachmentType AttachmentType => _attachmentType;
+        public StatModifier[] Modifiers => _modifiers; //修正値を定義
+        public AttachmentType[] EquippableTypes => _equippableTypes;
+    }
 }

@@ -8,13 +8,14 @@ public class ItemSystem : ASystem
     private readonly Dictionary<int, Container> _lootableContainerDic = new();
     public override void OnSetUp()
     {
+        gameStat.itemService = new ItemService();
         gameEvents.interactLootableEvent += ProvideContainer;
     }
 
     private void ProvideContainer(int lootableID, LootableType lootableType)
     {
         //lootableIDが含まれていない場合
-        if(!_lootableContainerDic.TryGetValue(lootableID, out Container container))
+        if (!_lootableContainerDic.TryGetValue(lootableID, out Container container))
         {
             //生成する
         }

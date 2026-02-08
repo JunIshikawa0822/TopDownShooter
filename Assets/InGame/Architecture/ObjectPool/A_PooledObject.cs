@@ -9,7 +9,7 @@ public abstract class APooledObject : MonoBehaviour
         if (poolAction == null) return;
         poolAction?.Invoke(this);
     }
-    
+
     public virtual void SetPoolAction<T>(Action<T> action) where T : APooledObject
     {
         // 登録されたAction<T>を、APooledObjectが要求するAction<APooledObject>に変換する

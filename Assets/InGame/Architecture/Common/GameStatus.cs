@@ -35,7 +35,6 @@ public class GameStatus
     public Transform gunPoolTrans;
 
     [Header("BulletPrefab")]
-    public Bullet bulletPrefab;
     public BulletVisual bulletVisualPrefab;
 
     [Header("GunPrefab")]
@@ -50,12 +49,12 @@ public class GameStatus
     [Header("PlayerInventory")]
     //テスト用データ
     public WeaponData playerWeaponData;
-    [HideInInspector]public bool isInventoryOpen = false;
-    
+    [HideInInspector] public bool isInventoryOpen = false;
+
     //テスト用ランタイムデータ
-    [HideInInspector]public AWeaponRuntimeDataBase playerWeaponRuntimeData;
+    [HideInInspector] public AWeaponRuntimeBase playerWeaponRuntimeData;
     //テスト用所持武器オブジェクト
-    [HideInInspector]public AWeaponBase playerEquipWeapon;
+    [HideInInspector] public AWeaponBase playerEquipWeapon;
 
     //シーンのロードに関する部分
     //インベントリモデル
@@ -63,4 +62,7 @@ public class GameStatus
     [HideInInspector] public InventoryView inventoryView;
     [HideInInspector] public InventoryEquipView inventoryEquipView;
     [HideInInspector] public InteractView interactView;
+
+    [Header("Item")]
+    [HideInInspector] public IItemService itemService;
 }

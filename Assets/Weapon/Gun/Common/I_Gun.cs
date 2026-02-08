@@ -4,9 +4,9 @@ using Game.Data;
 using UnityEngine;
 using System;
 
-public interface IGun<TRuntimeData> : IWeapon<TRuntimeData> where TRuntimeData : GunRuntimeData
+public interface IGun<out TRuntime> : IWeapon<TRuntime> where TRuntime : GunRuntime
 {
-    public GunRuntimeData GunRuntimeData{get;}
+    public GunRuntime GunRuntime { get; }
     //public void SetBulletPool(IObjectPool<Bullet> bullet);
     public void SetGunSurvice(IGunService gunService);
     public void SetBulletSurvice(IBulletService bulletService);

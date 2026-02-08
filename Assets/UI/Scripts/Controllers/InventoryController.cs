@@ -2,6 +2,7 @@ using Game.UI;
 using System;
 using UnityEngine;
 using UnityEngine.UIElements;
+using Game.Data;
 
 public class InventoryController : AUIController
 {

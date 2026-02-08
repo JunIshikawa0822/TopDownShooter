@@ -12,9 +12,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e37bd20e18d6a4cd4928c61ca35e1bbd, type: 3}
   m_Name: AR_L_VisualData
   m_EditorClassIdentifier: Assembly-CSharp::ItemVisualData
-  _prefab: {fileID: 639178805255782959, guid: 8095ef38caf3d1f459ef19d91b36d73e, type: 3}
-  width: 5
-  height: 2
-  _icon: {fileID: 0}
-  _pickupSound: {fileID: 0}
-  _useSound: {fileID: 0}
+  _prefab:
+    m_AssetGUID: 8095ef38caf3d1f459ef19d91b36d73e
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_SubObjectGUID: 
+    m_EditorAssetChanged: 0
+  _width: 0
+  _height: 0
+  _icon:
+    m_AssetGUID: 
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_SubObjectGUID: 
+    m_EditorAssetChanged: 0
+  _pickupSound:
+    m_AssetGUID: 
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_SubObjectGUID: 
+    m_EditorAssetChanged: 0
+  _useSound:
+    m_AssetGUID: 
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_SubObjectGUID: 
+    m_EditorAssetChanged: 0

@@ -1,7 +1,6 @@
-using Game.Data;
-using UnityEngine;
 
-public class SubMachinegun : AGunBase<GunRuntimeData>
+
+public class SubMachinegun : AGunBase<GunRuntime>
 {
-    
+
 }

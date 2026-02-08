@@ -25,7 +25,7 @@ public class PlayerAnimationHandler : MonoBehaviour, IAnimationHandler
         _animator.SetFloat("MoveDir_Y", entity.MoveDirection.z);
     }
 
-    public void OnWeaponEquipped(IWeapon<AWeaponRuntimeDataBase> weapon)
+    public void OnWeaponEquipped(IWeapon<AWeaponRuntimeBase> weapon)
     {
         //武器の種類に応じて基本Controllerを切り替え
         if (weapon.WeaponType == WeaponType.None)

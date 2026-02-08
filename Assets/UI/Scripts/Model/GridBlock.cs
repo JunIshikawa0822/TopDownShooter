@@ -1,6 +1,6 @@
 using UnityEngine;
 using System;
-using System.Collections.Generic; 
+using System.Collections.Generic;
 using System.Linq;
 
 public class GridBlock
@@ -23,7 +23,7 @@ public class GridBlock
 
     public bool TryFindItem(string itemID, out InventoryItemData[] items)
     {
-        InventoryItemData[] resultItems = _items.Where(item => item.RuntimeData.BaseData.ID == itemID).ToArray();
+        InventoryItemData[] resultItems = _items.Where(item => item.RuntimeData.BaseData.ItemID == itemID).ToArray();
         bool result = resultItems.Length != 0;
         items = result ? resultItems : Array.Empty<InventoryItemData>();
         return result;
@@ -46,13 +46,13 @@ public class GridBlock
     {
         foreach ((int cellX, int cellY) in item.CalculateOccupiedCells(x, y, dir))
         {
-            if (cellX < 0 || cellY < 0 || cellX >= _gridWidth || cellY >= _gridHeight) 
+            if (cellX < 0 || cellY < 0 || cellX >= _gridWidth || cellY >= _gridHeight)
             {
                 Debug.LogWarning("範囲外にアクセスしました");
                 return false;
             }
 
-            if (_grid[cellX, cellY] != null && _grid[cellX, cellY] != item) 
+            if (_grid[cellX, cellY] != null && _grid[cellX, cellY] != item)
             {
                 Debug.LogWarning("自身以外にアクセスしました");
                 return false;
@@ -63,14 +63,14 @@ public class GridBlock
 
     public bool IsContain(InventoryItemData item)
     {
-        if(item == null) return false;
+        if (item == null) return false;
         return _items.Contains(item);
     }
 
     //単純な排除作業
     public void RemoveFromGrid(InventoryItemData item)
     {
-        if(item == null)return;
+        if (item == null) return;
 
         foreach ((int cellX, int cellY) in item.GetOccupiedCells())
         {
@@ -99,7 +99,7 @@ public class GridBlock
         foreach ((int x, int y) in item.CalculateOccupiedCells(originX, originY, dir))
         {
             _grid[x, y] = item;
-        } 
+        }
 
         _guidDic[item.ItemDataGuid] = item;
         _items.Add(item);

@@ -6,35 +6,32 @@ public class GunService : IOnUpdate, IGunService
 {
     public bool IsActiveForUpdate => true;
     private bool _isBulletConsume = true;
-    private Dictionary<IGun<GunRuntimeData>, GunState> _gunStates = new();
+    private Dictionary<IGun<GunRuntime>, GunState> _gunStates = new();
 
-    public void RegisterGun(IGun<GunRuntimeData> gun)
+    public bool IsBulletConsume => _isBulletConsume;
+
+    public void RegisterGun(IGun<GunRuntime> gun)
     {
-        GunState state = new(){Gun = gun, IsShooting = false};
+        GunState state = new() { Gun = gun, IsShooting = false, LastShotTime = -999f };
         _gunStates.Add(gun, state);
     }
 
-    public void UnRegisterGun(IGun<GunRuntimeData> gun)
+    public void UnRegisterGun(IGun<GunRuntime> gun)
     {
         _gunStates.Remove(gun);
     }
 
-    public bool CanShoot(IGun<GunRuntimeData> gun)
+    public bool CanShoot(IGun<GunRuntime> gun)
     {
         float last = _gunStates.TryGetValue(gun, out GunState t) ? t.LastShotTime : -999f;
-        bool canShoot = Time.time - last >= 1f / gun.RuntimeData.FireRate;
+        bool canShoot = Time.time - last >= gun.GunRuntime.FireInterval;
 
         return canShoot;
     }
 
-    public bool IsBulletConsume()
+    public void RecordShotTime(IGun<GunRuntime> gun)
     {
-        return _isBulletConsume;
-    }
-
-    public void RecordShotTime(IGun<GunRuntimeData> gun)
-    {
-        if(_gunStates.TryGetValue(gun, out GunState t))
+        if (_gunStates.TryGetValue(gun, out GunState t))
         {
             t.LastShotTime = Time.time;
         }
@@ -44,9 +41,9 @@ public class GunService : IOnUpdate, IGunService
         }
     }
 
-    public void StartShooting(IGun<GunRuntimeData> gun)
+    public void StartShooting(IGun<GunRuntime> gun)
     {
-        if(_gunStates.TryGetValue(gun, out GunState t))
+        if (_gunStates.TryGetValue(gun, out GunState t))
         {
             t.IsShooting = true;
         }
@@ -56,9 +53,9 @@ public class GunService : IOnUpdate, IGunService
         }
     }
 
-    public void StopShooting(IGun<GunRuntimeData> gun)
+    public void StopShooting(IGun<GunRuntime> gun)
     {
-        if(_gunStates.TryGetValue(gun, out GunState t))
+        if (_gunStates.TryGetValue(gun, out GunState t))
         {
             t.IsShooting = false;
         }
@@ -76,7 +73,7 @@ public class GunService : IOnUpdate, IGunService
 
     private class GunState
     {
-        public IGun<GunRuntimeData> Gun;
+        public IGun<GunRuntime> Gun;
         public float LastShotTime;
         public bool IsShooting;
     }

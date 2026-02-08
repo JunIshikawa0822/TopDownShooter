@@ -1,6 +1,10 @@
-public enum FireType
+namespace Game.Data
 {
-    Semi,
-    Burst,
-    FullAuto
+    public enum FireType
+    {
+        Semi,
+        Burst,
+        FullAuto
+    }
 }
+

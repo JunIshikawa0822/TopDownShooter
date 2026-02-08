@@ -9,7 +9,9 @@ namespace Game.Data
         [Header("武器固有情報")]
         [SerializeField] private WeaponType _weaponType;
         [SerializeField] private AnimatorOverrideController _weaponAnimation;
-        //[SerializeField] private EquipmentSlot _equipSlot;
+
+        [Header("装備可能なアタッチメント")]
+        [SerializeField] private AttachmentType[] _equippableTypes;
 
         [Header("エンチャント")]
         [SerializeField] private EnchantData[] _attachableEnchants;
@@ -17,11 +19,10 @@ namespace Game.Data
         //[Header("Custom Effects")]
         //[SerializeField] private List<CustomEffect> _attachableEffects = new();
 
-        // public float AttackSpeed => _attackSpeed;
         public WeaponType WeaponType => _weaponType;
-        public IReadOnlyList<EnchantData> AttachableEnchants => _attachableEnchants;
+        public EnchantData[] AttachableEnchants => _attachableEnchants;
         public AnimatorOverrideController WeaponAnim => _weaponAnimation;
-        //public IReadOnlyList<CustomEffect> CustomEffects => customEffects;
+        public AttachmentType[] EquippableTypes => _equippableTypes;
     }
 }
 

@@ -5,21 +5,26 @@ namespace Game.Data
 {
     public interface IItemRuntimeData
     {
+        string RuntimeID { get; }
         ItemData BaseData { get; } // 元の ScriptableObject データ
-        int StackCount { get; }    // 現在のスタック数
-        int MaxStack { get; }      // スタック上限
+        ItemVisualData VisualData { get; }
+        int StackCount { get; }//現在のスタック数
         float CurrentWeight{get;} //重量
-        ItemType ItemType { get; } // アイテムの種類
-        bool CanStack { get; }     // スタック可能か
+        ItemType ItemType { get; }//アイテムの種類
 
-        //スタックに追加する。追加できなかった余りを返す。
+        /// <summary>
+        /// スタックに追加する。追加できなかった余りを返す。
+        /// </summary>
         int AddToStack(int amount);
 
-        //スタックから指定数を取り除く（消費・分割両方で使用可能）。
-        // 実際に減らせた数を返す。
+        /// <summary>
+        /// スタックから指定数を取り除く（消費・分割両方で使用可能）。実際に減らせた数を返す。
+        /// </summary>        
         int ReduceStack(int amount);
-
-        //別のスタックと結合する。結合できなかった余りを返す。
+        
+        /// <summary>
+        /// 別のスタックと結合する。完全に結合できたらtrue できなかったらfalse
+        /// </summary>
         bool Merge(IItemRuntimeData other);
     }
 }
