@@ -6,6 +6,7 @@ using UnityEngine;
 [System.Serializable]
 public class GameStatus
 {
+    [SerializeReference]public AWeaponBase equippedWeapon;
     [Header("Camera")]
     public Camera mainCamera;
     [Header("Player")]

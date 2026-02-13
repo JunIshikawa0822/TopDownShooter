@@ -9,7 +9,7 @@ EditorBuildSettings:
     path: Assets/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 0
-    path: Assets/InGame/Entity/Player/Scene/Player.unity
+    path: Assets/Entity/Player/Scene/Player.unity
     guid: 5e07bb4ade1d44b808f173539f696566
   - enabled: 0
     path: Assets/UI/Scene/TetrisInventory.unity

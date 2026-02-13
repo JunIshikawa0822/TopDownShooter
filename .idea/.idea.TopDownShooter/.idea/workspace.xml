@@ -2,7 +2,114 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ee09bf40-ed54-4878-afdf-4ca31a0a5ed0" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/ShaderGraphSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/ShaderGraphSettings.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.TopDownShooter/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.TopDownShooter/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Common.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Common/IDamagable.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Common/IDamagable.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animation.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animation/EmptyHand.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animation/EmptyHand/Idle1.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animation/EmptyHand/Idle1.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animation/EmptyHand/Run_Emptyhand.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animation/EmptyHand/Run_Emptyhand/Running1.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animation/EmptyHand/Run_Emptyhand/Running1.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animation/EmptyHand/Run_Emptyhand/Sprint1.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animation/EmptyHand/Run_Emptyhand/Sprint1.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animation/EmptyHand/Walk_Enptyhand.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animation/EmptyHand/Walk_Enptyhand/Walking_Backward.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animation/EmptyHand/Walk_Enptyhand/Walking_Backward.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animation/EmptyHand/Walk_Enptyhand/Walking_Forward.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animation/EmptyHand/Walk_Enptyhand/Walking_Forward.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animation/EmptyHand/Walk_Enptyhand/Walking_Left.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animation/EmptyHand/Walk_Enptyhand/Walking_Left.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animation/EmptyHand/Walk_Enptyhand/Walking_Right.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animation/EmptyHand/Walk_Enptyhand/Walking_Right.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animation/Melee.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animation/Melee/Run_Melee.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animation/Melee/Run_Melee/Y Bot@Sword And Shield Run Backward.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animation/Melee/Run_Melee/Y Bot@Sword And Shield Run Backward.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animation/Melee/Run_Melee/Y Bot@Sword And Shield Run Forward.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animation/Melee/Run_Melee/Y Bot@Sword And Shield Run Forward.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animation/Melee/Run_Melee/Y Bot@Sword And Shield Run Left.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animation/Melee/Run_Melee/Y Bot@Sword And Shield Run Left.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animation/Melee/Run_Melee/Y Bot@Sword And Shield Run Right.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animation/Melee/Run_Melee/Y Bot@Sword And Shield Run Right.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animation/Melee/Walk_Melee.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animation/Melee/Walk_Melee/Y Bot@Sword And Shield Walk Backward.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animation/Melee/Walk_Melee/Y Bot@Sword And Shield Walk Backward.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animation/Melee/Walk_Melee/Y Bot@Sword And Shield Walk Forward.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animation/Melee/Walk_Melee/Y Bot@Sword And Shield Walk Forward.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animation/Melee/Walk_Melee/Y Bot@Sword And Shield Walk Left Reverse.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animation/Melee/Walk_Melee/Y Bot@Sword And Shield Walk Left Reverse.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animation/Melee/Walk_Melee/Y Bot@Sword And Shield Walk Left.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animation/Melee/Walk_Melee/Y Bot@Sword And Shield Walk Left.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animation/Melee/Walk_Melee/Y Bot@Sword And Shield Walk Right.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animation/Melee/Walk_Melee/Y Bot@Sword And Shield Walk Right.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animation/Melee/Y Bot@Sword And Shield Idle.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animation/Melee/Y Bot@Sword And Shield Idle.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animation/Rifle.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animation/Rifle/Walk_Rifle.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animation/Rifle/Walk_Rifle/Y Bot@Idle Aiming.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animation/Rifle/Walk_Rifle/Y Bot@Idle Aiming.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animation/Rifle/Walk_Rifle/Y Bot@Walk Backward Left With Rifle.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animation/Rifle/Walk_Rifle/Y Bot@Walk Backward Left With Rifle.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animation/Rifle/Walk_Rifle/Y Bot@Walk Backward Right With Rifle.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animation/Rifle/Walk_Rifle/Y Bot@Walk Backward Right With Rifle.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animation/Rifle/Walk_Rifle/Y Bot@Walk Backward With Rifle.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animation/Rifle/Walk_Rifle/Y Bot@Walk Backward With Rifle.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animation/Rifle/Walk_Rifle/Y Bot@Walk Forward Left With Rifle.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animation/Rifle/Walk_Rifle/Y Bot@Walk Forward Left With Rifle.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animation/Rifle/Walk_Rifle/Y Bot@Walk Forward Right With Rifle.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animation/Rifle/Walk_Rifle/Y Bot@Walk Forward Right With Rifle.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animation/Rifle/Walk_Rifle/Y Bot@Walk Forward With Rifle.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animation/Rifle/Walk_Rifle/Y Bot@Walk Forward With Rifle.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animation/Rifle/Walk_Rifle/Y Bot@Walk Left With Rifle.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animation/Rifle/Walk_Rifle/Y Bot@Walk Left With Rifle.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animation/Rifle/Walk_Rifle/Y Bot@Walk Right With Rifle.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animation/Rifle/Walk_Rifle/Y Bot@Walk Right With Rifle.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animation/Rifle/Walk_Rifle/Y Bot@Walk With Rifle.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animation/Rifle/Walk_Rifle/Y Bot@Walk With Rifle.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animator.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animator/Player_EmptyHands_AnimatorController.controller" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animator/Player_EmptyHands_AnimatorController.controller.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animator/Player_MeleeWeapon_AnimatorController.controller" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animator/Player_MeleeWeapon_AnimatorController.controller.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animator/Player_Rifle_AnimatorController.controller" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Animator/Player_Rifle_AnimatorController.controller.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Player.prefab" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Player.prefab.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/PlayerMaterial.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/PlayerMaterial.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Prefab.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Prefab/Y Bot.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Prefab/Y Bot.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Scene.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Scene/Player.unity" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Scene/Player.unity.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Scripts.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Scripts/PlayerAnimationHandler.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Scripts/PlayerAnimationHandler.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Scripts/PlayerController.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Scripts/PlayerController.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Status.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Status/Buff.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Status/Buff.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Status/BuffManager.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Status/BuffManager.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Status/StatData.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Status/StatData.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Status/Stats.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Player/Status/Stats.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Readme.asset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Readme.asset.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Scripts.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Scripts/A_Entity.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Scripts/A_Entity.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Scripts/I_WeaponHandler.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/InGame/Entity/Scripts/I_WeaponHandler.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/TopDownShooter.slnx" beforeDir="false" afterPath="$PROJECT_DIR$/TopDownShooter.slnx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -12,9 +119,9 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 4
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 4
+}</component>
   <component name="ProjectId" id="34WTVfw7EF57PesaWSbkysySHcb" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -23,11 +130,56 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "feature__PlayerAnimation__1",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "feature__AISystem__1__11",
     "nodejs_package_manager_path": "npm",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RunManager" selected="Attach to Unity Editor.Attach to Unity Editor">
+    <configuration name="Start Unity" type="RunUnityExe" factoryName="Unity Executable">
+      <option name="EXE_PATH" value="/Applications/Unity/Hub/Editor/6000.2.8f1/Unity.app/Contents/MacOS/Unity" />
+      <option name="PROGRAM_PARAMETERS" value="-projectPath $PROJECT_DIR$ -debugCodeOptimization" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="PASS_PARENT_ENVS" value="1" />
+      <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Unit Tests (batch mode)" type="RunUnityExe" factoryName="Unity Executable">
+      <option name="EXE_PATH" value="/Applications/Unity/Hub/Editor/6000.2.8f1/Unity.app/Contents/MacOS/Unity" />
+      <option name="PROGRAM_PARAMETERS" value="-runTests -batchmode -projectPath $PROJECT_DIR$ -testResults Logs/results.xml -logFile Logs/Editor.log -testPlatform EditMode -debugCodeOptimization" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="PASS_PARENT_ENVS" value="1" />
+      <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Attach to Unity Editor &amp; Play" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="UNITY_ATTACH_AND_PLAY" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost">
+      <option name="allowRunningInParallel" value="false" />
+      <option name="listenPortForConnections" value="false" />
+      <option name="pid" />
+      <option name="projectPathOnTarget" />
+      <option name="runtimes">
+        <list />
+      </option>
+      <option name="selectedOptions">
+        <list />
+      </option>
+      <method v="2" />
+    </configuration>
+    <configuration name="Attach to Unity Editor" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost">
+      <option name="allowRunningInParallel" value="false" />
+      <option name="listenPortForConnections" value="false" />
+      <option name="pid" />
+      <option name="projectPathOnTarget" />
+      <option name="runtimes">
+        <list />
+      </option>
+      <option name="selectedOptions">
+        <list />
+      </option>
+      <method v="2" />
+    </configuration>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -37,14 +189,20 @@
       <option name="presentableId" value="Default" />
       <updated>1761328354319</updated>
       <workItem from="1761328356932" duration="4000" />
+      <workItem from="1770567000530" duration="224000" />
     </task>
     <servers />
   </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
   <component name="UnityProjectConfiguration" hasMinimizedUI="true" />
   <component name="UnityProjectDiscoverer">
+    <option name="hasUnityReference" value="true" />
     <option name="unityProject" value="true" />
     <option name="unityProjectFolder" value="true" />
   </component>
+  <component name="UnityUnitTestConfiguration" currentTestLauncher="Both" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
   </component>

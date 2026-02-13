@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
-//**********装備による一時的な値の変化量を管理する**********
+//**********バフによる一時的な値の変化量を管理する**********
 public class StatHandlerEffect
 {
     private struct CacheEntry
@@ -65,9 +65,9 @@ public class StatHandlerEffect
     }
 
     //装備の「補正値」の側面を渡す
-    public void AddEffect(StatusEffect statEffect)
+    public void AddEffect(StatEffect statEffect)
     {
-        if(statEffect == null) return;
+        if (statEffect == null) return;
         if (_activeEffectProviders.TryGetValue(statEffect.EffectID, out EffectEntry existing))
         {
             //すでに存在する場合は、効果時間の上書きだけする
@@ -130,10 +130,10 @@ public class StatHandlerEffect
         }
 
         //例えばkeyに対応する装備が外された直後の値取得で呼ばれる
-        if(relevantModifiers.Count == 0) 
+        if (relevantModifiers.Count == 0)
         {
             _cache[statName] = new CacheEntry { Offset = 0, BaseValue = baseValue };
-            _dirtyStats.Remove(statName); 
+            _dirtyStats.Remove(statName);
             return 0;
         }
 
