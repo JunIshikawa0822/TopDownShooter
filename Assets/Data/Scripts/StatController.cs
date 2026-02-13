@@ -1,29 +1,45 @@
-using System.Collections.Generic;
-using System.Numerics;
 using UnityEngine;
-//Statusを管理する最上位
-public class StatController
+using System.Collections.Generic;
+
+public class StatController : IOnUpdate
 {
-    //**********ベース値を管理する層**********
-    private Dictionary<string, float> _baseStats = new ();
+    // 大量のステータスを保持
+    protected readonly Dictionary<string, AttributeEntity> _attributes = new();
+    protected readonly Dictionary<string, ResourceEntity> _resources = new();
+    protected StatHandlerEquipment _equipmentHandler = new();
+    protected StatHandlerEffect _effectHandler = new();
 
-    //何らかの要因でBaseが成長したことを想定したメソッド
-    public void SetBaseStat(Dictionary<string, float> baseStat)
+    public bool IsActiveForUpdate => true;
+
+    public virtual void Initialize()
     {
-        _baseStats = baseStat;
+        //初期化の例
+        _attributes["MaxHP"] = new AttributeEntity(100);
+        _resources["CurrentHP"] = new ResourceEntity(100);
     }
-    
-    //**********装備による一時的な値の変化量を管理する層**********
 
-    StatHandlerEquipment _statHandlerEquipment = new();
-    //**********バフによる一時的な値の変化量を管理する層**********
-    StatHandlerEffect _statHandlerEffect = new();
-
-    //**********最終的な値を計算する層**********
-    private readonly Dictionary<string, float> _finalizeStats = new ();
-
-    private void CalculateStat()
+    public virtual void OnUpdate()
     {
-        
+        _effectHandler.Tick(Time.deltaTime, _attributes, _resources);
+    }
+
+    public virtual void AddEquipmentProvider(IStatModifierProvider provider)
+    {
+        _equipmentHandler.AddEquipmentProvider(provider);
+    }
+
+    public virtual void RemoveEquipmentProvider(IStatModifierProvider provider)
+    {
+        _equipmentHandler.RemoveEquipmentProvider(provider);
+    }
+
+    public virtual void AddEffect(StatEffect effect)
+    {
+        _effectHandler.AddEffect(effect);
+    }
+
+    public void RemoveEffect(string effectKey)
+    {
+        _effectHandler.RemoveEffect(effectKey);
     }
 }

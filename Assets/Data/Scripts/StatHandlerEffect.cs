@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
-//**********装備による一時的な値の変化量を管理する**********
+//**********バフによる一時的な値の変化量を管理する**********
 public class StatHandlerEffect
 {
     private struct CacheEntry
@@ -11,12 +11,15 @@ public class StatHandlerEffect
 
     private class EffectEntry
     {
+        //残り時間
         public float Duration;
         public readonly IStatModifierProvider Provider;
+        public readonly IActiveEffect ActiveEffect;
         public bool IsDiscard => Duration <= 0;
-        public EffectEntry(IStatModifierProvider effect, float duration)
+        public EffectEntry(StatEffect effect, float duration)
         {
             Provider = effect;
+            if (effect is IActiveEffect active) ActiveEffect = active;
             Duration = duration;
         }
     }
@@ -42,18 +45,35 @@ public class StatHandlerEffect
     }
 
     //毎フレーム呼ばれる
-    public void Tick(float deltaTime)
+    public void Tick(float deltaTime, Dictionary<string, AttributeEntity> attributes, Dictionary<string, ResourceEntity> resources)
     {
         _removalBuffer.Clear();
 
-        //まず「消すべきもの」を調べる（ここでは削除しない）
         foreach (KeyValuePair<string, EffectEntry> pair in _activeEffectProviders)
         {
             pair.Value.Duration -= deltaTime;
-            if (pair.Value.IsDiscard)
-            {
-                _removalBuffer.Add(pair.Key);
-            }
+            // ここで IActiveEffect を実行
+            if (pair.Value.ActiveEffect != null) pair.Value.ActiveEffect.Execute(deltaTime, attributes, resources);
+            //まず「消すべきもの」を調べる（ここでは削除しない）
+            if (pair.Value.IsDiscard)_removalBuffer.Add(pair.Key);
+        }
+
+        //調べ終わった後に、まとめて安全に削除する
+        foreach (string id in _removalBuffer)
+        {
+            //RemoveEffect経由で呼ぶことで、キャッシュも正しくクリアされる
+            RemoveEffect(id);
+        }
+
+        _removalBuffer.Clear();
+
+        foreach (KeyValuePair<string, EffectEntry> pair in _activeEffectProviders)
+        {
+            pair.Value.Duration -= deltaTime;
+            // ここで IActiveEffect を実行
+            if (pair.Value.ActiveEffect != null) pair.Value.ActiveEffect.Execute(deltaTime, attributes, resources);
+            //まず「消すべきもの」を調べる（ここでは削除しない）
+            if (pair.Value.IsDiscard)_removalBuffer.Add(pair.Key);
         }
 
         //調べ終わった後に、まとめて安全に削除する
@@ -64,10 +84,9 @@ public class StatHandlerEffect
         }
     }
 
-    //装備の「補正値」の側面を渡す
-    public void AddEffect(StatusEffect statEffect)
+    public void AddEffect(StatEffect statEffect)
     {
-        if(statEffect == null) return;
+        if (statEffect == null) return;
         if (_activeEffectProviders.TryGetValue(statEffect.EffectID, out EffectEntry existing))
         {
             //すでに存在する場合は、効果時間の上書きだけする
@@ -130,10 +149,10 @@ public class StatHandlerEffect
         }
 
         //例えばkeyに対応する装備が外された直後の値取得で呼ばれる
-        if(relevantModifiers.Count == 0) 
+        if (relevantModifiers.Count == 0)
         {
             _cache[statName] = new CacheEntry { Offset = 0, BaseValue = baseValue };
-            _dirtyStats.Remove(statName); 
+            _dirtyStats.Remove(statName);
             return 0;
         }
 
