@@ -28,14 +28,14 @@ public class StatHandlerEquipment
     //装備の「補正値」の側面を渡す
     public void AddEquipmentProvider(IStatModifierProvider provider)
     {
-        if(provider == null) return;
+        if (provider == null) return;
         if (_activeEquipProviders.Add(provider)) MarkAffectedStatsDirty(provider);
     }
 
     //装備の「補正値」の側面をはずす
     public void RemoveEquipmentProvider(IStatModifierProvider provider)
     {
-        if(provider == null) return;
+        if (provider == null) return;
         if (_activeEquipProviders.Remove(provider)) MarkAffectedStatsDirty(provider);
     }
 
@@ -71,10 +71,10 @@ public class StatHandlerEquipment
         }
 
         //例えばkeyに対応する装備が外された直後の値取得で呼ばれる
-        if(relevantModifiers.Count == 0) 
+        if (relevantModifiers.Count == 0)
         {
             _cache[statName] = new CacheEntry { Offset = 0, BaseValue = baseValue };
-            _dirtyStats.Remove(statName); 
+            _dirtyStats.Remove(statName);
             return 0;
         }
 

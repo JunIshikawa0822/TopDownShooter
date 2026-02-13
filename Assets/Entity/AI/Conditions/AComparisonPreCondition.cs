@@ -3,7 +3,7 @@ using HTN;
 using UnityEngine;
 public abstract class AComparisonPreCondition : ATaskPreCondition
 {
-    private enum ComparisonType
+    protected enum ComparisonType
     {
         EqualTo,
         GreaterThan,
@@ -13,6 +13,6 @@ public abstract class AComparisonPreCondition : ATaskPreCondition
         None
     }
     //[SerializeReference, SubclassSelector] private object left;
-    [SerializeField] private ComparisonType _comparisonType;
+    [SerializeField] protected ComparisonType _comparisonType;
     //[SerializeReference, SubclassSelector] private object right;
 }

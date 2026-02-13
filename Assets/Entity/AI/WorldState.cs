@@ -30,5 +30,10 @@ namespace HTN
         {
             return 0;
         }
+
+        public bool HasFloatVariable(string variableName)
+        {
+            return false;
+        }   
     }
 }

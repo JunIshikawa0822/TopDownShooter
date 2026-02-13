@@ -15,18 +15,5 @@ public class StatEffect : IStatModifierProvider
         _duration = duration;
     }
 
-    public bool CanRemove()
-    {
-        //時間による解除（無制限でなければ）
-        bool timeOut = _duration <= 0;
-
-        return timeOut;
-    }
-
     public IEnumerable<StatModifier> GetModifiers() => _modifiers;
-
-    public void Tick(float deltaTime)
-    {
-        _duration -= deltaTime;
-    }
 }
