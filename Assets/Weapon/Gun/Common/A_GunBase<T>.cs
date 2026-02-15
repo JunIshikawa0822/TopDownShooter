@@ -183,9 +183,39 @@ public abstract class AGunBase<TRuntime> : AWeaponBase<TRuntime>, IGun<TRuntime>
         );
     }
 
-    protected void SetBullet(Vector3 dir, bool isAiming)
+    protected void SetBullet(bool isAiming)
     {
-        
+        float startAngle = (GunRuntime.SimulNum > 1) ? -GunRuntime.ShotSpread * 0.5f : 0;
+        float angleStep = (GunRuntime.SimulNum > 1) ? GunRuntime.ShotSpread / (GunRuntime.SimulNum - 1) : 0;
+    
+        for (int i = 0; i < GunRuntime.SimulNum; ++i)
+        {
+            //扇状の配置角度
+            float baseAngle = startAngle + (angleStep * i);
+            
+            //TODO: ランダムな値は本当に0.5でいいのか
+            //TODO: 武器やその他プレイヤーの状態によるScatterの増加も考慮するとよい
+            float randomOffset = UnityEngine.Random.Range(-0.5f, 0.5f) * GunRuntime.CurrentScatter;
+            
+            //合計の回転角
+            float finalAngle = baseAngle + randomOffset;
+
+            //muzzle.forward（基準方向）をY軸中心に回転
+            Vector3 bulletDir = Quaternion.Euler(0, finalAngle, 0) * _muzzleTrans.forward;
+
+            Vector3 destinationPoint = GetDestination(_muzzleTrans.position, bulletDir);
+            float range = Vector3.Distance(_muzzleTrans.position, destinationPoint);
+
+            _bulletSurvice.BulletInit
+            (
+                GunRuntime.LoadAmmoData,
+                _muzzleTrans.position,
+                bulletDir,
+                Mathf.Min(range, GunRuntime.MaxRange),
+                GunRuntime.Velocity,
+                _collideLayerMask
+            );
+        }
     }
 
     protected virtual async UniTaskVoid InvokeMuzzleFlash()
