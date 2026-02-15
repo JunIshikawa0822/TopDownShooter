@@ -13,17 +13,20 @@ namespace Game.Data
         [Header("射撃ロジック")]
         [SerializeField] private FireType _fireType;
         [SerializeField] private int _burstCount = 3;
+        [SerializeField] private int _simulNum = 1;//同時発射数（ショットガンなど）
         [SerializeField] private float _rpm; //rounds per minute
 
         [Header("反動・精度")]
         [SerializeField] private float _velocity;//射出速度
         [SerializeField] private float _horizontalRecoil;//水平反動値 左右のブレの絶対値
         [SerializeField] private float _verticalRecoil;//垂直反動値 上下のブレの絶対値　下向きの制御はコード側で行う
+        
         //照準の中心から「半径何メートル（または角度何度）の円の中に弾が飛ぶか」という円の大きさ（半径）を表す。
         // 単位は一般的にDegree
-        [SerializeField] private float _baseSpread;
-        [SerializeField] private float _spreadIncriment;//連射時の拡散増加量
-        [SerializeField] private float _maxSpread = 3.0f;//連射時の拡散増加量上限
+        [SerializeField] private float _shotSpread;
+        [SerializeField] private float _baseScatter;//拡散のランダム
+        [SerializeField] private float _scatterIncriment;//連射時の拡散増加量
+        [SerializeField] private float _maxScatter = 3.0f;//連射時の拡散増加量上限
 
         [Header("取り回し")]
         [SerializeField] private float _reloadTime;
@@ -37,15 +40,17 @@ namespace Game.Data
 
         public FireType FireType => _fireType;
         public int BurstCount => _burstCount;
+        public int SimulNum => _simulNum;
         //射撃間隔（秒）
         public float FireInterval => _rpm > 0 ? 60f / _rpm : 0.1f;
 
         public float Velocity => _velocity > 0 ? _velocity : 10;
         public float HorizontalRecoil => _horizontalRecoil;
         public float VerticalRecoil => _verticalRecoil;
-        public float BaseSpread => _baseSpread;
-        public float SpreadIncriment => _spreadIncriment;
-        public float MaxSpread => _maxSpread;
+        public float ShotSpread => _shotSpread;
+        public float BaseScatter => _baseScatter;
+        public float ScatterIncriment => _scatterIncriment;
+        public float MaxScatter => _maxScatter;
 
         public float ReloadTime => _reloadTime;
         public float Ergonomics => _ergonomics;

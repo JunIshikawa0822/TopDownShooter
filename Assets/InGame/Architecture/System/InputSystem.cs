@@ -23,6 +23,9 @@ public class InputSystem : ASystem, IOnPreUpdate
         _gameInputs.Player.Attack.performed += OnAttackProcessInput;
         _gameInputs.Player.Attack.canceled += OnAttackEndInput;
 
+        _gameInputs.Player.AttackSupport.started += OnAttackSupportStartInput;
+        _gameInputs.Player.AttackSupport.canceled += OnAttackSupportEndInput;
+
         _gameInputs.Player.Sprint.started += OnSprintStartInput;
         _gameInputs.Player.Sprint.canceled += OnSprintEndInput;
 
@@ -136,26 +139,32 @@ public class InputSystem : ASystem, IOnPreUpdate
         gameStat.moveDirection = GetCameraSpaceMovementVector(direction, gameStat.mainCamera);
     }
 
-    private void OnLookInput(InputAction.CallbackContext context)
+    //Adsやその他スキル入力
+    private void OnAttackSupportStartInput(InputAction.CallbackContext context)
     {
+        gameStat.isAttackSupportInput = true;
+    }
 
+    private void OnAttackSupportEndInput(InputAction.CallbackContext context)
+    {
+        gameStat.isAttackSupportInput = false;
     }
 
     private void OnAttackStartInput(InputAction.CallbackContext context)
     {
-        gameEvents.attackStartEvent?.Invoke();
-        gameStat.isPressProcessing = true;
+        gameEvents.attackStartEvent?.Invoke(gameStat.isAttackSupportInput);
+        gameStat.isAttackProcessing = true;
     }
 
     private void OnAttackProcessInput(InputAction.CallbackContext context)
     {
-        gameEvents.attackProcessEvent?.Invoke();
+        //gameEvents.attackProcessEvent?.Invoke();
     }
 
     private void OnAttackEndInput(InputAction.CallbackContext context)
     {
-        gameEvents.attackEndEvent?.Invoke();
-        gameStat.isPressProcessing = false;
+        gameEvents.attackEndEvent?.Invoke(gameStat.isAttackSupportInput);
+        gameStat.isAttackProcessing = false;
     }
 
     private void OnInteractInput(InputAction.CallbackContext context)
@@ -199,7 +208,8 @@ public class InputSystem : ASystem, IOnPreUpdate
             _gameInputs.UI.Enable();
             
             gameStat.moveDirection = Vector3.zero;
-            gameStat.isPressProcessing = false;
+            gameStat.isAttackProcessing = false;
+            gameStat.isAttackSupportInput = false;
         }
         else
         {

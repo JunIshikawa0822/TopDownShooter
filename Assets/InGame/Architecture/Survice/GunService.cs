@@ -65,10 +65,9 @@ public class GunService : IOnUpdate, IGunService
         }
     }
 
-    //銃がGunServiceに問い合わせるのは「intervalかどうか」だけ
     public void OnUpdate()
     {
-
+        
     }
 
     private class GunState

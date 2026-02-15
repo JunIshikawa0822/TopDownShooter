@@ -47,14 +47,17 @@ public abstract class AGunBase<TRuntime> : AWeaponBase<TRuntime>, IGun<TRuntime>
         _bulletSurvice = bulletService;
     }
 
+    public virtual void RecoverScatter()
+    {
+        GunRuntime.DerimentScatter();
+    }
+
     public virtual void Reload()
     {
         //インベントリから新しい対応するマガジンを探し出して、セットする
     }
 
-
-
-    public override void AttackStart()
+    public override void AttackStart(bool isAiming)
     {
         if (GunRuntime.FireType == FireType.Burst) BurstFire().Forget();
         if (GunRuntime.FireType == FireType.FullAuto || GunRuntime.FireType == FireType.Semi)
@@ -98,7 +101,8 @@ public abstract class AGunBase<TRuntime> : AWeaponBase<TRuntime>, IGun<TRuntime>
         _gunService.StopShooting(this);
     }
 
-    public override void AttackProcess()
+    //TODO: 連射によって弾の拡散や反動を増加する計算を追加する
+    public override void AttackProcess(bool isAiming)
     {
         if (GunRuntime.FireType == FireType.Semi || GunRuntime.FireType == FireType.Burst) return;
         if (GunRuntime.FireType == FireType.FullAuto)
@@ -121,7 +125,7 @@ public abstract class AGunBase<TRuntime> : AWeaponBase<TRuntime>, IGun<TRuntime>
         return true;
     }
 
-    public override void AttackEnd()
+    public override void AttackEnd(bool isAiming)
     {
         _gunService.StopShooting(this);
     }
@@ -177,6 +181,11 @@ public abstract class AGunBase<TRuntime> : AWeaponBase<TRuntime>, IGun<TRuntime>
             GunRuntime.Velocity,
             _collideLayerMask
         );
+    }
+
+    protected void SetBullet(Vector3 dir, bool isAiming)
+    {
+        
     }
 
     protected virtual async UniTaskVoid InvokeMuzzleFlash()

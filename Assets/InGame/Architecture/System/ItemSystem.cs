@@ -14,7 +14,7 @@ public class ItemSystem : ASystem
 
     private void ProvideContainer(int lootableID, LootableType lootableType)
     {
-        //lootableIDが含まれていない場合
+        //lootableIDが含まれていない場合（初めて開ける箱の場合）は中身を生成する
         if (!_lootableContainerDic.TryGetValue(lootableID, out Container container))
         {
             //生成する

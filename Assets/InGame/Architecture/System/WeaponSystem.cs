@@ -48,9 +48,9 @@ public class WeaponSystem : ASystem, IOnUpdate, IOnFixedUpdate
         _gunService.OnUpdate();
         _bulletService.OnUpdate();
 
-        if(gameStat.isPressProcessing)
+        if(gameStat.isAttackProcessing)
         {
-            AttackProcess();
+            AttackProcess(gameStat.isAttackSupportInput);
         }
     }
 
@@ -59,24 +59,24 @@ public class WeaponSystem : ASystem, IOnUpdate, IOnFixedUpdate
         _bulletService.OnFixedUpdate();
     }
 
-    private void AttackStart()
+    private void AttackStart(bool isAttackSupportInput)
     {
         if(gameStat.playerEquipWeapon == null)return;
-        gameStat.playerEquipWeapon.AttackStart();
+        gameStat.playerEquipWeapon.AttackStart(isAttackSupportInput);
         //Debug.Log("AttackStart");
     }
 
-    private void AttackProcess()
+    private void AttackProcess(bool isAttackSupportInput)
     {
         if(gameStat.playerEquipWeapon == null)return;
-        gameStat.playerEquipWeapon.AttackProcess();
+        gameStat.playerEquipWeapon.AttackProcess(isAttackSupportInput);
         // Debug.Log("AttackProcess");
     }
 
-    private void AttackEnd()
+    private void AttackEnd(bool isAttackSupportInput)
     {
         if(gameStat.playerEquipWeapon == null)return;
-        gameStat.playerEquipWeapon.AttackEnd();
+        gameStat.playerEquipWeapon.AttackEnd(isAttackSupportInput);
         //Debug.Log("AttackEnd");
     }
 

@@ -6,7 +6,7 @@ public class Shotgun : AGunBase<GunRuntime>
 {
     //TODO: 弾を拡散させる処理を追加
     //TODO: 複数の弾を発射する処理を追加
-    public override void AttackStart()
+    public override void AttackStart(bool isAiming)
     {
         if (GunRuntime.FireType == FireType.Burst) BurstFire().Forget();
         if (GunRuntime.FireType == FireType.FullAuto || GunRuntime.FireType == FireType.Semi)
@@ -49,7 +49,7 @@ public class Shotgun : AGunBase<GunRuntime>
         _gunService.StopShooting(this);
     }
 
-    public override void AttackProcess()
+    public override void AttackProcess(bool isAiming)
     {
         if (GunRuntime.FireType == FireType.Semi || GunRuntime.FireType == FireType.Burst) return;
         if (GunRuntime.FireType == FireType.FullAuto)
