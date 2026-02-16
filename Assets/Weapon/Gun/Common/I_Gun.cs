@@ -11,5 +11,4 @@ public interface IGun<out TRuntime> : IWeapon<TRuntime> where TRuntime : GunRunt
     public void SetGunSurvice(IGunService gunService);
     public void SetBulletSurvice(IBulletService bulletService);
     public void Reload();
-    public void RecoverScatter();
 }

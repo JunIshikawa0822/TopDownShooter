@@ -29,6 +29,12 @@ public class GunService : IOnUpdate, IGunService
         return canShoot;
     }
 
+    public float GetPassedTimeSinceLastShot(IGun<GunRuntime> gun)
+    {
+        float last = _gunStates.TryGetValue(gun, out GunState t) ? t.LastShotTime : -999f;
+        return Time.time - last;
+    }
+
     public void RecordShotTime(IGun<GunRuntime> gun)
     {
         if (_gunStates.TryGetValue(gun, out GunState t))
@@ -67,7 +73,7 @@ public class GunService : IOnUpdate, IGunService
 
     public void OnUpdate()
     {
-        
+
     }
 
     private class GunState

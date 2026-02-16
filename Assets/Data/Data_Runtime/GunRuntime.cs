@@ -22,6 +22,8 @@ public class GunRuntime : AWeaponRuntimeBase
 
     private uint _internalAmmoRemaining = 0;
     private AmmoData _loadedInternalAmmoData;
+    private float _lastShotTime = -999f;
+    public bool IsIntervalShooting => Time.time - _lastShotTime < FireInterval;
 
     public GunData GunData => ItemData as GunData;
     public AmmoData LoadAmmoData => GunData.IsInternalMagazine ? _loadedInternalAmmoData : _currentMagazine.LoadedAmmoData;
@@ -37,11 +39,22 @@ public class GunRuntime : AWeaponRuntimeBase
     public float BaseScatter => _baseStats[KEY_BASE_SCATTER] + GetEquipOffsetStat(KEY_BASE_SCATTER);
     public float ScatterIncriment => _baseStats[KEY_SPREAD_INCRIMENT] + GetEquipOffsetStat(KEY_SPREAD_INCRIMENT);
     public float MaxScatter => _baseStats[KEY_MAX_SPREAD] + GetEquipOffsetStat(KEY_MAX_SPREAD);
-    private float _internalCurrentScatter = 0;//拡散量。これがBaseScatterからMaxScatterの範囲で変動するイメージ
-    public float CurrentScatter => _internalCurrentScatter;
+    private float _internalCurrentScatter;//拡散量。これがBaseScatterからMaxScatterの範囲で変動するイメージ
     public float ReloadTime => _baseStats[KEY_RELOAD_TIME] + GetEquipOffsetStat(KEY_RELOAD_TIME);
     public float Ergonomics => _baseStats[KEY_ERGONOMICS] + GetEquipOffsetStat(KEY_ERGONOMICS);
     public float MaxRange => _baseStats[KEY_MAX_RANGE] + GetEquipOffsetStat(KEY_MAX_RANGE);
+
+    public float CurrentScatter
+    {
+        get
+        {
+            float timePassed = Time.time - _lastShotTime;
+            // TODO: 拡散の回復速度をとりあえず増加の1/3にしている
+            float recovery = (ScatterIncriment / 3f) * timePassed;
+            _internalCurrentScatter = Mathf.Max(BaseScatter, _internalCurrentScatter - recovery);
+            return _internalCurrentScatter;
+        }
+    }
 
     public GunRuntime(GunData gunData, int initialCount = 1, Guid? runtimeGuid = null) : base(gunData, initialCount, runtimeGuid)
     {
@@ -100,7 +113,6 @@ public class GunRuntime : AWeaponRuntimeBase
     }
 
     //TODO: 無限弾の仕様考えておく
-
     public virtual bool CanConsume(bool isConsume = true)
     {
         if (!GunData.IsInternalMagazine)
@@ -123,27 +135,14 @@ public class GunRuntime : AWeaponRuntimeBase
         }
     }
 
+    public void RecordShotTime()
+    {
+        _lastShotTime = Time.time;
+    }
+
     //撃つたびに反動で精度が落ちる処理
     public void IncrimentScatter()
     {
         _internalCurrentScatter = Math.Clamp(_internalCurrentScatter + ScatterIncriment, BaseScatter, MaxScatter);
-    }
-    //時間経過で精度が回復する
-    //拡散がBaseScatterより小さくなっても、BaseScatterに戻していく
-    public void DerimentScatter()
-    {
-        if(Mathf.Approximately(_internalCurrentScatter, BaseScatter)) return;
-        _internalCurrentScatter = Mathf.MoveTowards
-        (
-            _internalCurrentScatter,
-            BaseScatter, 
-            //TODO: 拡散の回復速度をとりあえず増加の1/3にしている
-            (float)(ScatterIncriment / 3) * Time.deltaTime
-        );
-    }
-    //精度をリセットする（リロード時など）
-    public void ResetScatter()
-    {
-        _internalCurrentScatter = BaseScatter;
     }
 }

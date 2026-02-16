@@ -36,7 +36,6 @@ public class BulletService : IBulletService, IOnFixedUpdate, IOnUpdate
 
     public void OnFixedUpdate()
     {
-
         //計算のみで弾オブジェクトを飛ばす場合に用いる計算 新版
         for (int i = _bulletDatas.Count - 1; i >= 0; i--)
         {
@@ -47,6 +46,13 @@ public class BulletService : IBulletService, IOnFixedUpdate, IOnUpdate
 
             if (Physics.Raycast(b.Pos, b.Dir, out RaycastHit hit, step, b.CollideMask))
             {
+                //TODO: ダメージを与える処理
+                if (hit.collider.TryGetComponent<IDamageable>(out IDamageable damageable))
+                {
+                    DamageInfo bulletDamageInfo = new DamageInfo();
+                    damageable.TakeDamage(bulletDamageInfo);
+                }
+
                 BulletExpire(i);
                 continue;
             }

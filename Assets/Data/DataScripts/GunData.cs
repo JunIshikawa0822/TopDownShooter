@@ -20,7 +20,7 @@ namespace Game.Data
         [SerializeField] private float _velocity;//射出速度
         [SerializeField] private float _horizontalRecoil;//水平反動値 左右のブレの絶対値
         [SerializeField] private float _verticalRecoil;//垂直反動値 上下のブレの絶対値　下向きの制御はコード側で行う
-        
+
         //照準の中心から「半径何メートル（または角度何度）の円の中に弾が飛ぶか」という円の大きさ（半径）を表す。
         // 単位は一般的にDegree
         [SerializeField] private float _shotSpread;
