@@ -21,41 +21,68 @@ public class InventorySystem : ASystem
 
     private void GetInventoryDependency(ISceneEntryPoint entryPoint)
     {
-        if(!entryPoint.TryGetDependency<InventoryView>(out InventoryView inventoryView))
+        if (!entryPoint.TryGetDependency<InventoryView>(out InventoryView inventoryView))
         {
-            Debug.LogWarning("依存がない");
+            Debug.LogWarning("InventoryViewへの依存がない");
+            return;
+        }
+
+        if (!entryPoint.TryGetDependency<InventoryEquipView>(out InventoryEquipView inventoryEquipView))
+        {
+            Debug.LogWarning("InventoryEquipViewへの依存がない");
+            return;
+        }
+
+        if (!entryPoint.TryGetDependency<InventoryLootView>(out InventoryLootView inventoryLootView))
+        {
+            Debug.LogWarning("InventoryLootViewへの依存がない");
             return;
         }
 
         gameStat.inventoryView = inventoryView;
-        
+        gameStat.inventoryEquipView = inventoryEquipView;
+        gameStat.inventoryLootView = inventoryLootView;
+
         _inventoryController.InitializeView(inventoryView);
+        _inventoryController.InitializeEquipView(inventoryEquipView);
+        _inventoryController.InitializeLootView(inventoryLootView);
+
         _inventoryController.InitializeModel(gameStat.inventoryModel);
 
-        _inventoryController.CraetePlayerContainer();
+        _inventoryController.CreatePlayerContainer();
 
         Debug.Log($"{inventoryView} : inventory確保成功");
     }
 
     private void OpenLootContainer(Container container)
     {
-        gameEvents.inventoryToggleEvent?.Invoke();
         //受け取ったContainerを元に、UIを開く処理
         Debug.Log("コンテナを開いた");
         gameStat.isInventoryOpen = true;
-        ToggleInventory();
+        gameStat.isLootOpen = true;
+        gameEvents.inventoryToggleEvent?.Invoke();
     }
 
     private void ToggleInventory()
     {
-        if(gameStat.isInventoryOpen)
+        Debug.Log($"インベントリの開閉。現在の状態 : {gameStat.isInventoryOpen}");
+
+        if (gameStat.isInventoryOpen)
         {
             _inventoryController.Open();
+
+            //Lootしてない時はオフにする
+            if (!gameStat.isLootOpen)
+            {
+                gameStat?.inventoryLootView.Hide();
+            }
+
             //インベントリ以外の（常駐でない）UIをとじる
             gameStat?.interactView.Hide();
         }
         else
         {
+            gameStat.isLootOpen = false;
             _inventoryController.Close();
             //インベントリ以外の（常駐でない）UIを開く
             gameStat?.interactView.Show();

@@ -52,6 +52,7 @@ public class GameStatus
     //テスト用データ
     public WeaponData playerWeaponData;
     [HideInInspector] public bool isInventoryOpen = false;
+    [HideInInspector] public bool isLootOpen = false;
 
     //テスト用ランタイムデータ
     [HideInInspector] public AWeaponRuntimeBase playerWeaponRuntimeData;
@@ -63,6 +64,7 @@ public class GameStatus
     [HideInInspector] public Inventory inventoryModel;
     [HideInInspector] public InventoryView inventoryView;
     [HideInInspector] public InventoryEquipView inventoryEquipView;
+    [HideInInspector] public InventoryLootView inventoryLootView;
     [HideInInspector] public InteractView interactView;
 
     [Header("Item")]

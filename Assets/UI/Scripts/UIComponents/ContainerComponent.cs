@@ -14,7 +14,7 @@ namespace Game.UI
         private readonly Guid _containerGuid;
         public event Action<Guid> OnPointerEnterEvent;
         public event Action<Guid> OnPointerLeaveEvent;
-        public VisualElement RootElement => _containerRoot;
+        //public VisualElement RootElement => _containerRoot;
         public ContainerComponent(Guid containerDataGuid)
         {
             _containerGuid = containerDataGuid;

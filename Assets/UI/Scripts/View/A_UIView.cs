@@ -7,6 +7,7 @@ namespace Game.UI
     public abstract class AUIView : MonoBehaviour, IDisposable
     {
         [SerializeField] private UIDocument _uiDocument;
+        [SerializeField] protected string _rootElementName = "";
         protected VisualElement _rootElement;
         //このUIが初期化（Initialize）されたときに、すぐに非表示にするかどうかの設定です。
         [SerializeField] protected bool _hideOnAwake = false;
@@ -23,13 +24,23 @@ namespace Game.UI
 
         public virtual void Initialize()
         {
-            if(_uiDocument == null)
+            if (_uiDocument == null)
             {
                 Debug.LogError("UIDocumentを設定してください");
                 return;
             }
 
-            _rootElement = _uiDocument.rootVisualElement ?? throw new ArgumentNullException(nameof(_rootElement));
+            _rootElement = _uiDocument.rootVisualElement;
+
+            if (!string.IsNullOrEmpty(_rootElementName))
+            {
+                VisualElement target = _rootElement.Q(_rootElementName);
+                if (target == null)
+                {
+                    Debug.LogError($"RootElementが見つかりませんでした : {_rootElementName}");
+                }
+                _rootElement = target ?? _rootElement;
+            }
 
             if (_hideOnAwake)
             {

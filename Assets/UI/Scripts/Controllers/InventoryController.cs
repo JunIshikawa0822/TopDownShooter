@@ -10,6 +10,7 @@ public class InventoryController : AUIController
     private Inventory _inventoryModel;
     private InventoryView _inventoryView;
     private InventoryEquipView _InventoryEquipView;
+    private InventoryLootView _inventoryLootView;
 
     //使うやつ
     private Guid _currentContainerGuid;
@@ -32,27 +33,35 @@ public class InventoryController : AUIController
         _InventoryEquipView = view;
     }
 
+    public void InitializeLootView(InventoryLootView view)
+    {
+        _inventoryLootView = view;
+    }
+
     public override void Open()
     {
         _inventoryView.Show();
+        _InventoryEquipView.Show();
+        _inventoryLootView.Show();
     }
 
     public override void Close()
     {
         _inventoryView.Hide();
+        _InventoryEquipView.Hide();
+        _inventoryLootView.Hide();
     }
 
-    public void CraetePlayerContainer()
+    public void CreatePlayerContainer()
     {
         ContainerData playerContainerData = Resources.Load<ContainerData>("BackPack_1");
-        AddContainer(playerContainerData);
+        Container container = new Container(playerContainerData);
+        AddContainer(playerContainerData, container);
     }
 
-    public void AddContainer(ContainerData containerData)
+    public void AddContainer(ContainerData containerData, Container container)
     {
-        //装備のたびにContainer生成は微妙
-        Container container = new Container(containerData);
-        //装備のたびにContainerTemplate生成は微妙　使い回し入れたい
+        //TODO: 装備のたびにContainerTemplate生成は微妙　使い回し入れたい
         TemplateContainer containerTemplate = containerData.ContainerAsset.Instantiate();
 
         _inventoryView.AddContainer(containerTemplate, containerData.ContainerBuild, container.Guid);

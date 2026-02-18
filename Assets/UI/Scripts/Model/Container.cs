@@ -9,7 +9,6 @@ public class Container
     private float _currentWeight;
     public int GridBlockCount => _gridBlocks.Length;
     public Guid Guid => _containerDataGuid;
-
     public float CurrentWeight => _currentWeight;
     public Action ContentChanged;
     public Container(ContainerData containerData)
@@ -34,9 +33,9 @@ public class Container
         item.SetDirection(dir);
 
         _gridBlocks[gridBlockIndex].PlaceToGrid(item, x, y, dir);
+        _currentWeight += item.Runtime.Weight;
 
-        _currentWeight += item.RuntimeData.CurrentWeight;
-
+        ContentChanged?.Invoke();
         return true;
     }
 
@@ -48,7 +47,8 @@ public class Container
         item.ClearItemOrigin();
 
         _gridBlocks[gridBlockIndex].RemoveFromGrid(item);
-        _currentWeight -= item.RuntimeData.BaseData.Weight * item.RuntimeData.StackCount;
+        _currentWeight -= item.Runtime.Weight;
+        ContentChanged?.Invoke();
         return true;
     }
 
@@ -82,8 +82,8 @@ public class Container
         dir = ItemDirection.Up;
 
         // 元のサイズを取得
-        int w = itemData.RuntimeData.BaseData.VisualData.Width;
-        int h = itemData.RuntimeData.BaseData.VisualData.Height;
+        int w = itemData.Runtime.VisualData.Width;
+        int h = itemData.Runtime.VisualData.Height;
 
         for (int i = 0; i < _gridBlocks.Length; i++)
         {

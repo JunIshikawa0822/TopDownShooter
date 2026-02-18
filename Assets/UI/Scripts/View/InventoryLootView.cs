@@ -9,7 +9,7 @@ using System;
 
 namespace Game.UI
 {
-    public class InventoryView : AContainerGridProvider
+    public class InventoryLootView : AContainerGridProvider
     {
         private ScrollView _scrollViewParent;
         private VisualElement _scrollContentContainer;
@@ -20,16 +20,16 @@ namespace Game.UI
 
         protected override void SetVisualElements()
         {
-            _scrollViewParent = _rootElement.Q<ScrollView>("container__scrollview");
+            _scrollViewParent = _rootElement.Q<ScrollView>("lootcontainer__scrollview");
             _scrollContentContainer = _scrollViewParent.Q<VisualElement>("unity-content-container");
 
-            // //グリッドセルのロード
+            //グリッドセルのロード
             // _cellTemplate = Resources.Load<VisualTreeAsset>("GridBlockCell");
-            // //グリッドブロックのロード
+            //グリッドブロックのロード
             // _gridBlockTemplate = Resources.Load<VisualTreeAsset>("GridBlock");
-            // //コンテナのロード
+            //コンテナのロード
             // _containerTemplate = Resources.Load<VisualTreeAsset>("Container");
-            // //アイテムUIのロード
+            //アイテムUIのロード
             _itemTemplate = Resources.Load<VisualTreeAsset>("InventoryItem");
         }
 
@@ -56,7 +56,6 @@ namespace Game.UI
             _containerUIDic[containerGuid].PlaceItem(gridBlockIndex, x, y, rotationDeg, itemComponent);
         }
 
-        //ContainerのUIに関する初期化のクラス
         public override void AddContainer(VisualElement containerElementRoot, GridBlockData[] gridBlockDatas, Guid containerGuid)
         {
             base.AddContainer(containerElementRoot, gridBlockDatas, containerGuid);

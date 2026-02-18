@@ -143,6 +143,7 @@ public class GunRuntime : AWeaponRuntimeBase
     //撃つたびに反動で精度が落ちる処理
     public void IncrimentScatter()
     {
-        _internalCurrentScatter = Math.Clamp(_internalCurrentScatter + ScatterIncriment, BaseScatter, MaxScatter);
+        //プロパティで計算された現在値を実体に焼き付けてから加算
+        _internalCurrentScatter = Math.Clamp(CurrentScatter + ScatterIncriment, BaseScatter, MaxScatter);
     }
 }

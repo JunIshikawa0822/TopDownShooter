@@ -12,7 +12,7 @@ public class GunService : IOnUpdate, IGunService
 
     public void RegisterGun(IGun<GunRuntime> gun)
     {
-        GunState state = new() { Gun = gun, IsShooting = false, LastShotTime = -999f };
+        GunState state = new() { Gun = gun, IsShooting = false };
         _gunStates.Add(gun, state);
     }
 
@@ -21,31 +21,14 @@ public class GunService : IOnUpdate, IGunService
         _gunStates.Remove(gun);
     }
 
-    public bool CanShoot(IGun<GunRuntime> gun)
-    {
-        float last = _gunStates.TryGetValue(gun, out GunState t) ? t.LastShotTime : -999f;
-        bool canShoot = Time.time - last >= gun.GunRuntime.FireInterval;
+    // public bool CanShoot(IGun<GunRuntime> gun)
+    // {
+    //     // GunRuntime自体が時間管理するようになったため、シンプルに委譲する形、もしくは不要になる
+    //     // 一旦、GunRuntimeの情報を使って判定するように修正
+    //     bool canShoot = !gun.GunRuntime.IsIntervalShooting;
 
-        return canShoot;
-    }
-
-    public float GetPassedTimeSinceLastShot(IGun<GunRuntime> gun)
-    {
-        float last = _gunStates.TryGetValue(gun, out GunState t) ? t.LastShotTime : -999f;
-        return Time.time - last;
-    }
-
-    public void RecordShotTime(IGun<GunRuntime> gun)
-    {
-        if (_gunStates.TryGetValue(gun, out GunState t))
-        {
-            t.LastShotTime = Time.time;
-        }
-        else
-        {
-            Debug.Log($"{gun}が見つかりません");
-        }
-    }
+    //     return canShoot;
+    // }
 
     public void StartShooting(IGun<GunRuntime> gun)
     {
@@ -79,7 +62,7 @@ public class GunService : IOnUpdate, IGunService
     private class GunState
     {
         public IGun<GunRuntime> Gun;
-        public float LastShotTime;
+        //public float LastShotTime;
         public bool IsShooting;
     }
 }

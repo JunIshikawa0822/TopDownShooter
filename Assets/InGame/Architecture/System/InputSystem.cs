@@ -98,16 +98,16 @@ public class InputSystem : ASystem, IOnPreUpdate
             }
         }
 
-            // 最終フォールバック
-            return basePos + _baseTrans.forward * 50;
+        // 最終フォールバック
+        return basePos + _baseTrans.forward * 50;
         //}
     }
 
     /// <summary>
-/// WASDのVector2入力を、カメラの向きに基づいたワールド空間のVector3移動ベクトルに変換する。
-/// </summary>
-/// <param name="inputDirection">WASDから得られた入力Vector2 (x: 左右, y: 前後)。</param>
-/// <returns>XZ平面上のワールド空間の移動ベクトルVector3。</returns>
+    /// WASDのVector2入力を、カメラの向きに基づいたワールド空間のVector3移動ベクトルに変換する。
+    /// </summary>
+    /// <param name="inputDirection">WASDから得られた入力Vector2 (x: 左右, y: 前後)。</param>
+    /// <returns>XZ平面上のワールド空間の移動ベクトルVector3。</returns>
     private Vector3 GetCameraSpaceMovementVector(Vector2 inputDirection, Camera camera)
     {
         Transform cameraTransform = camera.transform;
@@ -183,7 +183,7 @@ public class InputSystem : ASystem, IOnPreUpdate
     {
 
     }
-    
+
     private void OnSprintStartInput(InputAction.CallbackContext context)
     {
         gameStat.isSprinting = true;
@@ -206,7 +206,7 @@ public class InputSystem : ASystem, IOnPreUpdate
         {
             _gameInputs.Player.Disable();
             _gameInputs.UI.Enable();
-            
+
             gameStat.moveDirection = Vector3.zero;
             gameStat.isAttackProcessing = false;
             gameStat.isAttackSupportInput = false;
@@ -220,7 +220,7 @@ public class InputSystem : ASystem, IOnPreUpdate
 
     public override void OnDispose()
     {
-        if(_gameInputs != null)
+        if (_gameInputs != null)
         {
             _gameInputs.Player.Move.started -= OnMoveInput;
             _gameInputs.Player.Move.performed -= OnMoveInput;

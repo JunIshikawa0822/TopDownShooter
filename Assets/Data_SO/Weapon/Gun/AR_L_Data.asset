@@ -39,8 +39,8 @@ MonoBehaviour:
   _verticalRecoil: 0
   _shotSpread: 0
   _baseScatter: 5
-  _scatterIncriment: 0.1
-  _maxScatter: 7
+  _scatterIncriment: 1
+  _maxScatter: 80
   _reloadTime: 0
   _ergonomics: 0
   _maxRange: 20
