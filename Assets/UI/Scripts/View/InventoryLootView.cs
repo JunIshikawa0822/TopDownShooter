@@ -38,9 +38,9 @@ namespace Game.UI
 
         }
 
-        public override void AddContainer(VisualElement containerElementRoot, GridBlockData[] gridBlockDatas, Guid containerGuid)
+        public override void AddContainerComponent(VisualElement containerElementRoot, GridBlockData[] gridBlockDatas, Guid containerGuid)
         {
-            base.AddContainer(containerElementRoot, gridBlockDatas, containerGuid);
+            base.AddContainerComponent(containerElementRoot, gridBlockDatas, containerGuid);
             _scrollContentContainer.Add(containerElementRoot);
         }
     }

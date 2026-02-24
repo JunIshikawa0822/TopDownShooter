@@ -10,6 +10,7 @@ public class InventoryController : AUIController
 {
     //依存
     private Inventory _inventoryModel;
+    private Inventory _lootInventoryModel;
 
     private InventoryView _inventoryView;
     private InventoryEquipView _InventoryEquipView;
@@ -28,6 +29,11 @@ public class InventoryController : AUIController
     public void InitializeModel(Inventory model)
     {
         _inventoryModel = model;
+    }
+
+    public void InitializeLootModel(Inventory lootInventoryModel)
+    {
+        _lootInventoryModel = lootInventoryModel;
     }
 
     public void InitializeView(InventoryView view)
@@ -87,15 +93,15 @@ public class InventoryController : AUIController
         LoadItem(_inventoryModel, _inventoryView).Forget();
     }
 
-    public void LoadLootInventory(Inventory lootInventory)
+    public void LoadLootInventory()
     {
-        foreach (Container container in lootInventory.Containers)
+        foreach (Container container in _lootInventoryModel.Containers)
         {
             TemplateContainer containerTemplate = container.ContainerData.ContainerAsset.Instantiate();
             _inventoryLootView.AddContainerComponent(containerTemplate, container.ContainerData.ContainerBuild, container.Guid);
         }
 
-        LoadItem(lootInventory, _inventoryLootView).Forget();
+        LoadItem(_lootInventoryModel, _inventoryLootView).Forget();
     }
 
     //とりあえず「読み込んだInventoryの中身をViewに出す」処理
