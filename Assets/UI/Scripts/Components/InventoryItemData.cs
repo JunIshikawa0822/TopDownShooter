@@ -15,7 +15,10 @@ public class InventoryItemData
     public int GridIndex => _gridIndex;
     public int OriginX => _originX;
     public int OriginY => _originY;
+    public int Width => Runtime.VisualData.Width;
+    public int Height => Runtime.VisualData.Height;
     public ItemDirection Direction => _direction;
+    public int DirectionDeg => _direction == ItemDirection.Up ? 0 : 90;
     public Guid ItemDataGuid => _itemDataGuid;
 
     public InventoryItemData(int gridIndex, int originX, int originY, IItemRuntime itemRuntime)
@@ -51,7 +54,7 @@ public class InventoryItemData
     public IEnumerable<(int x, int y)> GetOccupiedCells()
     {
         // 回転方向に応じてサイズを入れ替え
-        int width  = _direction == ItemDirection.Up ? Runtime.VisualData.Width  : Runtime.VisualData.Height;
+        int width = _direction == ItemDirection.Up ? Runtime.VisualData.Width : Runtime.VisualData.Height;
         int height = _direction == ItemDirection.Up ? Runtime.VisualData.Height : Runtime.VisualData.Width;
 
         for (int dx = 0; dx < width; ++dx)
@@ -61,12 +64,12 @@ public class InventoryItemData
                 yield return (_originX + dx, _originY + dy);
             }
         }
-    } 
+    }
 
     public IEnumerable<(int x, int y)> CalculateOccupiedCells(int originX, int originY, ItemDirection direction)
     {
         // 回転方向に応じてサイズを入れ替え
-        int width  = direction == ItemDirection.Up ? Runtime.VisualData.Width  :  Runtime.VisualData.Height;
+        int width = direction == ItemDirection.Up ? Runtime.VisualData.Width : Runtime.VisualData.Height;
         int height = direction == ItemDirection.Up ? Runtime.VisualData.Height : Runtime.VisualData.Width;
 
         for (int dx = 0; dx < width; ++dx)
@@ -76,8 +79,17 @@ public class InventoryItemData
                 yield return (originX + dx, originY + dy);
             }
         }
-    }   
+    }
 
+    public override bool Equals(object obj)
+    {
+        return obj is InventoryItemData other && _itemDataGuid == other._itemDataGuid;
+    }
+
+    public override int GetHashCode()
+    {
+        return _itemDataGuid.GetHashCode();
+    }
 }
 
 public enum ItemDirection

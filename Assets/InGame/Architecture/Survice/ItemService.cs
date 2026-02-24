@@ -28,12 +28,13 @@ public class ItemService : IItemService
         };
     }
 
-    public IItemRuntime CreateNewItemRuntime(ItemData data, int amount)
+    public InventoryItemData CreateNewItemRuntime(ItemData data, int amount)
     {
         Guid guid = Guid.NewGuid();
         if (_typeDict.TryGetValue(data.ItemType, out Func<ItemData, int, Guid, IItemRuntime> createFunc))
         {
-            return createFunc(data, amount, guid);
+            IItemRuntime runtime = createFunc(data, amount, guid);
+            return new InventoryItemData(-1, -1, -1, runtime);
         }
 
         return null;

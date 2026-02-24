@@ -16,7 +16,7 @@ public class InventorySystem : ASystem
 
         //インベントリ表示/非表示メソッド登録
         gameEvents.inventoryToggleEvent += ToggleInventory;
-        gameEvents.lootContainerOpenEvent += OpenLootContainer;
+        gameEvents.lootInventoryOpenEvent += OpenLootInventory;
     }
 
     private void GetInventoryDependency(ISceneEntryPoint entryPoint)
@@ -54,10 +54,10 @@ public class InventorySystem : ASystem
         Debug.Log($"{inventoryView} : inventory確保成功");
     }
 
-    private void OpenLootContainer(Container container)
+    private void OpenLootInventory(Inventory inventory)
     {
-        //受け取ったContainerを元に、UIを開く処理
-        Debug.Log("コンテナを開いた");
+        //受け取ったInventoryを元に、UIを開く処理
+        Debug.Log("インベントリを開いた");
         gameStat.isInventoryOpen = true;
         gameStat.isLootOpen = true;
         gameEvents.inventoryToggleEvent?.Invoke();

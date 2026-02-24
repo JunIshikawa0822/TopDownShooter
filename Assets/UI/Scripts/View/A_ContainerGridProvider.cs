@@ -44,18 +44,19 @@ namespace Game.UI
             return containerComponent;
         }
 
-        //ContainerのUIに関する初期化のクラス
-        public virtual void AddContainer(VisualElement containerElementRoot, GridBlockData[] gridBlockDatas, Guid containerGuid)
+        public virtual InventoryItemComponent CreateItemComponent(TemplateContainer itemTemplate, Guid itemGuid, Sprite sprite, int width, int height)
         {
-            InitContainer(containerElementRoot, gridBlockDatas, containerGuid);
+            InventoryItemComponent itemComponent = new InventoryItemComponent(itemTemplate, itemGuid);
+            itemComponent.SetVisualData(sprite, width, height, _cellSize);
+            return itemComponent;
         }
 
-        public virtual void RemoveContainer(Guid containerGuid)
+        public virtual void RemoveContainerComponent(Guid containerGuid)
         {
             _containerUIDic.Remove(containerGuid);
         }
 
-        protected virtual void InitContainer(VisualElement containerElementRoot, GridBlockData[] gridBlockDatas, Guid containerGuid)
+        public virtual void AddContainerComponent(VisualElement containerElementRoot, GridBlockData[] gridBlockDatas, Guid containerGuid)
         {
             List<VisualElement> gridBlockUIs = containerElementRoot.Query<VisualElement>(className: "GridBlock").ToList();
 
@@ -90,11 +91,11 @@ namespace Game.UI
                     int x = count % gridBlockDatas[i].width;
                     int y = count / gridBlockDatas[i].height;
                     GridCellComponent cell = CreateGridCellComponent(cellUIs[j]);
-                    gridBlock.SetCell(x, y, cell);
+                    gridBlock.SetCellComponentInfo(x, y, cell);
                 }
 
                 container.SetGridBlock(i, gridBlock);
-            };
+            }
 
             //ContainerにCellやGridBlockの情報を渡し、Guidと結びつけるまで
             _containerUIDic[containerGuid] = container;
@@ -108,6 +109,11 @@ namespace Game.UI
         protected virtual void SetSelectingContainerGuid(Guid containerGuid)
         {
             _selectingContainerGuid = containerGuid;
+        }
+
+        public virtual void LoadToContainerComponent(Guid containerGuid, int gridBlockIndex, int x, int y, int rotationDeg, InventoryItemComponent itemComponent)
+        {
+            _containerUIDic[containerGuid].PlaceItemComponent(gridBlockIndex, x, y, rotationDeg, itemComponent);
         }
     }
 }

@@ -38,28 +38,10 @@ namespace Game.UI
 
         }
 
-        private InventoryItemComponent CreateItemComponent(TemplateContainer itemTemplate, ItemVisualData visualData, Guid itemGuid)
-        {
-            InventoryItemComponent itemComponent = new InventoryItemComponent(itemTemplate, itemGuid);
-
-            //TODO:AddressableでSpriteロードしなきゃ！！
-            Sprite sprite = null;
-            itemComponent.SetVisualData(sprite, visualData.Width, visualData.Height, _cellSize);
-            //TODO: OnPointerEnterの登録
-            //TODO: OnPointerLeaveの登録
-
-            return itemComponent;
-        }
-
-        public void LoadItemToContainer(Guid containerGuid, int gridBlockIndex, int x, int y, int rotationDeg, InventoryItemComponent itemComponent)
-        {
-            _containerUIDic[containerGuid].PlaceItem(gridBlockIndex, x, y, rotationDeg, itemComponent);
-        }
-
         //ContainerのUIに関する初期化のクラス
-        public override void AddContainer(VisualElement containerElementRoot, GridBlockData[] gridBlockDatas, Guid containerGuid)
+        public override void AddContainerComponent(VisualElement containerElementRoot, GridBlockData[] gridBlockDatas, Guid containerGuid)
         {
-            base.AddContainer(containerElementRoot, gridBlockDatas, containerGuid);
+            base.AddContainerComponent(containerElementRoot, gridBlockDatas, containerGuid);
             _scrollContentContainer.Add(containerElementRoot);
         }
     }

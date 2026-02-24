@@ -9,5 +9,5 @@ public class GameEventBus
     public Action inventoryToggleEvent;
     public Action interactEvent;
     public Action<int, LootableType> interactLootableEvent;
-    public Action<Container> lootContainerOpenEvent;
+    public Action<Inventory> lootInventoryOpenEvent;
 }

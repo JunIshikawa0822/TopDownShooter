@@ -1,18 +1,24 @@
 using System;
 using UnityEngine;
 using Game.Data;
+using System.Linq;
+using System.Collections.Generic;
 
 public class Container
 {
     private readonly Guid _containerDataGuid;
     private readonly GridBlock[] _gridBlocks;
     private float _currentWeight;
+    private ContainerData _containerData;
     public int GridBlockCount => _gridBlocks.Length;
     public Guid Guid => _containerDataGuid;
     public float CurrentWeight => _currentWeight;
+    public GridBlock[] GridBlocks => _gridBlocks;
     public Action ContentChanged;
+    public ContainerData ContainerData => _containerData;
     public Container(ContainerData containerData)
     {
+        _containerData = containerData;
         GridBlockData[] gridBlockDatas = containerData.ContainerBuild;
         _gridBlocks = new GridBlock[gridBlockDatas.Length];
 
@@ -24,7 +30,7 @@ public class Container
         _containerDataGuid = Guid.NewGuid();
     }
 
-    public bool TryPlaceItem(int gridBlockIndex, InventoryItemData item, int x, int y, ItemDirection dir)
+    public bool TryPlaceItem(InventoryItemData item, int gridBlockIndex, int x, int y, ItemDirection dir)
     {
         if (!IsValidBlockIndex(gridBlockIndex)) return false;
         if (!_gridBlocks[gridBlockIndex].CanPlace(item, x, y, dir)) return false;
@@ -39,7 +45,7 @@ public class Container
         return true;
     }
 
-    public bool TryRemoveItem(int gridBlockIndex, InventoryItemData item)
+    public bool TryRemoveItem(InventoryItemData item, int gridBlockIndex)
     {
         if (!IsValidBlockIndex(gridBlockIndex)) return false;
         if (!_gridBlocks[gridBlockIndex].IsContain(item)) return false;
@@ -58,7 +64,7 @@ public class Container
         //当該マスにアイテムがあるかを確認
         InventoryItemData item = _gridBlocks[gridBlockIndex].TryFindItem(x, y);
 
-        return TryRemoveItem(gridBlockIndex, item);
+        return TryRemoveItem(item, gridBlockIndex);
     }
 
     private bool IsValidBlockIndex(int gridBlockIndex)
@@ -70,11 +76,25 @@ public class Container
     }
 
     /// <summary>
+    /// 空いているスペースを自動で探し、アイテムを配置する
+    /// </summary>
+    /// <param name="itemData">配置したいアイテム</param>
+    /// <param name="allowRotation">回転を許可するか</param>
+    /// <returns>配置に成功したか</returns>
+    public bool TryAutoPlace(InventoryItemData itemData, bool allowRotation)
+    {
+        if (TryFindSpace(itemData, allowRotation, out int blockIndex, out int x, out int y, out ItemDirection dir))
+        {
+            return TryPlaceItem(itemData, blockIndex, x, y, dir);
+        }
+
+        return false;
+    }
+
+    /// <summary>
     /// コンテナ全体からアイテムの空きスペースを探す
     /// </summary>
-    /// <param name="itemData">配置したいアイテムのデータ</param>
-    /// <param name="allowRotation">回転を考慮するか</param>
-    public bool TryFindSpace(InventoryItemData itemData, bool allowRotation, out int blockIndex, out int x, out int y, out ItemDirection dir)
+    private bool TryFindSpace(InventoryItemData itemData, bool allowRotation, out int blockIndex, out int x, out int y, out ItemDirection dir)
     {
         blockIndex = -1;
         x = -1;

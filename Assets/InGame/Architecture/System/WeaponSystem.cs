@@ -11,7 +11,7 @@ public class WeaponSystem : ASystem, IOnUpdate, IOnFixedUpdate
     private GunService _gunService;
     private BulletService _bulletService;
     private Dictionary<WeaponType, IObjectPool<AWeaponBase>> _weaponFactories;
-    private WeaponVisualLoader _weaponVisualLoader;
+    private AddressableProvider _weaponVisualLoader;
     public bool IsActiveForUpdate => true;
     public bool IsActiveForFixedUpdate => true;
     public override void OnSetUp()
@@ -32,7 +32,7 @@ public class WeaponSystem : ASystem, IOnUpdate, IOnFixedUpdate
             {WeaponType.Shotgun, new ObjectPool<AWeaponBase>(gameStat.gunPoolTrans, new Factory_Shotgun(gameStat.shotgunPrefab,_gunService, _bulletService), "Shotgun")},
         };
 
-        foreach(KeyValuePair<WeaponType, IObjectPool<AWeaponBase>> set in _weaponFactories)
+        foreach (KeyValuePair<WeaponType, IObjectPool<AWeaponBase>> set in _weaponFactories)
         {
             set.Value.PoolSetUp(2);
         }
@@ -48,7 +48,7 @@ public class WeaponSystem : ASystem, IOnUpdate, IOnFixedUpdate
         _gunService.OnUpdate();
         _bulletService.OnUpdate();
 
-        if(gameStat.isAttackProcessing)
+        if (gameStat.isAttackProcessing)
         {
             AttackProcess(gameStat.isAttackSupportInput);
         }
@@ -61,21 +61,21 @@ public class WeaponSystem : ASystem, IOnUpdate, IOnFixedUpdate
 
     private void AttackStart(bool isAttackSupportInput)
     {
-        if(gameStat.playerEquipWeapon == null)return;
+        if (gameStat.playerEquipWeapon == null) return;
         gameStat.playerEquipWeapon.AttackStart(isAttackSupportInput);
         //Debug.Log("AttackStart");
     }
 
     private void AttackProcess(bool isAttackSupportInput)
     {
-        if(gameStat.playerEquipWeapon == null)return;
+        if (gameStat.playerEquipWeapon == null) return;
         gameStat.playerEquipWeapon.AttackProcess(isAttackSupportInput);
         // Debug.Log("AttackProcess");
     }
 
     private void AttackEnd(bool isAttackSupportInput)
     {
-        if(gameStat.playerEquipWeapon == null)return;
+        if (gameStat.playerEquipWeapon == null) return;
         gameStat.playerEquipWeapon.AttackEnd(isAttackSupportInput);
         //Debug.Log("AttackEnd");
     }
@@ -92,7 +92,7 @@ public class WeaponSystem : ASystem, IOnUpdate, IOnFixedUpdate
         {
             //見た目のロード（ここで待機が発生）
             //キャンセルを考慮するなら .WithCancellation を推奨
-            GameObject visualInstance = await _weaponVisualLoader.LoadVisualAsync(weaponRuntimeData.VisualData.Prefab);
+            GameObject visualInstance = await _weaponVisualLoader.LoadAssetAsync<GameObject>(weaponRuntimeData.VisualData.Prefab);
             Debug.Log(visualInstance);
             //組み立て
             weapon.VisualSet(visualInstance);
@@ -103,7 +103,7 @@ public class WeaponSystem : ASystem, IOnUpdate, IOnFixedUpdate
         catch (System.Exception e)
         {
             Debug.LogError($"武器の生成に失敗しました: {e.Message}");
-            
+
             //失敗した場合は、確保していた挙動オブジェクトをプールに返して掃除
             weapon.ReturnToPool();
             return null;
@@ -122,11 +122,11 @@ public class WeaponSystem : ASystem, IOnUpdate, IOnFixedUpdate
 
     private void WeaponTestDataSet()
     {
-        if(gameStat.playerWeaponData == null)return;
+        if (gameStat.playerWeaponData == null) return;
 
-        if(gameStat.playerWeaponData.WeaponType == WeaponType.Melee)
+        if (gameStat.playerWeaponData.WeaponType == WeaponType.Melee)
         {
-            if(gameStat.playerWeaponData is MeleeData meleeData)
+            if (gameStat.playerWeaponData is MeleeData meleeData)
             {
                 gameStat.playerWeaponRuntimeData = new MeleeRuntime(meleeData);
                 //Debug.Log("MeleeTestDataSet");
@@ -135,7 +135,7 @@ public class WeaponSystem : ASystem, IOnUpdate, IOnFixedUpdate
         else
         {
             // Debug.Log("銃ではある");
-            if(gameStat.playerWeaponData is GunData gunData)
+            if (gameStat.playerWeaponData is GunData gunData)
             {
                 // Debug.Log("GunTestDataSet");
                 // Debug.Log("やあ" + gunData);

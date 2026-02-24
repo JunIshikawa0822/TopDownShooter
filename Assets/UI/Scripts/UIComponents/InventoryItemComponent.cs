@@ -29,8 +29,8 @@ public class InventoryItemComponent
 
     public InventoryItemComponent(TemplateContainer inventoryItemElement, Guid itemDataGuid)
     {
-        if (inventoryItemElement == null)return;
-        if(_itemDataGuid == itemDataGuid) return;
+        if (inventoryItemElement == null) return;
+        if (_itemDataGuid == itemDataGuid) return;
 
         _itemDataGuid = itemDataGuid;
         _icon = inventoryItemElement.Q("inventoryitem__container");
@@ -38,7 +38,7 @@ public class InventoryItemComponent
     public virtual void SetVisualData(Sprite icon, int width, int height, int cellSize)
     {
         _icon.style.backgroundImage = new StyleBackground(icon);
-        _icon.style.width  = width * cellSize;
+        _icon.style.width = width * cellSize;
         _icon.style.height = height * cellSize;
     }
 

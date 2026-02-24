@@ -21,7 +21,7 @@ namespace Game.UI
         }
         public void SetVisualElements(VisualElement containerElement)
         {
-            if(containerElement == null)return;
+            if (containerElement == null) return;
             _containerRoot = containerElement.Q("containeritem__root");
             _containerText = containerElement.Q("containeritem__header-text");
         }
@@ -43,14 +43,14 @@ namespace Game.UI
             _gridMap[index] = gridBlock;
         }
 
-        public void PlaceItem(int index, int x, int y, int rotationDeg, InventoryItemComponent itemElement)
+        public void PlaceItemComponent(int index, int x, int y, int rotationDeg, InventoryItemComponent itemElement)
         {
-            _gridMap[index].PlaceItem(x, y, rotationDeg, itemElement);
+            _gridMap[index].PlaceItemComponent(x, y, rotationDeg, itemElement);
         }
 
-        public void RemoveItem(int index, InventoryItemComponent itemElement)
+        public void RemoveItemComponent(int index, InventoryItemComponent itemElement)
         {
-            _gridMap[index].RemoveItem(itemElement);
+            _gridMap[index].RemoveItemComponent(itemElement);
         }
 
         public void SetColor(Color color)
