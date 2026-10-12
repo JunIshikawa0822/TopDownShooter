@@ -1,0 +1,8 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/USS/Interact.uss?fileID=7433441132597879392&amp;guid=455ccf01a8cc140309e821f53c035600&amp;type=3#Interact" />
+    <Style src="project://database/Assets/UI/USS/Inventory.uss?fileID=7433441132597879392&amp;guid=b33633997863f4c9cbe3712c7d36de2a&amp;type=3#Inventory" />
+    <ui:VisualElement name="interactIcon__root" class="interacticon" style="flex-grow: 0; background-color: rgba(0, 255, 255, 0.39); justify-content: center;">
+        <ui:VisualElement name="interacticon__buttonicon" class="interacticon__buttonicon" style="background-image: url(&quot;project://database/Assets/UI/Sprites/KeyIcon_F.png?fileID=2800000&amp;guid=666974f757a6f4341a15791e9558598b&amp;type=3#KeyIcon_F&quot;);" />
+        <ui:Label text="open" name="interacticon__text" class="interacticon__text" />
+    </ui:VisualElement>
+</ui:UXML>

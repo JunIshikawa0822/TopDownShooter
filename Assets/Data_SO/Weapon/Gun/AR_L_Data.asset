@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2849eccd2fd304db5a88e82dc4b69e85, type: 3}
+  m_Name: AR_L_Data
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Items.GunData
+  _id: ar_test
+  _displayName: AR_L
+  _description: Description of AR_L
+  _rank: 1
+  _weight: 2
+  _basePrice: 0
+  _stackableNumber: 1
+  _itemType: 4
+  _actionTags: 0
+  _traitTags: 0
+  _visualData: {fileID: 11400000, guid: 48e4ad5cbed8646e0951ed4d6b4af39e, type: 2}
+  _weaponType: 3
+  _weaponAnimation: {fileID: 0}
+  _equippableTypes: 
+  _attachableEnchants: []
+  _targetAmmo: 2
+  _isInternalMagazine: 1
+  _internalCapacity: 60
+  _fireType: 2
+  _burstCount: 0
+  _rpm: 450
+  _velocity: 60
+  _horizontalRecoil: 0
+  _verticalRecoil: 0
+  _baseSpread: 0
+  _spreadIncriment: 0
+  _maxSpread: 3
+  _reloadTime: 0
+  _ergonomics: 0
+  _maxRange: 20

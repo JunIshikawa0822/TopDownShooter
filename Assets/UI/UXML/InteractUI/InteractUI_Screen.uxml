@@ -1,0 +1,6 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/USS/Interact.uss?fileID=7433441132597879392&amp;guid=455ccf01a8cc140309e821f53c035600&amp;type=3#Interact" />
+    <ui:VisualElement name="interact__screen" style="flex-grow: 1;">
+        <ui:VisualElement name="interacticon__parent" style="flex-grow: 0; position: absolute;" />
+    </ui:VisualElement>
+</ui:UXML>
