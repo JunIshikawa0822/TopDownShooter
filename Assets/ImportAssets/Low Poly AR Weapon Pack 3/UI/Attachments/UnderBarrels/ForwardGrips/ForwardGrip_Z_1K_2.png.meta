@@ -1,7 +1,17 @@
 fileFormatVersion: 2
 guid: 50f6bc0023c7b474f9fdca6de86aac80
+AssetOrigin:
+  serializedVersion: 1
+  productId: 318173
+  packageName: Low Poly SMG Weapon Pack 3
+  packageVersion: 1.0
+  assetPath: Assets/ImportAssets/Low Poly AR Weapon Pack 3/UI/Attachments/UnderBarrels/ForwardGrips/ForwardGrip_Z_1K_2.png
+  uploadId: 752901
 TextureImporter:
-  internalIDToNameTable: []
+  internalIDToNameTable:
+  - first:
+      213: 552072968738056539
+    second: ForwardGrip_Z_1K_2_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -95,7 +105,29 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: ForwardGrip_Z_1K_2_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 1920
+        height: 1080
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b592ab7a07b59a700800000000000000
+      internalID: 552072968738056539
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -109,16 +141,10 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      ForwardGrip_Z_1K_2_0: 552072968738056539
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 
-AssetOrigin:
-  serializedVersion: 1
-  productId: 318173
-  packageName: Low Poly SMG Weapon Pack 3
-  packageVersion: 1.0
-  assetPath: Assets/ImportAssets/Low Poly AR Weapon Pack 3/UI/Attachments/UnderBarrels/ForwardGrips/ForwardGrip_Z_1K_2.png
-  uploadId: 752901

@@ -1,7 +1,17 @@
 fileFormatVersion: 2
 guid: 9e3085cbf23d1cc4eae79454556dd9ef
+AssetOrigin:
+  serializedVersion: 1
+  productId: 344628
+  packageName: Low Poly Weapon Series 4 WWII 1
+  packageVersion: 1.0
+  assetPath: Assets/ImportAssets/Low Poly Weapon Pack 4_WWII_1/UI/Bullets/WWII_Pistol_A_Bullet_Line.png
+  uploadId: 834808
 TextureImporter:
-  internalIDToNameTable: []
+  internalIDToNameTable:
+  - first:
+      213: 6484754584956302928
+    second: WWII_Pistol_A_Bullet_Line_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -95,7 +105,29 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: WWII_Pistol_A_Bullet_Line_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 1920
+        height: 1080
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 056f7e3ffe97ef950800000000000000
+      internalID: 6484754584956302928
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -109,16 +141,10 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      WWII_Pistol_A_Bullet_Line_0: 6484754584956302928
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 
-AssetOrigin:
-  serializedVersion: 1
-  productId: 344628
-  packageName: Low Poly Weapon Series 4 WWII 1
-  packageVersion: 1.0
-  assetPath: Assets/ImportAssets/Low Poly Weapon Pack 4_WWII_1/UI/Bullets/WWII_Pistol_A_Bullet_Line.png
-  uploadId: 834808
