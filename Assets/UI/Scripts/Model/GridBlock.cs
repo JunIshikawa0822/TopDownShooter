@@ -12,6 +12,7 @@ public class GridBlock
     private int _gridHeight;
     public int GridWidth => _gridWidth;
     public int GridHeight => _gridHeight;
+    public IReadOnlyCollection<InventoryItemData> Items => _items;
 
     public GridBlock(int width, int height)
     {
@@ -23,7 +24,7 @@ public class GridBlock
 
     public bool TryFindItem(string itemID, out InventoryItemData[] items)
     {
-        InventoryItemData[] resultItems = _items.Where(item => item.RuntimeData.BaseData.ItemID == itemID).ToArray();
+        InventoryItemData[] resultItems = _items.Where(item => item.Runtime.ItemData.ItemID == itemID).ToArray();
         bool result = resultItems.Length != 0;
         items = result ? resultItems : Array.Empty<InventoryItemData>();
         return result;

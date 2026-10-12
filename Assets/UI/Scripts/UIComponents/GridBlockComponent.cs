@@ -27,7 +27,7 @@ namespace Game.UI
         }
         public void SetVisualElements(VisualElement visualElement)
         {
-            if(visualElement == null)return;
+            if (visualElement == null) return;
             _gridBlockRoot = visualElement;
             _itemParent = visualElement.Q("gridblock__itemparent");
         }
@@ -44,18 +44,18 @@ namespace Game.UI
             _gridBlockRoot.UnregisterCallback<PointerLeaveEvent>(OnPointerLeave);
         }
 
-        public void SetCell(int x, int y, GridCellComponent cell)
+        public void SetCellComponentInfo(int x, int y, GridCellComponent cell)
         {
             _cells.Add(cell);
             _cellsDic[(x, y)] = cell;
         }
 
-        public void PlaceItem(int x, int y, int rotationDeg, InventoryItemComponent item)
+        public void PlaceItemComponent(int x, int y, int rotationDeg, InventoryItemComponent item)
         {
             item.Icon.style.position = Position.Absolute;
             // 座標変換（左上基準）
             item.Icon.style.left = x * _cellSize;
-            item.Icon.style.top  = y * _cellSize;
+            item.Icon.style.top = y * _cellSize;
 
             // 回転（度数指定）
             item.Icon.style.rotate = new Rotate(rotationDeg);
@@ -68,12 +68,12 @@ namespace Game.UI
 
             _items.Add(item);
         }
-        public void RemoveCell(int x, int y)
+        public void RemoveCellComponent(int x, int y)
         {
             _cells.Remove(_cellsDic[(x, y)]);
             _cellsDic.Remove((x, y));
         }
-        public void RemoveItem(InventoryItemComponent item)
+        public void RemoveItemComponent(InventoryItemComponent item)
         {
             _items.Remove(item);
         }

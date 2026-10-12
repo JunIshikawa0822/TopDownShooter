@@ -1,0 +1,11 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/USS/Inventory.uss?fileID=7433441132597879392&amp;guid=b33633997863f4c9cbe3712c7d36de2a&amp;type=3#Inventory" />
+    <ui:VisualElement name="inventory__lootcontainer" style="flex-grow: 1;">
+        <ui:VisualElement name="inventory__header" class="inventory__header" style="flex-grow: 0;">
+            <ui:Label name="lootcontainer__header-text" text="Field" class="inventory__header-text" />
+        </ui:VisualElement>
+        <ui:VisualElement name="inventory__body" style="flex-grow: 0; width: 100%; height: 100%;">
+            <ui:ScrollView name="lootcontainer__scrollview" vertical-scroller-visibility="AlwaysVisible" style="width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.09);" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

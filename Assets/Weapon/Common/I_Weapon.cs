@@ -8,7 +8,7 @@ public interface IWeapon<out TRuntimeData> : IItem<TRuntimeData> where TRuntimeD
 {
     WeaponType WeaponType { get; }
     RuntimeAnimatorController WeaponAnim { get; } //武器専用AnimatorOverrideController
-    void AttackStart();
-    void AttackProcess();
-    void AttackEnd();
+    void AttackStart(bool isAttackSupportInput);
+    void AttackProcess(bool isAttackSupportInput);
+    void AttackEnd(bool isAttackSupportInput);
 }

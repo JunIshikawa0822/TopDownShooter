@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class ItemSystem : ASystem
 {
-    private readonly Dictionary<int, Container> _lootableContainerDic = new();
+    private readonly Dictionary<int, Inventory> _lootableInventoryDic = new();
     public override void OnSetUp()
     {
         gameStat.itemService = new ItemService();
@@ -14,13 +14,14 @@ public class ItemSystem : ASystem
 
     private void ProvideContainer(int lootableID, LootableType lootableType)
     {
-        //lootableIDが含まれていない場合
-        if (!_lootableContainerDic.TryGetValue(lootableID, out Container container))
+        //lootableIDが含まれていない場合（初めて開ける箱の場合）は中身を生成する
+        if (!_lootableInventoryDic.TryGetValue(lootableID, out Inventory inventory))
         {
-            //生成する
+            //InventoryDataを用いてInventoryを生成
+            //
         }
 
-        gameEvents.lootContainerOpenEvent?.Invoke(container);
+        gameEvents.lootInventoryOpenEvent?.Invoke(inventory);
     }
 
     public override void OnDispose()

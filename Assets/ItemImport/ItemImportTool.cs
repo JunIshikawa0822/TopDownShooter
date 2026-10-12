@@ -218,7 +218,6 @@ public class ItemImportTool : EditorWindow
 
             Debug.Log($"[{setting.key}] ダウンロード成功。行数: {rows.Count}");
 
-            //TODO: ここで作成済みのScriptableObjectを探す、または新規作成して流し込む
             //次のステップでこの 'setting.targetTypeName' を使ったクラス分離処理を実装します
 
             if (rows.Count < 3) throw new Exception("シートにデータが足りません（最低3行必要です）");

@@ -6,22 +6,22 @@ public class Shotgun : AGunBase<GunRuntime>
 {
     //TODO: 弾を拡散させる処理を追加
     //TODO: 複数の弾を発射する処理を追加
-    public override void AttackStart()
+    public override void AttackStart(bool isAiming)
     {
-        if (GunRuntime.FireType == FireType.Burst) BurstFire().Forget();
+        if (GunRuntime.FireType == FireType.Burst) BurstFire(isAiming).Forget();
         if (GunRuntime.FireType == FireType.FullAuto || GunRuntime.FireType == FireType.Semi)
         {
             if (!CanShoot()) return;
 
             _gunService.StartShooting(this);
 
-            SetBullet(_muzzleTrans.forward);
-            _gunService.RecordShotTime(this);
+            SetBullet(isAiming);
+            GunRuntime.RecordShotTime();
             InvokeMuzzleFlash().Forget();
         }
     }
 
-    protected override async UniTaskVoid BurstFire()
+    protected override async UniTaskVoid BurstFire(bool isAiming)
     {
         CancellationToken ct = this.GetCancellationTokenOnDestroy();
 
@@ -36,8 +36,8 @@ public class Shotgun : AGunBase<GunRuntime>
                 _gunService.StartShooting(this);
             }
 
-            SetBullet(_muzzleTrans.forward);
-            _gunService.RecordShotTime(this);
+            SetBullet(isAiming);
+            GunRuntime.RecordShotTime();
             InvokeMuzzleFlash().Forget();
 
             if (i < count - 1)
@@ -49,15 +49,15 @@ public class Shotgun : AGunBase<GunRuntime>
         _gunService.StopShooting(this);
     }
 
-    public override void AttackProcess()
+    public override void AttackProcess(bool isAiming)
     {
         if (GunRuntime.FireType == FireType.Semi || GunRuntime.FireType == FireType.Burst) return;
         if (GunRuntime.FireType == FireType.FullAuto)
         {
             if (!CanShoot()) return;
 
-            SetBullet(_muzzleTrans.forward);
-            _gunService.RecordShotTime(this);
+            SetBullet(isAiming);
+            GunRuntime.RecordShotTime();
             InvokeMuzzleFlash().Forget();
         }
     }

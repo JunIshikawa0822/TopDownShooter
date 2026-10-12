@@ -52,11 +52,9 @@ public abstract class AGunBase<TRuntime> : AWeaponBase<TRuntime>, IGun<TRuntime>
         //インベントリから新しい対応するマガジンを探し出して、セットする
     }
 
-
-
-    public override void AttackStart()
+    public override void AttackStart(bool isAiming)
     {
-        if (GunRuntime.FireType == FireType.Burst) BurstFire().Forget();
+        if (GunRuntime.FireType == FireType.Burst) BurstFire(isAiming).Forget();
         if (GunRuntime.FireType == FireType.FullAuto || GunRuntime.FireType == FireType.Semi)
         {
             Debug.Log(CanShoot());
@@ -64,13 +62,13 @@ public abstract class AGunBase<TRuntime> : AWeaponBase<TRuntime>, IGun<TRuntime>
 
             _gunService.StartShooting(this);
 
-            SetBullet(_muzzleTrans.forward);
-            _gunService.RecordShotTime(this);
+            SetBullet(isAiming);
+            GunRuntime.RecordShotTime();
             InvokeMuzzleFlash().Forget();
         }
     }
 
-    protected virtual async UniTaskVoid BurstFire()
+    protected virtual async UniTaskVoid BurstFire(bool isAiming)
     {
         CancellationToken ct = this.GetCancellationTokenOnDestroy();
 
@@ -85,8 +83,8 @@ public abstract class AGunBase<TRuntime> : AWeaponBase<TRuntime>, IGun<TRuntime>
                 _gunService.StartShooting(this);
             }
 
-            SetBullet(_muzzleTrans.forward);
-            _gunService.RecordShotTime(this);
+            SetBullet(isAiming);
+            GunRuntime.RecordShotTime();
             InvokeMuzzleFlash().Forget();
 
             if (i < count - 1)
@@ -98,15 +96,16 @@ public abstract class AGunBase<TRuntime> : AWeaponBase<TRuntime>, IGun<TRuntime>
         _gunService.StopShooting(this);
     }
 
-    public override void AttackProcess()
+    //TODO: 連射によって弾の拡散や反動を増加する計算を追加する
+    public override void AttackProcess(bool isAiming)
     {
         if (GunRuntime.FireType == FireType.Semi || GunRuntime.FireType == FireType.Burst) return;
         if (GunRuntime.FireType == FireType.FullAuto)
         {
             if (!CanShoot()) return;
 
-            SetBullet(_muzzleTrans.forward);
-            _gunService.RecordShotTime(this);
+            SetBullet(isAiming);
+            GunRuntime.RecordShotTime();
             InvokeMuzzleFlash().Forget();
         }
     }
@@ -114,14 +113,12 @@ public abstract class AGunBase<TRuntime> : AWeaponBase<TRuntime>, IGun<TRuntime>
     protected virtual bool CanShoot()
     {
         if (!TryClipCheck()) return false;
-        Debug.Log(_gunService.CanShoot(this));
-        if (!_gunService.CanShoot(this)) return false;
-        Debug.Log(GunRuntime.CanConsume(_gunService.IsBulletConsume));
+        if (GunRuntime.IsIntervalShooting) return false;
         if (!GunRuntime.CanConsume(_gunService.IsBulletConsume)) return false;
         return true;
     }
 
-    public override void AttackEnd()
+    public override void AttackEnd(bool isAiming)
     {
         _gunService.StopShooting(this);
     }
@@ -163,20 +160,59 @@ public abstract class AGunBase<TRuntime> : AWeaponBase<TRuntime>, IGun<TRuntime>
 
     //計算で弾を飛ばすのに必要
     //TODO: 弾のブレを考慮する計算を追加する
-    protected void SetBullet(Vector3 dir)
-    {
-        Vector3 destinationPoint = GetDestination(_muzzleTrans.position, dir);
-        float range = Vector3.Distance(_muzzleTrans.position, destinationPoint);
+    // protected void SetBullet(Vector3 dir)
+    // {
+    //     Vector3 destinationPoint = GetDestination(_muzzleTrans.position, dir);
+    //     float range = Vector3.Distance(_muzzleTrans.position, destinationPoint);
 
-        _bulletSurvice.BulletInit
-        (
-            GunRuntime.LoadAmmoData,
-            _muzzleTrans.position,
-            dir,
-            Mathf.Min(range, GunRuntime.MaxRange),
-            GunRuntime.Velocity,
-            _collideLayerMask
-        );
+    //     _bulletSurvice.BulletInit
+    //     (
+    //         GunRuntime.LoadAmmoData,
+    //         _muzzleTrans.position,
+    //         dir,
+    //         Mathf.Min(range, GunRuntime.MaxRange),
+    //         GunRuntime.Velocity,
+    //         _collideLayerMask
+    //     );
+    // }
+
+    protected void SetBullet(bool isAiming)
+    {
+        float startAngle = (GunRuntime.SimulNum > 1) ? -GunRuntime.ShotSpread : 0;
+        startAngle *= isAiming ? 0.5f : 1f;
+
+        float angleStep = (GunRuntime.SimulNum > 1) ? GunRuntime.ShotSpread / (GunRuntime.SimulNum - 1) : 0;
+
+        for (int i = 0; i < GunRuntime.SimulNum; ++i)
+        {
+            //扇状の配置角度
+            float baseAngle = startAngle + (angleStep * i);
+
+            //TODO: ランダムな値は本当に0.5でいいのか
+            //TODO: 武器やその他プレイヤーの状態によるScatterの増加も考慮するとよい
+            float randomOffset = UnityEngine.Random.Range(-0.5f, 0.5f) * GunRuntime.CurrentScatter;
+
+            //合計の回転角
+            float finalAngle = baseAngle + randomOffset;
+
+            //muzzle.forward（基準方向）をY軸中心に回転
+            Vector3 bulletDir = (Quaternion.Euler(0, finalAngle, 0) * _muzzleTrans.forward).normalized;
+
+            Vector3 destinationPoint = GetDestination(_muzzleTrans.position, bulletDir);
+            float range = Vector3.Distance(_muzzleTrans.position, destinationPoint);
+
+            _bulletSurvice.BulletInit
+            (
+                GunRuntime.LoadAmmoData,
+                _muzzleTrans.position,
+                bulletDir,
+                Mathf.Min(range, GunRuntime.MaxRange),
+                GunRuntime.Velocity,
+                _collideLayerMask
+            );
+        }
+
+        GunRuntime.IncrimentScatter();
     }
 
     protected virtual async UniTaskVoid InvokeMuzzleFlash()

@@ -14,7 +14,8 @@ public class GameStatus
 
     [Header("Inputs")]
     [HideInInspector]
-    public bool isPressProcessing = false;
+    public bool isAttackProcessing = false;
+    public bool isAttackSupportInput = false;
     public Vector3 moveDirection = Vector3.zero;
     public bool isSprinting = false;
     public Vector2 screenPosition = Vector2.zero;
@@ -51,6 +52,7 @@ public class GameStatus
     //テスト用データ
     public WeaponData playerWeaponData;
     [HideInInspector] public bool isInventoryOpen = false;
+    [HideInInspector] public bool isLootOpen = false;
 
     //テスト用ランタイムデータ
     [HideInInspector] public AWeaponRuntimeBase playerWeaponRuntimeData;
@@ -62,6 +64,7 @@ public class GameStatus
     [HideInInspector] public Inventory inventoryModel;
     [HideInInspector] public InventoryView inventoryView;
     [HideInInspector] public InventoryEquipView inventoryEquipView;
+    [HideInInspector] public InventoryLootView inventoryLootView;
     [HideInInspector] public InteractView interactView;
 
     [Header("Item")]

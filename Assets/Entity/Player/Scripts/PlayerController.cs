@@ -90,16 +90,16 @@ public class PlayerController : AEntity, IWeaponHandler
         
         if(verticalAngle >= currentMaxAngle) 
         {
-            // 射角外なら、体の正面を向く（前回の修正）
+            //射角外なら、体の正面を向く（前回の修正）
             targetRotation = Quaternion.LookRotation(transform.forward);
         }
         else
         {
-            // 射角内なら、さっき決めた「安定化された方向」を向く
+            //射角内なら、さっき決めた「安定化された方向」を向く
             targetRotation = Quaternion.LookRotation(stableDirectionForRotation);
         }
 
-        // 5. スムージング
+        //スムージング
         _righthand.rotation = Quaternion.Slerp(_righthand.rotation, targetRotation, Time.deltaTime * _playerTime * _weaponRotationSpeed);
     }
 
@@ -110,7 +110,7 @@ public class PlayerController : AEntity, IWeaponHandler
         _currentWeapon.transform.SetPositionAndRotation(_righthand.position, _righthand.rotation);
     }
 
-    public override void TakeDamage(float damage)
+    public override void TakeDamage(DamageInfo damageInfo)
     {
         
     }

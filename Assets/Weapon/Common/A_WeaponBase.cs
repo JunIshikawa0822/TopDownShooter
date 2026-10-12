@@ -43,9 +43,9 @@ public abstract class AWeaponBase : APooledObject
         }
     }
 
-    public abstract void AttackStart();
-    public abstract void AttackProcess();
-    public abstract void AttackEnd();
+    public abstract void AttackStart(bool isAttackSupportInput);
+    public abstract void AttackProcess(bool isAttackSupportInput);
+    public abstract void AttackEnd(bool isAttackSupportInput);
 
     public override void ReturnToPool()
     {

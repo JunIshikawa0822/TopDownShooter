@@ -10,9 +10,10 @@ public class GunRuntime : AWeaponRuntimeBase
     public const string KEY_VELOCITY = "Velocity";
     public const string KEY_HORIZONTAL_RECOIL = "HorizontalRecoil";
     public const string KEY_VERTICAL_RECOIL = "VerticalRecoil";
-    public const string KEY_BASE_SPREAD = "BaseSpread";
-    public const string KEY_SPREAD_INCRIMENT = "SpreadIncriment";
-    public const string KEY_MAX_SPREAD = "MaxSpread";
+    public const string KEY_SHOT_SPREAD = "ShotSpread";
+    public const string KEY_BASE_SCATTER = "BaseScatter";
+    public const string KEY_SPREAD_INCRIMENT = "ScatterIncriment";
+    public const string KEY_MAX_SPREAD = "MaxScatter";
     public const string KEY_RELOAD_TIME = "ReloadTime";
     public const string KEY_ERGONOMICS = "Ergonomics";
     public const string KEY_MAX_RANGE = "MaxRange";
@@ -21,22 +22,39 @@ public class GunRuntime : AWeaponRuntimeBase
 
     private uint _internalAmmoRemaining = 0;
     private AmmoData _loadedInternalAmmoData;
+    private float _lastShotTime = -999f;
+    public bool IsIntervalShooting => Time.time - _lastShotTime < FireInterval;
 
     public GunData GunData => ItemData as GunData;
     public AmmoData LoadAmmoData => GunData.IsInternalMagazine ? _loadedInternalAmmoData : _currentMagazine.LoadedAmmoData;
 
     public FireType FireType => GunData.FireType;
     public int BurstCount => GunData.BurstCount;
+    public int SimulNum => GunData.SimulNum;
     public float FireInterval => GunData.FireInterval;
     public float Velocity => _baseStats[KEY_VELOCITY] + GetEquipOffsetStat(KEY_VELOCITY);
     public float HorizontalRecoil => _baseStats[KEY_HORIZONTAL_RECOIL] + GetEquipOffsetStat(KEY_HORIZONTAL_RECOIL);
     public float VerticalRecoil => _baseStats[KEY_VERTICAL_RECOIL] + GetEquipOffsetStat(KEY_VERTICAL_RECOIL);
-    public float BaseSpread => _baseStats[KEY_BASE_SPREAD] + GetEquipOffsetStat(KEY_BASE_SPREAD);
-    public float SpreadIncriment => _baseStats[KEY_SPREAD_INCRIMENT] + GetEquipOffsetStat(KEY_SPREAD_INCRIMENT);
-    public float MaxSpread => _baseStats[KEY_MAX_SPREAD] + GetEquipOffsetStat(KEY_MAX_SPREAD);
+    public float ShotSpread => _baseStats[KEY_SHOT_SPREAD] + GetEquipOffsetStat(KEY_SHOT_SPREAD);
+    public float BaseScatter => _baseStats[KEY_BASE_SCATTER] + GetEquipOffsetStat(KEY_BASE_SCATTER);
+    public float ScatterIncriment => _baseStats[KEY_SPREAD_INCRIMENT] + GetEquipOffsetStat(KEY_SPREAD_INCRIMENT);
+    public float MaxScatter => _baseStats[KEY_MAX_SPREAD] + GetEquipOffsetStat(KEY_MAX_SPREAD);
+    private float _internalCurrentScatter;//拡散量。これがBaseScatterからMaxScatterの範囲で変動するイメージ
     public float ReloadTime => _baseStats[KEY_RELOAD_TIME] + GetEquipOffsetStat(KEY_RELOAD_TIME);
     public float Ergonomics => _baseStats[KEY_ERGONOMICS] + GetEquipOffsetStat(KEY_ERGONOMICS);
     public float MaxRange => _baseStats[KEY_MAX_RANGE] + GetEquipOffsetStat(KEY_MAX_RANGE);
+
+    public float CurrentScatter
+    {
+        get
+        {
+            float timePassed = Time.time - _lastShotTime;
+            // TODO: 拡散の回復速度をとりあえず増加の1/3にしている
+            float recovery = (ScatterIncriment / 3f) * timePassed;
+            _internalCurrentScatter = Mathf.Max(BaseScatter, _internalCurrentScatter - recovery);
+            return _internalCurrentScatter;
+        }
+    }
 
     public GunRuntime(GunData gunData, int initialCount = 1, Guid? runtimeGuid = null) : base(gunData, initialCount, runtimeGuid)
     {
@@ -45,15 +63,17 @@ public class GunRuntime : AWeaponRuntimeBase
             { KEY_VELOCITY, gunData.Velocity },
             { KEY_HORIZONTAL_RECOIL, gunData.HorizontalRecoil },
             { KEY_VERTICAL_RECOIL, gunData.VerticalRecoil },
-            { KEY_BASE_SPREAD, gunData.BaseSpread },
-            { KEY_SPREAD_INCRIMENT, gunData.SpreadIncriment },
-            { KEY_MAX_SPREAD, gunData.MaxSpread },
+            { KEY_SHOT_SPREAD, gunData.ShotSpread },
+            { KEY_BASE_SCATTER, gunData.BaseScatter },
+            { KEY_SPREAD_INCRIMENT, gunData.ScatterIncriment },
+            { KEY_MAX_SPREAD, gunData.MaxScatter },
             { KEY_RELOAD_TIME, gunData.ReloadTime },
             { KEY_ERGONOMICS, gunData.Ergonomics },
             { KEY_MAX_RANGE, gunData.MaxRange }
         };
 
         _internalAmmoRemaining = (uint)GunData.InternalCapacity;
+        _internalCurrentScatter = BaseScatter;
     }
     //アタッチメント付け替えがすでに手動リロード処理になっているので、ここでは書かない
     //代わりに、自動リロードにあたる処理追加
@@ -93,7 +113,6 @@ public class GunRuntime : AWeaponRuntimeBase
     }
 
     //TODO: 無限弾の仕様考えておく
-
     public virtual bool CanConsume(bool isConsume = true)
     {
         if (!GunData.IsInternalMagazine)
@@ -116,5 +135,15 @@ public class GunRuntime : AWeaponRuntimeBase
         }
     }
 
+    public void RecordShotTime()
+    {
+        _lastShotTime = Time.time;
+    }
 
+    //撃つたびに反動で精度が落ちる処理
+    public void IncrimentScatter()
+    {
+        //プロパティで計算された現在値を実体に焼き付けてから加算
+        _internalCurrentScatter = Math.Clamp(CurrentScatter + ScatterIncriment, BaseScatter, MaxScatter);
+    }
 }
