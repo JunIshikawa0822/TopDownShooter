@@ -1,7 +1,17 @@
 fileFormatVersion: 2
 guid: 18df650e7bad2c24ba394b3931ea0359
+AssetOrigin:
+  serializedVersion: 1
+  productId: 318173
+  packageName: Low Poly SMG Weapon Pack 3
+  packageVersion: 1.0
+  assetPath: Assets/ImportAssets/Low Poly AR Weapon Pack 3/UI/Attachments/Optics/Optics_IronSight/Optic_AH_1K_2.png
+  uploadId: 752901
 TextureImporter:
-  internalIDToNameTable: []
+  internalIDToNameTable:
+  - first:
+      213: -6745978366242342718
+    second: Optic_AH_1K_2_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -95,7 +105,29 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: Optic_AH_1K_2_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 1920
+        height: 1080
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2c8b7a9ea687162a0800000000000000
+      internalID: -6745978366242342718
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -109,16 +141,10 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Optic_AH_1K_2_0: -6745978366242342718
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 
-AssetOrigin:
-  serializedVersion: 1
-  productId: 318173
-  packageName: Low Poly SMG Weapon Pack 3
-  packageVersion: 1.0
-  assetPath: Assets/ImportAssets/Low Poly AR Weapon Pack 3/UI/Attachments/Optics/Optics_IronSight/Optic_AH_1K_2.png
-  uploadId: 752901
