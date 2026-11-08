@@ -1,0 +1,2844 @@
+{
+    "app": "UMLEditor",
+    "kind": "project",
+    "version": 4,
+    "id": "p-mvcii50c-xtvvcu0p",
+    "notation": "uml",
+    "about": "design: クラス・関係・図の中身（設計）。layout: 配置・色・タグ・メモ（ツールが管理。省略可）。仕様は UML-FORMAT.txt",
+    "design": {
+        "layers": [
+            {
+                "name": "共通部品",
+                "desc": [
+                    "どの層からも使ってよい、自作の標準ライブラリ。クリーンアーキテクチャの4つの層のどれでもなく、その下に敷く土台(DDD の共有カーネルに近い)。",
+                    "入れてよいのは、ゲームの中身を知らない・Unity の機能を使わない・ほとんど変わらない・小さい、をすべて満たすものだけ。",
+                    "例: ライフサイクル用インターフェース、IDisposable、要求の集約、時間の領域(TimeDomain)"
+                ]
+            },
+            {
+                "name": "エンティティ",
+                "desc": [
+                    "ゲームのルールそのもの。何にも依存しない普通の C# クラス。",
+                    "Unity の数学の型(Vector3 など)と Mathf は使ってよいが、MonoBehaviour・GameObject・Transform・Physics は使わない。",
+                    "例: 銃の連射と拡散の計算、ダメージ計算、インベントリのグリッドに置けるかの判定"
+                ]
+            },
+            {
+                "name": "ユースケース",
+                "desc": [
+                    "エンティティを使って、ある目的を実現する遊びの流れ。毎フレームの流れを動かす System もここに入る。",
+                    "外側の機能(シーンの読み込み、画面への表示)を使うときは、欲しい形のインターフェースをこの層で決め、外側に実装させる。",
+                    "例: 攻撃ボタンを押している間は連射する、時間停止スキルで敵の時間を止める、このゲームの時間のグループ(GameClocks)、時間の場(TimeFieldSystem)"
+                ]
+            },
+            {
+                "name": "インターフェースアダプター",
+                "desc": [
+                    "外の世界(入力、画面、エンジン、ファイル)とユースケースの間で、データの形を変換する役。「インターフェース」は C# の interface ではなく、外の世界との接点のこと。",
+                    "例: Input System のボタンの状態を「攻撃中」に変換する、ユースケースが決めたシーン読み込みの窓口を Addressables で実装する"
+                ]
+            },
+            {
+                "name": "フレームワークとドライバー",
+                "desc": [
+                    "Unity そのものと、全部を組み立てる Main。一番外側で、全部の層を知っていてよい。",
+                    "例: MonoBehaviour、Input System、Addressables、物理演算、GameMain、CompositionRoot、SystemRunner、UnityTimeDriver、Animator などへの時間の反映"
+                ]
+            }
+        ],
+        "namespaces": {
+            "Example": "【使用例】設計の使い方を見せるための仮のクラス。実際の設計には含めない。",
+            "Example::Timing": "【使用例】時間の管理を使う機能の例。大きな括りに要求する側(ポーズ、スロー、ヒットストップ、時間停止、加速)と、自分の管理するものを個別に調整する側(敵、弾)。",
+            "System": ".NET の標準ライブラリ。自作のコードではない(ここでは IDisposable を使っている)。",
+            "TopDownShooter": [
+                "このゲームのコード全体。旧コード(グローバル名前空間、Game.Data、Game.UI、HTN)と区別するためのルート。",
+                "名前空間は機能のまとまりで分け、層では分けない(層はクラスの layer で表す)。"
+            ],
+            "TopDownShooter::Bootstrap": [
+                "起動と組み立て。Unity から呼ばれる入口(GameMain)、全部のクラスを組み立てる場所(CompositionRoot)、System を呼び出す仕組み(SystemRunner)。",
+                "全部の名前空間を参照してよい唯一の場所。ゲームのルールは書かない。"
+            ],
+            "TopDownShooter::Core": [
+                "ゲームの中身を知らない、どの層からも使ってよい共通部品。ライフサイクル用インターフェースなど、「呼ばれ方の形」だけを置く。",
+                "Unity の機能を使わない。旧コードと同名の型(IOnUpdate など)があるので、using は namespace の内側に書く。"
+            ],
+            "TopDownShooter::Core::Requests": [
+                "要求の集約。複数の場所からの要求を集めて、1つの結果を決める汎用の仕組み。ゲーム中の操作で GC の確保を起こさない。",
+                "使い道: 時間の倍率、有効な入力マップ、入力を受け付けない状態、カメラ、BGM"
+            ],
+            "TopDownShooter::Core::Timing": [
+                "時間の領域。領域ごとに倍率を持ち、親があれば「親の倍率 × 自分の倍率」で速さが決まる汎用の仕組み。",
+                "ゲームの中身も Unity も知らない。経過時間は外(UnityTimeDriver)から渡される。名前空間を Time にすると UnityEngine.Time と衝突するので Timing にしている。"
+            ],
+            "TopDownShooter::Timing": [
+                "このゲームの時間の管理。大きな括り(全体とグループ)の時間(GameClocks)、範囲で効く時間の場(TimeFieldSystem)、Unity への反映(UnityTimeDriver、各 Binding)。",
+                "1つずつのオブジェクトの調整はここではしない。そのオブジェクトを管理する System が、グループの時間を読んで自分で掛ける。"
+            ],
+            "TopDownShooter::Inputs": [
+                "入力の管理。Unity の入力を受け取り(InputRecorder)、順番と押下状態を覚え(InputProcessor)、今の入力コンテキストに応じて各 System に配る(InputDispatcher)。",
+                "どの入力でどの行動をするかは知らない。それは受け取った各 System が決める。"
+            ],
+            "TopDownShooter::Actions": [
+                "行動の競合の管理(ActionCoordinator)。どの行動とどの行動が同時にできないか、というゲームのルールだけを持つ。",
+                "攻撃のアニメーションの長さや先行入力などの、行動ごとの細かいルールは持たない(各行動の System が持つ)。"
+            ],
+            "TopDownShooter::Players": "プレイヤーの行動(攻撃・回避・ガード)と移動の System。",
+            "TopDownShooter::Interactions": "インタラクトの System。",
+            "TopDownShooter::Inventories": "インベントリの System。",
+            "TopDownShooter::Menus": "メニューの System。"
+        },
+        "classes": {
+            "TopDownShooter::Core::IInitializable": {
+                "stereo": "interface",
+                "layer": "共通部品",
+                "desc": "開始時に1回呼ばれる処理の形。SystemRunner が Start のタイミングで、登録順に呼ぶ。",
+                "ops": [
+                    "+ Initialize(): void"
+                ]
+            },
+            "TopDownShooter::Core::IOnPreUpdate": {
+                "stereo": "interface",
+                "layer": "共通部品",
+                "desc": "毎フレーム、Update より先に呼ばれる処理の形。時間を進める処理(UnityTimeDriver)や入力の読み取りのように、他の処理より先に済ませたいもの用。",
+                "ops": [
+                    "+ OnPreUpdate(): void"
+                ]
+            },
+            "TopDownShooter::Core::IOnUpdate": {
+                "stereo": "interface",
+                "layer": "共通部品",
+                "desc": "毎フレーム呼ばれる処理の形(Unity の Update に相当)。経過時間は Time.deltaTime ではなく、自分のグループの時間(ITimeSource)から読む。",
+                "ops": [
+                    "+ OnUpdate(): void"
+                ]
+            },
+            "TopDownShooter::Core::IOnFixedUpdate": {
+                "stereo": "interface",
+                "layer": "共通部品",
+                "desc": [
+                    "物理演算の1ステップごとに呼ばれる処理の形。",
+                    "Unity の FixedUpdate ではなく、UnityTimeDriver がゲームの時間に合わせて物理を1ステップ進めるたびに呼ぶ(ポーズ中は呼ばれない、スロー中は回数が減る)。"
+                ],
+                "ops": [
+                    "+ OnFixedUpdate(): void"
+                ]
+            },
+            "TopDownShooter::Core::IOnLateUpdate": {
+                "stereo": "interface",
+                "layer": "共通部品",
+                "desc": "毎フレーム、Update の後に呼ばれる処理の形。カメラやカーソルの表示のように、他の処理の結果を見て動くもの用。",
+                "ops": [
+                    "+ OnLateUpdate(): void"
+                ]
+            },
+            "System::IDisposable": {
+                "stereo": "interface",
+                "layer": "共通部品",
+                "desc": ".NET 標準の、終了時の片付けの形。SystemRunner が作った順の逆に呼ぶ。要求の集約では、引換券を返す操作にも使う。",
+                "ops": [
+                    "+ Dispose(): void"
+                ]
+            },
+            "TopDownShooter::Bootstrap::GameMain": {
+                "stereo": "MonoBehaviour",
+                "leaf": true,
+                "layer": "フレームワークとドライバー",
+                "desc": [
+                    "Unity からライフサイクル(Awake・Start・Update など)を受け取り、SystemRunner に流す入口。",
+                    "Unity と自作のコードをつなぐ唯一の MonoBehaviour で、組み立ては CompositionRoot に任せる。",
+                    "FixedUpdate は流さない。物理のステップは UnityTimeDriver が、ゲームの時間に合わせて進める。"
+                ],
+                "attrs": [
+                    "- _systemRunner: SystemRunner {readOnly}"
+                ],
+                "ops": [
+                    "- Awake(): void",
+                    "- Start(): void",
+                    "- Update(): void",
+                    "- LateUpdate(): void",
+                    "- OnDestroy(): void"
+                ]
+            },
+            "TopDownShooter::Bootstrap::CompositionRoot": {
+                "leaf": true,
+                "layer": "フレームワークとドライバー",
+                "desc": [
+                    "全部のクラスを new して組み立て、作った順に SystemRunner へ追加する組み立て役(Main)。",
+                    "どのクラスに何を渡すかを知っている唯一の場所。時間なら、GameClocks の各グループを、使う側に ITimeSource(読む側)/ IRequestSink<float>(要求する側)として渡す。"
+                ],
+                "ops": [
+                    "+ Compose(systemRunner: SystemRunner): void"
+                ]
+            },
+            "TopDownShooter::Bootstrap::SystemRunner": {
+                "leaf": true,
+                "layer": "フレームワークとドライバー",
+                "desc": [
+                    "追加された System を、フェーズごとに決められた順番で呼び出す。何を呼ぶかは知らず、呼び方だけを担当する。",
+                    "FixedUpdate は Unity からではなく、UnityTimeDriver から物理のステップごとに呼ばれる。"
+                ],
+                "attrs": [
+                    "- _initializables: List<IInitializable> {readOnly}",
+                    "- _preUpdates: List<IOnPreUpdate> {readOnly}",
+                    "- _updates: List<IOnUpdate> {readOnly}",
+                    "- _fixedUpdates: List<IOnFixedUpdate> {readOnly}",
+                    "- _lateUpdates: List<IOnLateUpdate> {readOnly}",
+                    "- _disposables: List<IDisposable> {readOnly}"
+                ],
+                "ops": [
+                    "+ Add(system: object): void",
+                    "+ Initialize(): void",
+                    "+ PreUpdate(): void",
+                    "+ Update(): void",
+                    "+ FixedUpdate(): void",
+                    "+ LateUpdate(): void",
+                    "+ Dispose(): void"
+                ],
+                "implements": "System::IDisposable"
+            },
+            "TopDownShooter::Core::Requests::IRequestSink<T>": {
+                "stereo": "interface",
+                "layer": "共通部品",
+                "desc": [
+                    "要求する側(ポーズ画面、スキルなど)に渡す窓口。",
+                    "Request で「この値にしてほしい」と申し出ると、引換券(RequestHandle<T>)が返ってくる。要求は引換券を返すまで有効。",
+                    "requester には文字列の定数を渡す(その場で組み立てると確保が起きる)。"
+                ],
+                "ops": [
+                    "+ Request(value: T, priority: int, requester: string): RequestHandle<T>"
+                ]
+            },
+            "TopDownShooter::Core::Requests::IRequestResult<T>": {
+                "stereo": "interface",
+                "layer": "共通部品",
+                "desc": "結果を使う側に渡す窓口。Current で今の結果を読み、Changed で結果が変わった瞬間を知る。要求することはできない。",
+                "attrs": [
+                    "+ Current: T {readOnly}",
+                    "+ Changed: event Action<T>"
+                ]
+            },
+            "TopDownShooter::Core::Requests::IRequestOwner<T>": {
+                "stereo": "interface",
+                "visibility": "package",
+                "layer": "共通部品",
+                "desc": "引換券が、取り下げと値の変更を本体に伝えるための窓口(internal)。引換券は本体の型を知らず、これだけを知るので、本体と引換券の間に循環ができない。",
+                "ops": [
+                    "+ Release(id: long): void",
+                    "+ UpdateValue(id: long, value: T): void"
+                ]
+            },
+            "TopDownShooter::Core::Requests::RequestHandle<T>": {
+                "stereo": "struct",
+                "layer": "共通部品",
+                "desc": [
+                    "要求1件ごとの引換券。構造体なので、要求しても GC の確保が起きない。",
+                    "持つのは本体の窓口と、使い回さない番号だけ。古い引換券や2回目の Dispose は、本体で番号が見つからず何もしない。",
+                    "初期値(default)の引換券は何もしないので、「まだ要求していない」状態のフィールドにそのまま使える。"
+                ],
+                "attrs": [
+                    "- _owner: IRequestOwner<T> {readOnly}",
+                    "- _id: long {readOnly}"
+                ],
+                "ops": [
+                    "~ RequestHandle(owner: IRequestOwner<T>, id: long)",
+                    "+ Update(value: T): void",
+                    "+ Dispose(): void"
+                ],
+                "implements": "System::IDisposable"
+            },
+            "TopDownShooter::Core::Requests::RequestEntry<T>": {
+                "stereo": "struct",
+                "layer": "共通部品",
+                "desc": "1件の要求の中身。値、優先度、要求した側の名前、番号。番号は大きいほど後から来た要求。ポリシーの材料と、デバッグ用の一覧(ActiveRequests)に使う。",
+                "attrs": [
+                    "+ Value: T {readOnly}",
+                    "+ Priority: int {readOnly}",
+                    "+ Requester: string {readOnly}",
+                    "+ Id: long {readOnly}"
+                ]
+            },
+            "TopDownShooter::Core::Requests::RequestAggregator<T>": {
+                "leaf": true,
+                "layer": "共通部品",
+                "desc": [
+                    "要求の集約の本体。資源1つにつき1つ作る。",
+                    "やることは3つだけ: 残っている要求を覚える / ポリシーで結果を決め直す / 結果が変わったら Changed で知らせる。",
+                    "_entries は作るときに capacity 分の容量を確保しておき、ゲーム中に確保を起こさない。",
+                    "Release と UpdateValue は IRequestOwner<T> の明示的な実装なので、このクラスの公開メンバーには出ない(引換券からだけ呼ばれる)。"
+                ],
+                "attrs": [
+                    "- _policy: IAggregationPolicy<T> {readOnly}",
+                    "- _defaultValue: T {readOnly}",
+                    "- _entries: List<RequestEntry<T>> {readOnly}",
+                    "- _nextId: long",
+                    "+ /Current: T {readOnly}",
+                    "+ Changed: event Action<T>",
+                    "+ ActiveRequests: IReadOnlyList<RequestEntry<T>> {readOnly}"
+                ],
+                "ops": [
+                    "+ RequestAggregator(policy: IAggregationPolicy<T>, defaultValue: T, capacity: int)",
+                    "+ Request(value: T, priority: int, requester: string): RequestHandle<T>",
+                    "- Recalculate(): void"
+                ],
+                "implements": [
+                    "TopDownShooter::Core::Requests::IRequestSink<T>",
+                    "TopDownShooter::Core::Requests::IRequestResult<T>",
+                    "TopDownShooter::Core::Requests::IRequestOwner<T>"
+                ]
+            },
+            "TopDownShooter::Core::Requests::IAggregationPolicy<T>": {
+                "stereo": "interface",
+                "layer": "共通部品",
+                "desc": [
+                    "残っている要求の一覧から、結果を1つ決めるルール。資源ごとに差し替える(Strategy パターン)。",
+                    "実装では一覧を添え字の for で回し、LINQ を使わない(確保を起こさないため)。"
+                ],
+                "ops": [
+                    "+ Aggregate(entries: IReadOnlyList<RequestEntry<T>>, defaultValue: T): T"
+                ]
+            },
+            "TopDownShooter::Core::Requests::HighestPriorityPolicy<T>": {
+                "leaf": true,
+                "layer": "共通部品",
+                "desc": "一番優先度が高い要求の値を結果にする。同じ優先度なら後から来た要求(Id が大きいほう)。使い道: 有効な入力マップ、カメラ、BGM。",
+                "ops": [
+                    "+ Aggregate(entries: IReadOnlyList<RequestEntry<T>>, defaultValue: T): T"
+                ],
+                "implements": "TopDownShooter::Core::Requests::IAggregationPolicy<T>"
+            },
+            "TopDownShooter::Core::Requests::MultiplyPolicy": {
+                "leaf": true,
+                "layer": "共通部品",
+                "desc": [
+                    "すべての要求の値を掛け合わせて結果にする(float 用)。使い道: 時間の倍率。",
+                    "停止(0)が1つでもあれば 0、スロー 0.5 と加速 2 が重なれば 1。以前の「一番小さい値」は、加速とスローが重なると加速が消えるのでやめた。"
+                ],
+                "ops": [
+                    "+ Aggregate(entries: IReadOnlyList<RequestEntry<float>>, defaultValue: float): float"
+                ],
+                "implements": "TopDownShooter::Core::Requests::IAggregationPolicy<T>"
+            },
+            "TopDownShooter::Core::Requests::AnyTruePolicy": {
+                "leaf": true,
+                "layer": "共通部品",
+                "desc": "1つでも true の要求があれば true にする(bool 用)。使い道: 入力を受け付けない状態、カーソルのロック。",
+                "ops": [
+                    "+ Aggregate(entries: IReadOnlyList<RequestEntry<bool>>, defaultValue: bool): bool"
+                ],
+                "implements": "TopDownShooter::Core::Requests::IAggregationPolicy<T>"
+            },
+            "TopDownShooter::Core::Timing::ITimeSource": {
+                "stereo": "interface",
+                "layer": "共通部品",
+                "desc": [
+                    "時間を読む側の窓口。Time.deltaTime の代わりに、自分のグループの時間から経過時間を読む。",
+                    "DeltaTime はそのフレームの経過時間、FixedDeltaTime は物理の1ステップの経過時間(ゲームの時間の外の領域では 0)。"
+                ],
+                "attrs": [
+                    "+ Scale: float {readOnly}",
+                    "+ DeltaTime: float {readOnly}",
+                    "+ FixedDeltaTime: float {readOnly}",
+                    "+ ElapsedTime: double {readOnly}",
+                    "+ ScaleChanged: event Action<float>"
+                ]
+            },
+            "TopDownShooter::Core::Timing::TimeDomain": {
+                "leaf": true,
+                "layer": "共通部品",
+                "desc": [
+                    "時間の領域。大きな括り(ゲーム全体、プレイヤー、敵、弾など)ごとに1つ作る。",
+                    "自分の倍率は要求の集約(MultiplyPolicy、既定値 1)で決める。止めたい・遅くしたい原因の側は、この領域に倍率を要求する(IRequestSink<float>)。",
+                    "親があれば、速さ = 親の倍率 × 自分の倍率。このゲームでは「全体(Game)→ グループ」の2段だけに使い、オブジェクト1つずつには持たせない。"
+                ],
+                "attrs": [
+                    "+ Name: string {readOnly}",
+                    "- _parent: TimeDomain",
+                    "- _scaleRequests: RequestAggregator<float>",
+                    "+ /Scale: float {readOnly}",
+                    "+ DeltaTime: float {readOnly}",
+                    "+ FixedDeltaTime: float {readOnly}",
+                    "+ ElapsedTime: double {readOnly}",
+                    "+ ScaleChanged: event Action<float>"
+                ],
+                "ops": [
+                    "+ TimeDomain(name: string, parent: TimeDomain, requestCapacity: int)",
+                    "+ Request(value: float, priority: int, requester: string): RequestHandle<float>",
+                    "~ Advance(realDelta: float, realFixedStep: float): void"
+                ],
+                "implements": [
+                    "TopDownShooter::Core::Timing::ITimeSource",
+                    "TopDownShooter::Core::Requests::IRequestSink<T>"
+                ]
+            },
+            "TopDownShooter::Core::Timing::ITimeBindable": {
+                "stereo": "interface",
+                "layer": "共通部品",
+                "desc": [
+                    "時間に結び付けられるものの窓口。Animator・パーティクルなどへの反映役が実装する。",
+                    "Bind でグループの時間に結び付け、SetLocalScale で、そのオブジェクトだけに掛かる倍率(時間の場や凍結の分)を渡す。反映される倍率 = グループの倍率 × これ。"
+                ],
+                "ops": [
+                    "+ Bind(source: ITimeSource): void",
+                    "+ Unbind(): void",
+                    "+ SetLocalScale(scale: float): void"
+                ]
+            },
+            "TopDownShooter::Timing::TimeGroup": {
+                "stereo": "enumeration",
+                "layer": "ユースケース",
+                "desc": "このゲームの時間の括り。GameClocks の配列の添え字にも使う(辞書を引かず、確保もしない)。",
+                "attrs": [
+                    "Real",
+                    "UI",
+                    "Game",
+                    "Player",
+                    "Enemies",
+                    "Projectiles",
+                    "Environment"
+                ]
+            },
+            "TopDownShooter::Timing::GameClocks": {
+                "leaf": true,
+                "layer": "ユースケース",
+                "desc": [
+                    "このゲームの大きな括りの時間を、起動時に作って持つ。",
+                    "Real(実時間)、UI(メニュー。ポーズ中も進む)、Game(ゲーム全体)と、Game を親に持つ4つのグループ(Player・Enemies・Projectiles・Environment)。",
+                    "ポーズ・全体スロー = Game に要求。時間停止スキル = Enemies・Projectiles・Environment の3つに要求(Player は止めない)。加速バフ = Player に要求。",
+                    "1つずつのオブジェクトの調整はここではしない(範囲は TimeFieldSystem、それ以外は持ち主の System が行う)。"
+                ],
+                "attrs": [
+                    "- _domains: TimeDomain[]"
+                ],
+                "ops": [
+                    "+ GameClocks(requestCapacity: int)",
+                    "+ Get(group: TimeGroup): TimeDomain"
+                ]
+            },
+            "TopDownShooter::Timing::ITimeFieldQuery": {
+                "stereo": "interface",
+                "layer": "ユースケース",
+                "desc": "時間の場に「この位置の倍率はいくつか」を聞く窓口。敵の System も弾の System も同じ窓口に聞くので、場の効き方がそろう。",
+                "ops": [
+                    "+ GetScaleAt(position: Vector3): float"
+                ]
+            },
+            "TopDownShooter::Timing::ITimeFieldRegistry": {
+                "stereo": "interface",
+                "layer": "ユースケース",
+                "desc": "時間の場を置く・外す窓口。減速フィールドを出すスキルなどが使う。",
+                "ops": [
+                    "+ Register(field: TimeField): void",
+                    "+ Unregister(field: TimeField): void"
+                ]
+            },
+            "TopDownShooter::Timing::TimeField": {
+                "leaf": true,
+                "layer": "ユースケース",
+                "desc": [
+                    "時間の場1つ。範囲(中心と半径)と倍率を持つ。減速フィールド、加速床、時間停止の結界など。",
+                    "置く側(スキルなど)が起動時に作って持ち、使うたびに Register / Unregister する(ゲーム中に new しない)。動く場は、置く側が Center を書き換える。"
+                ],
+                "attrs": [
+                    "+ Center: Vector3",
+                    "+ Radius: float",
+                    "+ Scale: float"
+                ]
+            },
+            "TopDownShooter::Timing::TimeFieldSystem": {
+                "leaf": true,
+                "layer": "ユースケース",
+                "desc": [
+                    "今ある時間の場の一覧を持ち、位置ごとの倍率に答える。",
+                    "GetScaleAt は、その位置を含む場の倍率をすべて掛け合わせる(場が重なったら掛け算。どれにも入っていなければ 1)。一覧は for で回し、確保を起こさない。"
+                ],
+                "attrs": [
+                    "- _fields: List<TimeField>"
+                ],
+                "ops": [
+                    "+ TimeFieldSystem(capacity: int)",
+                    "+ Register(field: TimeField): void",
+                    "+ Unregister(field: TimeField): void",
+                    "+ GetScaleAt(position: Vector3): float"
+                ],
+                "implements": [
+                    "TopDownShooter::Timing::ITimeFieldQuery",
+                    "TopDownShooter::Timing::ITimeFieldRegistry"
+                ]
+            },
+            "TopDownShooter::Timing::UnityTimeDriver": {
+                "leaf": true,
+                "layer": "フレームワークとドライバー",
+                "desc": [
+                    "Unity の実時間を読み、すべての時間の領域を進める唯一の場所。",
+                    "Initialize で Time.timeScale = 1 に固定し、Physics.simulationMode = Script にする(Unity の時間の仕組みには頼らない)。",
+                    "OnPreUpdate で Time.unscaledDeltaTime を親から順に各領域へ渡して進め、Game の経過時間を貯めて、決まった刻みごとに物理を1ステップ進める(_onFixedStep で各 System の OnFixedUpdate → Physics.Simulate)。"
+                ],
+                "attrs": [
+                    "- _clocks: GameClocks",
+                    "- _fixedStep: float",
+                    "- _accumulator: float",
+                    "- _onFixedStep: Action"
+                ],
+                "ops": [
+                    "+ UnityTimeDriver(clocks: GameClocks, fixedStep: float, onFixedStep: Action)",
+                    "+ Initialize(): void",
+                    "+ OnPreUpdate(): void"
+                ],
+                "implements": [
+                    "TopDownShooter::Core::IInitializable",
+                    "TopDownShooter::Core::IOnPreUpdate"
+                ]
+            },
+            "TopDownShooter::Timing::AnimatorTimeBinding": {
+                "stereo": "MonoBehaviour",
+                "leaf": true,
+                "layer": "フレームワークとドライバー",
+                "desc": "Animator.speed に「グループの倍率 × そのオブジェクトだけの倍率」を書き込む。値が変わったときだけ書き込む。",
+                "attrs": [
+                    "- _animator: Animator",
+                    "- _source: ITimeSource",
+                    "- _localScale: float"
+                ],
+                "ops": [
+                    "+ Bind(source: ITimeSource): void",
+                    "+ Unbind(): void",
+                    "+ SetLocalScale(scale: float): void",
+                    "- Apply(): void"
+                ],
+                "implements": "TopDownShooter::Core::Timing::ITimeBindable"
+            },
+            "TopDownShooter::Timing::ParticleTimeBinding": {
+                "stereo": "MonoBehaviour",
+                "leaf": true,
+                "layer": "フレームワークとドライバー",
+                "desc": "ParticleSystem の simulationSpeed に「グループの倍率 × そのオブジェクトだけの倍率」を書き込む。",
+                "attrs": [
+                    "- _particles: ParticleSystem[]",
+                    "- _source: ITimeSource",
+                    "- _localScale: float"
+                ],
+                "ops": [
+                    "+ Bind(source: ITimeSource): void",
+                    "+ Unbind(): void",
+                    "+ SetLocalScale(scale: float): void",
+                    "- Apply(): void"
+                ],
+                "implements": "TopDownShooter::Core::Timing::ITimeBindable"
+            },
+            "TopDownShooter::Timing::VisualEffectTimeBinding": {
+                "stereo": "MonoBehaviour",
+                "leaf": true,
+                "layer": "フレームワークとドライバー",
+                "desc": "VFX Graph の VisualEffect.playRate に「グループの倍率 × そのオブジェクトだけの倍率」を書き込む(マズルフラッシュなど)。",
+                "attrs": [
+                    "- _effect: VisualEffect",
+                    "- _source: ITimeSource",
+                    "- _localScale: float"
+                ],
+                "ops": [
+                    "+ Bind(source: ITimeSource): void",
+                    "+ Unbind(): void",
+                    "+ SetLocalScale(scale: float): void",
+                    "- Apply(): void"
+                ],
+                "implements": "TopDownShooter::Core::Timing::ITimeBindable"
+            },
+            "Example::Timing::PauseMenuState": {
+                "layer": "ユースケース",
+                "desc": [
+                    "【使用例 / 大きな括りに要求する側】オプションを開いている間、ゲーム全体を止める。Game に 0 を要求し、閉じたら返すだけ。",
+                    "UI は Game の外にあるので、メニューのアニメーションは動き続ける。"
+                ],
+                "attrs": [
+                    "- _gameTime: IRequestSink<float>",
+                    "- _handle: RequestHandle<float>"
+                ],
+                "ops": [
+                    "+ PauseMenuState(gameTime: IRequestSink<float>)",
+                    "+ Enter(): void",
+                    "+ Exit(): void"
+                ]
+            },
+            "Example::Timing::HitStop": {
+                "layer": "ユースケース",
+                "desc": "【使用例 / 大きな括りに要求する側】攻撃が当たった瞬間に、ゲーム全体を一瞬止める。Game に 0 を要求し、Real の時間で数えて返す(Game の時間で数えると、止まっているので終われない)。",
+                "attrs": [
+                    "- _gameTime: IRequestSink<float>",
+                    "- _realTime: ITimeSource",
+                    "- _handle: RequestHandle<float>",
+                    "- _remaining: float"
+                ],
+                "ops": [
+                    "+ Play(duration: float): void",
+                    "+ OnUpdate(): void"
+                ],
+                "implements": "TopDownShooter::Core::IOnUpdate"
+            },
+            "Example::Timing::SlowMotionSkill": {
+                "layer": "ユースケース",
+                "desc": "【使用例 / 大きな括りに要求する側】ゲーム全体をスローにするスキル。Game に 0.3 を要求し、最後は引換券の Update でだんだん 1 に戻してから返す。長さは Real の時間で数える。",
+                "attrs": [
+                    "- _gameTime: IRequestSink<float>",
+                    "- _realTime: ITimeSource",
+                    "- _handle: RequestHandle<float>",
+                    "- _remaining: float"
+                ],
+                "ops": [
+                    "+ Activate(duration: float): void",
+                    "+ OnUpdate(): void"
+                ],
+                "implements": "TopDownShooter::Core::IOnUpdate"
+            },
+            "Example::Timing::TimeStopSkill": {
+                "layer": "ユースケース",
+                "desc": "【使用例 / 大きな括りに要求する側】プレイヤー以外の時間を止めるスキル。Enemies・Projectiles・Environment の3つに 0 を要求し、3枚の引換券を持つ。長さは Player の時間で数える(ポーズ中は進まない)。",
+                "attrs": [
+                    "- _enemiesTime: IRequestSink<float>",
+                    "- _projectilesTime: IRequestSink<float>",
+                    "- _environmentTime: IRequestSink<float>",
+                    "- _playerTime: ITimeSource",
+                    "- _handles: RequestHandle<float>[]",
+                    "- _remaining: float"
+                ],
+                "ops": [
+                    "+ Activate(duration: float): void",
+                    "+ OnUpdate(): void"
+                ],
+                "implements": "TopDownShooter::Core::IOnUpdate"
+            },
+            "Example::Timing::HasteBuff": {
+                "layer": "ユースケース",
+                "desc": "【使用例 / 大きな括りに要求する側】プレイヤーだけを速くするバフ。Player に 1.5 を要求する。全体スロー(Game 0.3)と重なると 0.3 × 1.5 = 0.45 になる。",
+                "attrs": [
+                    "- _playerTime: IRequestSink<float>",
+                    "- _handle: RequestHandle<float>"
+                ],
+                "ops": [
+                    "+ Apply(): void",
+                    "+ Remove(): void"
+                ]
+            },
+            "Example::Timing::SlowFieldSkill": {
+                "layer": "ユースケース",
+                "desc": "【使用例 / 時間の場を置く側】範囲に入ったものを遅くするフィールドを出すスキル。起動時に TimeField(倍率 0.5)を1つ作っておき、発動したら Register、時間が来たら Unregister する。中に誰がいるかは覚えない。",
+                "attrs": [
+                    "- _registry: ITimeFieldRegistry",
+                    "- _field: TimeField",
+                    "- _playerTime: ITimeSource",
+                    "- _remaining: float"
+                ],
+                "ops": [
+                    "+ Activate(center: Vector3, duration: float): void",
+                    "+ OnUpdate(): void"
+                ],
+                "implements": "TopDownShooter::Core::IOnUpdate"
+            },
+            "Example::Timing::EnemyState": {
+                "stereo": "struct",
+                "layer": "ユースケース",
+                "desc": "【使用例】敵1体分の状態。ExampleEnemySystem が配列でまとめて持つ。",
+                "attrs": [
+                    "+ Position: Vector3",
+                    "+ Velocity: Vector3",
+                    "+ FreezeRemaining: float",
+                    "+ LocalScale: float"
+                ]
+            },
+            "Example::Timing::IEnemyView": {
+                "stereo": "interface",
+                "layer": "ユースケース",
+                "desc": "【使用例】敵の見た目への窓口。ユースケース(ExampleEnemySystem)が MonoBehaviour に直接依存しないように、この層で決めて外側に実装させる。",
+                "ops": [
+                    "+ SetPosition(position: Vector3): void",
+                    "+ ApplyLocalScale(scale: float): void"
+                ]
+            },
+            "Example::Timing::EnemyView": {
+                "stereo": "MonoBehaviour",
+                "layer": "フレームワークとドライバー",
+                "desc": "【使用例】敵の見た目。ApplyLocalScale で、付いている ITimeBindable(Animator・パーティクル)にまとめて SetLocalScale を渡す。",
+                "attrs": [
+                    "- _bindings: ITimeBindable[]"
+                ],
+                "ops": [
+                    "+ SetPosition(position: Vector3): void",
+                    "+ ApplyLocalScale(scale: float): void"
+                ],
+                "implements": "Example::Timing::IEnemyView"
+            },
+            "Example::Timing::ExampleEnemySystem": {
+                "layer": "ユースケース",
+                "desc": [
+                    "【使用例 / 自分の管理するものを個別に調整する側】敵をまとめて動かす System。",
+                    "毎フレーム、敵ごとに 倍率 = 時間の場の倍率(位置で聞く)× 凍結の倍率(凍結中なら 0)を計算し、移動は Enemies の DeltaTime × その倍率で行う。見た目にも同じ倍率を渡す。",
+                    "凍結の残り時間は、Enemies の DeltaTime で減らす(凍結を含んだ自分の倍率で減らすと 0 のままで解けない)。"
+                ],
+                "attrs": [
+                    "- _enemiesTime: ITimeSource",
+                    "- _fields: ITimeFieldQuery",
+                    "- _enemies: EnemyState[]",
+                    "- _views: IEnemyView[]"
+                ],
+                "ops": [
+                    "+ Freeze(index: int, seconds: float): void",
+                    "+ OnUpdate(): void"
+                ],
+                "implements": "TopDownShooter::Core::IOnUpdate"
+            },
+            "Example::Timing::BulletState": {
+                "stereo": "struct",
+                "layer": "ユースケース",
+                "desc": "【使用例】弾1発分の状態。弾はオブジェクトにせず、構造体のリストでまとめて動かす(旧コードの BulletService と同じ作り)。",
+                "attrs": [
+                    "+ Position: Vector3",
+                    "+ Velocity: Vector3"
+                ]
+            },
+            "Example::Timing::ExampleBulletSimulation": {
+                "layer": "ユースケース",
+                "desc": [
+                    "【使用例 / 自分の管理するものを個別に調整する側】弾をまとめて動かす System。",
+                    "物理の1ステップごとに、弾ごとに 移動量 = 速度 × Projectiles の FixedDeltaTime × 時間の場の倍率(位置で聞く)。減速フィールドに入った弾だけが遅くなる。"
+                ],
+                "attrs": [
+                    "- _projectilesTime: ITimeSource",
+                    "- _fields: ITimeFieldQuery",
+                    "- _bullets: List<BulletState>"
+                ],
+                "ops": [
+                    "+ Fire(position: Vector3, velocity: Vector3): void",
+                    "+ OnFixedUpdate(): void"
+                ],
+                "implements": "TopDownShooter::Core::IOnFixedUpdate"
+            },
+            "TopDownShooter::Inputs::InputActionType": {
+                "stereo": "enumeration",
+                "layer": "ユースケース",
+                "desc": "入力の種類。InputRecorder が Unity の InputAction をこれに変換する。",
+                "attrs": [
+                    "LeftClick",
+                    "RightClick",
+                    "Move",
+                    "Dodge",
+                    "Guard",
+                    "Interact",
+                    "Inventory",
+                    "Menu"
+                ]
+            },
+            "TopDownShooter::Inputs::InputEventType": {
+                "stereo": "enumeration",
+                "layer": "ユースケース",
+                "desc": "入力の出来事の種類。Unity の started / performed / canceled に対応する。",
+                "attrs": [
+                    "Started",
+                    "Performed",
+                    "Canceled"
+                ]
+            },
+            "TopDownShooter::Inputs::InputContext": {
+                "stereo": "enumeration",
+                "layer": "ユースケース",
+                "desc": "今のゲームの状況。同じ入力でも、コンテキストによって配る先の System が変わる(左クリック: Gameplay なら攻撃、Inventory ならアイテム選択)。",
+                "attrs": [
+                    "Gameplay",
+                    "Inventory",
+                    "Menu",
+                    "Dialog"
+                ]
+            },
+            "TopDownShooter::Inputs::InputRecord": {
+                "stereo": "struct",
+                "layer": "ユースケース",
+                "desc": "起きた入力1件の記録(どの入力が、どう変わったか)。過去の出来事なので、まだ実行していない行動の要求(BufferedAction)とは別の型にする。",
+                "attrs": [
+                    "+ ActionType: InputActionType {readOnly}",
+                    "+ EventType: InputEventType {readOnly}"
+                ]
+            },
+            "TopDownShooter::Inputs::InputRouteKey": {
+                "stereo": "struct",
+                "layer": "ユースケース",
+                "desc": "配る先を引くためのキー(コンテキスト × 入力の種類)。Dictionary のキーにするので IEquatable<InputRouteKey> を実装する(実装しないと、引くたびにボックス化で確保が起きる)。",
+                "attrs": [
+                    "+ Context: InputContext {readOnly}",
+                    "+ ActionType: InputActionType {readOnly}"
+                ],
+                "ops": [
+                    "+ Equals(other: InputRouteKey): bool",
+                    "+ GetHashCode(): int"
+                ]
+            },
+            "TopDownShooter::Inputs::IInputReceiver": {
+                "stereo": "interface",
+                "layer": "ユースケース",
+                "desc": "InputDispatcher から入力を受け取る System の窓口。受け取った入力を、自分の責務に応じて解釈する。",
+                "ops": [
+                    "+ OnInputReceived(input: InputRecord): void"
+                ]
+            },
+            "TopDownShooter::Inputs::IInputRouteRegistry": {
+                "stereo": "interface",
+                "layer": "ユースケース",
+                "desc": "各 System が「このコンテキストのこの入力は自分に送って」と登録・解除する窓口。各 System には配送の操作(DispatchInputs)を見せず、これだけを渡す。",
+                "ops": [
+                    "+ TryRegister(context: InputContext, actionType: InputActionType, receiver: IInputReceiver): bool",
+                    "+ Unregister(context: InputContext, actionType: InputActionType, receiver: IInputReceiver): void"
+                ]
+            },
+            "TopDownShooter::Inputs::InputRecorder": {
+                "layer": "インターフェースアダプター",
+                "leaf": true,
+                "implements": [
+                    "TopDownShooter::Core::IInitializable",
+                    "System::IDisposable"
+                ],
+                "desc": [
+                    "Unity の Input System から入力を受け取り、ゲームで扱える形(InputRecord)に変換して InputProcessor に渡す。",
+                    "どの入力をどの InputActionType にするかは、組み立て時に Bind で教えてもらう。ゲームの行動ルールも配る先も知らない。"
+                ],
+                "attrs": [
+                    "- _processor: InputProcessor {readOnly}",
+                    "- _actionTypes: Dictionary<InputAction, InputActionType> {readOnly}"
+                ],
+                "ops": [
+                    "+ InputRecorder(processor: InputProcessor, actionCapacity: int)",
+                    "+ Bind(action: InputAction, actionType: InputActionType): void",
+                    "+ Initialize(): void",
+                    "+ Dispose(): void",
+                    "- OnActionStarted(context: InputAction.CallbackContext): void",
+                    "- OnActionPerformed(context: InputAction.CallbackContext): void",
+                    "- OnActionCanceled(context: InputAction.CallbackContext): void",
+                    "- RecordInput(actionType: InputActionType, eventType: InputEventType): void"
+                ]
+            },
+            "TopDownShooter::Inputs::InputProcessor": {
+                "layer": "ユースケース",
+                "leaf": true,
+                "desc": [
+                    "入力の出来事を起きた順にキューへ積み、今押されているボタン(物理的な押下状態)を覚える。",
+                    "ボタンを押していることと、ゲーム内でガードが成立していることは別。成立は各行動の System が決める。"
+                ],
+                "attrs": [
+                    "- _inputQueue: Queue<InputRecord> {readOnly}",
+                    "- _pressedInputs: HashSet<InputActionType> {readOnly}"
+                ],
+                "ops": [
+                    "+ InputProcessor(queueCapacity: int)",
+                    "+ RecordInput(input: InputRecord): void",
+                    "+ TryDequeueInput(input: out InputRecord): bool",
+                    "+ IsPressed(actionType: InputActionType): bool"
+                ]
+            },
+            "TopDownShooter::Inputs::InputDispatcher": {
+                "layer": "ユースケース",
+                "leaf": true,
+                "implements": [
+                    "TopDownShooter::Inputs::IInputRouteRegistry",
+                    "TopDownShooter::Core::IOnPreUpdate"
+                ],
+                "desc": [
+                    "入力を取り出し、今のコンテキストと入力の種類から配る先を引いて、その System に渡す。",
+                    "今のコンテキストは要求の集約(HighestPriorityPolicy、既定値 Gameplay)で決める。インベントリやメニューを開く側が要求し、閉じたら返す。",
+                    "Canceled は、コンテキストが途中で変わっていても、Started を受け取った System に届ける(_pressedReceivers)。"
+                ],
+                "attrs": [
+                    "- _processor: InputProcessor {readOnly}",
+                    "- _routes: Dictionary<InputRouteKey, IInputReceiver> {readOnly}",
+                    "- _pressedReceivers: Dictionary<InputActionType, IInputReceiver> {readOnly}",
+                    "- _contextRequests: RequestAggregator<InputContext> {readOnly}",
+                    "+ ContextRequests: IRequestSink<InputContext> {readOnly}",
+                    "+ /CurrentContext: InputContext {readOnly}"
+                ],
+                "ops": [
+                    "+ InputDispatcher(processor: InputProcessor, routeCapacity: int, contextRequestCapacity: int)",
+                    "+ OnPreUpdate(): void",
+                    "+ DispatchInputs(): void",
+                    "+ TryRegister(context: InputContext, actionType: InputActionType, receiver: IInputReceiver): bool",
+                    "+ Unregister(context: InputContext, actionType: InputActionType, receiver: IInputReceiver): void",
+                    "- TryResolveReceiver(context: InputContext, actionType: InputActionType, receiver: out IInputReceiver): bool"
+                ]
+            },
+            "TopDownShooter::Actions::PlayerActionType": {
+                "stereo": "enumeration",
+                "layer": "エンティティ",
+                "desc": "ゲーム内の行動の種類。入力の種類(InputActionType)とは別。",
+                "attrs": [
+                    "Move",
+                    "Attack",
+                    "Dodge",
+                    "Guard",
+                    "Interact"
+                ]
+            },
+            "TopDownShooter::Actions::ActionStartResult": {
+                "stereo": "enumeration",
+                "layer": "エンティティ",
+                "desc": "行動を始められたかどうか。",
+                "attrs": [
+                    "Started",
+                    "BlockedByConflict"
+                ]
+            },
+            "TopDownShooter::Actions::ActionHandle": {
+                "stereo": "struct",
+                "layer": "エンティティ",
+                "desc": "実行中の行動の引換券。行動が終わったら、これで実行権を返す。",
+                "attrs": [
+                    "+ Id: int {readOnly}",
+                    "+ ActionType: PlayerActionType {readOnly}"
+                ]
+            },
+            "TopDownShooter::Actions::ActionCoordinator": {
+                "layer": "エンティティ",
+                "leaf": true,
+                "desc": [
+                    "複数の行動が同時にできるかを判定し、実行中の行動を覚える。行動同士の競合関係(ゲームのルール)だけを持つ。",
+                    "拒否した行動は覚えない(先行入力として持つかどうかは、行動の System が決める)。"
+                ],
+                "attrs": [
+                    "- _activeActions: Dictionary<int, PlayerActionType> {readOnly}",
+                    "- _conflictTable: Dictionary<PlayerActionType, HashSet<PlayerActionType>> {readOnly}",
+                    "- _nextHandleId: int"
+                ],
+                "ops": [
+                    "+ ActionCoordinator(activeCapacity: int)",
+                    "+ SetConflict(running: PlayerActionType, starting: PlayerActionType): void",
+                    "+ TryAcquire(actionType: PlayerActionType, handle: out ActionHandle): ActionStartResult",
+                    "+ Release(handle: ActionHandle): void"
+                ]
+            },
+            "TopDownShooter::Players::BufferedAction": {
+                "stereo": "struct",
+                "layer": "ユースケース",
+                "desc": "先行入力として持っている、まだ実行していない行動の要求。期限を過ぎたら捨てる。",
+                "attrs": [
+                    "+ ActionType: PlayerActionType {readOnly}",
+                    "+ ExpireTime: float {readOnly}"
+                ]
+            },
+            "TopDownShooter::Players::PlayerActionSystem": {
+                "layer": "ユースケース",
+                "leaf": true,
+                "implements": [
+                    "TopDownShooter::Inputs::IInputReceiver",
+                    "TopDownShooter::Core::IInitializable",
+                    "TopDownShooter::Core::IOnUpdate",
+                    "System::IDisposable"
+                ],
+                "desc": [
+                    "攻撃・回避・ガードの入力を受け取り、行動の要求として解釈して実行する。",
+                    "行動を始めるときは ActionCoordinator に実行権を求め、拒否されたら先行入力として持ち、行動が終わったら持っている要求を試し直す。",
+                    "入力の登録は Initialize で、解除は Dispose で行う(MonoBehaviour ではないので OnEnable / OnDisable ではない)。"
+                ],
+                "attrs": [
+                    "- _routeRegistry: IInputRouteRegistry {readOnly}",
+                    "- _actionCoordinator: ActionCoordinator {readOnly}",
+                    "- _bufferedActions: Queue<BufferedAction> {readOnly}"
+                ],
+                "ops": [
+                    "+ PlayerActionSystem(routeRegistry: IInputRouteRegistry, actionCoordinator: ActionCoordinator, bufferCapacity: int)",
+                    "+ Initialize(): void",
+                    "+ OnInputReceived(input: InputRecord): void",
+                    "+ OnUpdate(): void",
+                    "+ Dispose(): void",
+                    "- HandleAttackInput(): void",
+                    "- HandleDodgeInput(): void",
+                    "- HandleGuardInput(): void",
+                    "- TryExecuteAction(actionType: PlayerActionType): void",
+                    "- BufferAction(actionType: PlayerActionType): void",
+                    "- ProcessBufferedActions(): void",
+                    "- OnActionFinished(actionType: PlayerActionType): void"
+                ]
+            },
+            "TopDownShooter::Players::PlayerMovementSystem": {
+                "layer": "ユースケース",
+                "leaf": true,
+                "implements": [
+                    "TopDownShooter::Inputs::IInputReceiver",
+                    "TopDownShooter::Core::IInitializable",
+                    "System::IDisposable"
+                ],
+                "desc": "移動の入力を受け取って移動する。インベントリを開いていても動けるようにするなら、Inventory のコンテキストにも Move を登録する。",
+                "attrs": [
+                    "- _routeRegistry: IInputRouteRegistry {readOnly}"
+                ],
+                "ops": [
+                    "+ PlayerMovementSystem(routeRegistry: IInputRouteRegistry)",
+                    "+ Initialize(): void",
+                    "+ OnInputReceived(input: InputRecord): void",
+                    "+ Dispose(): void"
+                ]
+            },
+            "TopDownShooter::Interactions::InteractSystem": {
+                "layer": "ユースケース",
+                "leaf": true,
+                "implements": [
+                    "TopDownShooter::Inputs::IInputReceiver",
+                    "TopDownShooter::Core::IInitializable",
+                    "System::IDisposable"
+                ],
+                "desc": "インタラクトの入力を受け取って実行する。インタラクト中にほかの行動をさせないよう、ActionCoordinator に実行権を求める。",
+                "attrs": [
+                    "- _routeRegistry: IInputRouteRegistry {readOnly}",
+                    "- _actionCoordinator: ActionCoordinator {readOnly}"
+                ],
+                "ops": [
+                    "+ InteractSystem(routeRegistry: IInputRouteRegistry, actionCoordinator: ActionCoordinator)",
+                    "+ Initialize(): void",
+                    "+ OnInputReceived(input: InputRecord): void",
+                    "+ Dispose(): void"
+                ]
+            },
+            "TopDownShooter::Inventories::InventorySystem": {
+                "layer": "ユースケース",
+                "leaf": true,
+                "implements": [
+                    "TopDownShooter::Inputs::IInputReceiver",
+                    "TopDownShooter::Core::IInitializable",
+                    "System::IDisposable"
+                ],
+                "desc": "インベントリの開閉と操作の入力を処理する。開くときに InputContext.Inventory を要求し、閉じたら返す。",
+                "attrs": [
+                    "- _routeRegistry: IInputRouteRegistry {readOnly}"
+                ],
+                "ops": [
+                    "+ InventorySystem(routeRegistry: IInputRouteRegistry)",
+                    "+ Initialize(): void",
+                    "+ OnInputReceived(input: InputRecord): void",
+                    "+ Dispose(): void"
+                ]
+            },
+            "TopDownShooter::Menus::MenuSystem": {
+                "layer": "ユースケース",
+                "leaf": true,
+                "implements": [
+                    "TopDownShooter::Inputs::IInputReceiver",
+                    "TopDownShooter::Core::IInitializable",
+                    "System::IDisposable"
+                ],
+                "desc": "メニューの表示と選択の入力を処理する。開くときに InputContext.Menu を要求し、閉じたら返す。",
+                "attrs": [
+                    "- _routeRegistry: IInputRouteRegistry {readOnly}"
+                ],
+                "ops": [
+                    "+ MenuSystem(routeRegistry: IInputRouteRegistry)",
+                    "+ Initialize(): void",
+                    "+ OnInputReceived(input: InputRecord): void",
+                    "+ Dispose(): void"
+                ]
+            }
+        },
+        "relations": [
+            {
+                "kind": "composition",
+                "from": "TopDownShooter::Bootstrap::GameMain",
+                "to": "TopDownShooter::Bootstrap::SystemRunner",
+                "m1": "1",
+                "m2": "1",
+                "r2": "_systemRunner",
+                "label": "所有"
+            },
+            {
+                "kind": "dependency",
+                "from": "TopDownShooter::Bootstrap::GameMain",
+                "to": "TopDownShooter::Bootstrap::CompositionRoot",
+                "label": "new して Compose を呼ぶ"
+            },
+            {
+                "kind": "dependency",
+                "from": "TopDownShooter::Bootstrap::CompositionRoot",
+                "to": "TopDownShooter::Bootstrap::SystemRunner",
+                "label": "作った順に Add"
+            },
+            {
+                "kind": "dependency",
+                "from": "TopDownShooter::Bootstrap::CompositionRoot",
+                "to": "TopDownShooter::Timing::GameClocks",
+                "label": "new して、各グループを使う側に渡す"
+            },
+            {
+                "kind": "dependency",
+                "from": "TopDownShooter::Bootstrap::CompositionRoot",
+                "to": "TopDownShooter::Timing::TimeFieldSystem",
+                "label": "new して、置く側・聞く側に渡す"
+            },
+            {
+                "kind": "dependency",
+                "from": "TopDownShooter::Bootstrap::CompositionRoot",
+                "to": "TopDownShooter::Timing::UnityTimeDriver",
+                "label": "new(onFixedStep に SystemRunner.FixedUpdate を渡す)"
+            },
+            {
+                "kind": "directed",
+                "from": "TopDownShooter::Bootstrap::SystemRunner",
+                "to": "TopDownShooter::Core::IInitializable",
+                "m2": "*",
+                "r2": "_initializables"
+            },
+            {
+                "kind": "directed",
+                "from": "TopDownShooter::Bootstrap::SystemRunner",
+                "to": "TopDownShooter::Core::IOnPreUpdate",
+                "m2": "*",
+                "r2": "_preUpdates"
+            },
+            {
+                "kind": "directed",
+                "from": "TopDownShooter::Bootstrap::SystemRunner",
+                "to": "TopDownShooter::Core::IOnUpdate",
+                "m2": "*",
+                "r2": "_updates"
+            },
+            {
+                "kind": "directed",
+                "from": "TopDownShooter::Bootstrap::SystemRunner",
+                "to": "TopDownShooter::Core::IOnFixedUpdate",
+                "m2": "*",
+                "r2": "_fixedUpdates"
+            },
+            {
+                "kind": "directed",
+                "from": "TopDownShooter::Bootstrap::SystemRunner",
+                "to": "TopDownShooter::Core::IOnLateUpdate",
+                "m2": "*",
+                "r2": "_lateUpdates"
+            },
+            {
+                "kind": "directed",
+                "from": "TopDownShooter::Bootstrap::SystemRunner",
+                "to": "System::IDisposable",
+                "m2": "*",
+                "r2": "_disposables",
+                "label": "逆順に破棄"
+            },
+            {
+                "kind": "composition",
+                "from": "TopDownShooter::Core::Requests::RequestAggregator<T>",
+                "to": "TopDownShooter::Core::Requests::RequestEntry<T>",
+                "m1": "1",
+                "m2": "*",
+                "r2": "_entries",
+                "label": "残っている要求"
+            },
+            {
+                "kind": "directed",
+                "from": "TopDownShooter::Core::Requests::RequestAggregator<T>",
+                "to": "TopDownShooter::Core::Requests::IAggregationPolicy<T>",
+                "m1": "*",
+                "m2": "1",
+                "r2": "_policy",
+                "label": "結果の決め方"
+            },
+            {
+                "kind": "dependency",
+                "from": "TopDownShooter::Core::Requests::RequestAggregator<T>",
+                "to": "TopDownShooter::Core::Requests::RequestHandle<T>",
+                "label": "要求ごとに作って返す"
+            },
+            {
+                "kind": "directed",
+                "from": "TopDownShooter::Core::Requests::RequestHandle<T>",
+                "to": "TopDownShooter::Core::Requests::IRequestOwner<T>",
+                "m1": "*",
+                "m2": "1",
+                "r2": "_owner",
+                "label": "取り下げ・値の変更を伝える"
+            },
+            {
+                "kind": "dependency",
+                "from": "TopDownShooter::Core::Requests::IAggregationPolicy<T>",
+                "to": "TopDownShooter::Core::Requests::RequestEntry<T>",
+                "label": "一覧を受け取る"
+            },
+            {
+                "kind": "dependency",
+                "from": "TopDownShooter::Core::Requests::IRequestSink<T>",
+                "to": "TopDownShooter::Core::Requests::RequestHandle<T>",
+                "label": "引換券を返す"
+            },
+            {
+                "kind": "directed",
+                "from": "TopDownShooter::Core::Timing::TimeDomain",
+                "to": "TopDownShooter::Core::Timing::TimeDomain",
+                "m1": "*",
+                "m2": "0..1",
+                "r2": "_parent",
+                "label": "親(Game)"
+            },
+            {
+                "kind": "composition",
+                "from": "TopDownShooter::Core::Timing::TimeDomain",
+                "to": "TopDownShooter::Core::Requests::RequestAggregator<T>",
+                "m1": "1",
+                "m2": "1",
+                "r2": "_scaleRequests",
+                "label": "自分の倍率(T = float)"
+            },
+            {
+                "kind": "dependency",
+                "from": "TopDownShooter::Core::Timing::TimeDomain",
+                "to": "TopDownShooter::Core::Requests::MultiplyPolicy",
+                "label": "倍率は掛け合わせる"
+            },
+            {
+                "kind": "dependency",
+                "from": "TopDownShooter::Core::Timing::ITimeBindable",
+                "to": "TopDownShooter::Core::Timing::ITimeSource",
+                "label": "結び付ける"
+            },
+            {
+                "kind": "composition",
+                "from": "TopDownShooter::Timing::GameClocks",
+                "to": "TopDownShooter::Core::Timing::TimeDomain",
+                "m1": "1",
+                "m2": "7",
+                "r2": "_domains",
+                "label": "括りごとの時間"
+            },
+            {
+                "kind": "dependency",
+                "from": "TopDownShooter::Timing::GameClocks",
+                "to": "TopDownShooter::Timing::TimeGroup",
+                "label": "添え字"
+            },
+            {
+                "kind": "aggregation",
+                "from": "TopDownShooter::Timing::TimeFieldSystem",
+                "to": "TopDownShooter::Timing::TimeField",
+                "m1": "1",
+                "m2": "*",
+                "r2": "_fields",
+                "label": "今ある場(持ち主は置く側)"
+            },
+            {
+                "kind": "dependency",
+                "from": "TopDownShooter::Timing::ITimeFieldRegistry",
+                "to": "TopDownShooter::Timing::TimeField",
+                "label": "置く・外す"
+            },
+            {
+                "kind": "directed",
+                "from": "TopDownShooter::Timing::UnityTimeDriver",
+                "to": "TopDownShooter::Timing::GameClocks",
+                "m2": "1",
+                "r2": "_clocks",
+                "label": "各領域を進める"
+            },
+            {
+                "kind": "directed",
+                "from": "TopDownShooter::Timing::AnimatorTimeBinding",
+                "to": "TopDownShooter::Core::Timing::ITimeSource",
+                "m2": "0..1",
+                "r2": "_source"
+            },
+            {
+                "kind": "directed",
+                "from": "TopDownShooter::Timing::ParticleTimeBinding",
+                "to": "TopDownShooter::Core::Timing::ITimeSource",
+                "m2": "0..1",
+                "r2": "_source"
+            },
+            {
+                "kind": "directed",
+                "from": "TopDownShooter::Timing::VisualEffectTimeBinding",
+                "to": "TopDownShooter::Core::Timing::ITimeSource",
+                "m2": "0..1",
+                "r2": "_source"
+            },
+            {
+                "kind": "directed",
+                "from": "Example::Timing::PauseMenuState",
+                "to": "TopDownShooter::Core::Requests::IRequestSink<T>",
+                "m2": "1",
+                "r2": "_gameTime",
+                "label": "Game に 0"
+            },
+            {
+                "kind": "dependency",
+                "from": "Example::Timing::PauseMenuState",
+                "to": "TopDownShooter::Core::Requests::RequestHandle<T>",
+                "label": "引換券を値で持つ"
+            },
+            {
+                "kind": "directed",
+                "from": "Example::Timing::HitStop",
+                "to": "TopDownShooter::Core::Requests::IRequestSink<T>",
+                "m2": "1",
+                "r2": "_gameTime",
+                "label": "Game に 0"
+            },
+            {
+                "kind": "directed",
+                "from": "Example::Timing::HitStop",
+                "to": "TopDownShooter::Core::Timing::ITimeSource",
+                "m2": "1",
+                "r2": "_realTime",
+                "label": "Real で数える"
+            },
+            {
+                "kind": "directed",
+                "from": "Example::Timing::SlowMotionSkill",
+                "to": "TopDownShooter::Core::Requests::IRequestSink<T>",
+                "m2": "1",
+                "r2": "_gameTime",
+                "label": "Game に 0.3"
+            },
+            {
+                "kind": "directed",
+                "from": "Example::Timing::SlowMotionSkill",
+                "to": "TopDownShooter::Core::Timing::ITimeSource",
+                "m2": "1",
+                "r2": "_realTime",
+                "label": "Real で数える"
+            },
+            {
+                "kind": "directed",
+                "from": "Example::Timing::TimeStopSkill",
+                "to": "TopDownShooter::Core::Requests::IRequestSink<T>",
+                "m2": "3",
+                "label": "Enemies・Projectiles・Environment に 0"
+            },
+            {
+                "kind": "directed",
+                "from": "Example::Timing::TimeStopSkill",
+                "to": "TopDownShooter::Core::Timing::ITimeSource",
+                "m2": "1",
+                "r2": "_playerTime",
+                "label": "Player で数える"
+            },
+            {
+                "kind": "directed",
+                "from": "Example::Timing::HasteBuff",
+                "to": "TopDownShooter::Core::Requests::IRequestSink<T>",
+                "m2": "1",
+                "r2": "_playerTime",
+                "label": "Player に 1.5"
+            },
+            {
+                "kind": "directed",
+                "from": "Example::Timing::SlowFieldSkill",
+                "to": "TopDownShooter::Timing::ITimeFieldRegistry",
+                "m2": "1",
+                "r2": "_registry",
+                "label": "場を置く・外す"
+            },
+            {
+                "kind": "composition",
+                "from": "Example::Timing::SlowFieldSkill",
+                "to": "TopDownShooter::Timing::TimeField",
+                "m1": "1",
+                "m2": "1",
+                "r2": "_field",
+                "label": "起動時に作って持つ"
+            },
+            {
+                "kind": "directed",
+                "from": "Example::Timing::SlowFieldSkill",
+                "to": "TopDownShooter::Core::Timing::ITimeSource",
+                "m2": "1",
+                "r2": "_playerTime",
+                "label": "Player で数える"
+            },
+            {
+                "kind": "directed",
+                "from": "Example::Timing::ExampleEnemySystem",
+                "to": "TopDownShooter::Core::Timing::ITimeSource",
+                "m2": "1",
+                "r2": "_enemiesTime",
+                "label": "Enemies の時間を読む"
+            },
+            {
+                "kind": "directed",
+                "from": "Example::Timing::ExampleEnemySystem",
+                "to": "TopDownShooter::Timing::ITimeFieldQuery",
+                "m2": "1",
+                "r2": "_fields",
+                "label": "位置の倍率を聞く"
+            },
+            {
+                "kind": "composition",
+                "from": "Example::Timing::ExampleEnemySystem",
+                "to": "Example::Timing::EnemyState",
+                "m1": "1",
+                "m2": "*",
+                "r2": "_enemies"
+            },
+            {
+                "kind": "directed",
+                "from": "Example::Timing::ExampleEnemySystem",
+                "to": "Example::Timing::IEnemyView",
+                "m2": "*",
+                "r2": "_views",
+                "label": "倍率と位置を渡す"
+            },
+            {
+                "kind": "directed",
+                "from": "Example::Timing::EnemyView",
+                "to": "TopDownShooter::Core::Timing::ITimeBindable",
+                "m2": "*",
+                "r2": "_bindings"
+            },
+            {
+                "kind": "directed",
+                "from": "Example::Timing::ExampleBulletSimulation",
+                "to": "TopDownShooter::Core::Timing::ITimeSource",
+                "m2": "1",
+                "r2": "_projectilesTime",
+                "label": "Projectiles の時間を読む"
+            },
+            {
+                "kind": "directed",
+                "from": "Example::Timing::ExampleBulletSimulation",
+                "to": "TopDownShooter::Timing::ITimeFieldQuery",
+                "m2": "1",
+                "r2": "_fields",
+                "label": "位置の倍率を聞く"
+            },
+            {
+                "kind": "composition",
+                "from": "Example::Timing::ExampleBulletSimulation",
+                "to": "Example::Timing::BulletState",
+                "m1": "1",
+                "m2": "*",
+                "r2": "_bullets"
+            },
+            {
+                "kind": "dependency",
+                "from": "TopDownShooter::Bootstrap::CompositionRoot",
+                "to": "TopDownShooter::Inputs::InputRecorder",
+                "label": "new して、InputAction を Bind"
+            },
+            {
+                "kind": "dependency",
+                "from": "TopDownShooter::Bootstrap::CompositionRoot",
+                "to": "TopDownShooter::Inputs::InputDispatcher",
+                "label": "new して、各 System に IInputRouteRegistry として渡す"
+            },
+            {
+                "kind": "directed",
+                "from": "TopDownShooter::Inputs::InputRecorder",
+                "to": "TopDownShooter::Inputs::InputProcessor",
+                "m2": "1",
+                "r2": "_processor",
+                "label": "記録を渡す"
+            },
+            {
+                "kind": "dependency",
+                "from": "TopDownShooter::Inputs::InputRecorder",
+                "to": "TopDownShooter::Inputs::InputRecord",
+                "label": "作る"
+            },
+            {
+                "kind": "composition",
+                "from": "TopDownShooter::Inputs::InputProcessor",
+                "to": "TopDownShooter::Inputs::InputRecord",
+                "m1": "1",
+                "m2": "*",
+                "r2": "_inputQueue",
+                "label": "起きた順"
+            },
+            {
+                "kind": "directed",
+                "from": "TopDownShooter::Inputs::InputDispatcher",
+                "to": "TopDownShooter::Inputs::InputProcessor",
+                "m2": "1",
+                "r2": "_processor",
+                "label": "取り出す"
+            },
+            {
+                "kind": "directed",
+                "from": "TopDownShooter::Inputs::InputDispatcher",
+                "to": "TopDownShooter::Inputs::IInputReceiver",
+                "m2": "*",
+                "r2": "_routes",
+                "label": "配る先"
+            },
+            {
+                "kind": "directed",
+                "from": "TopDownShooter::Inputs::InputDispatcher",
+                "to": "TopDownShooter::Inputs::IInputReceiver",
+                "m2": "*",
+                "r2": "_pressedReceivers",
+                "label": "Started を受け取った受け手(Canceled の届け先)"
+            },
+            {
+                "kind": "composition",
+                "from": "TopDownShooter::Inputs::InputDispatcher",
+                "to": "TopDownShooter::Inputs::InputRouteKey",
+                "m1": "1",
+                "m2": "*",
+                "r2": "_routes",
+                "label": "キー"
+            },
+            {
+                "kind": "composition",
+                "from": "TopDownShooter::Inputs::InputDispatcher",
+                "to": "TopDownShooter::Core::Requests::RequestAggregator<T>",
+                "m1": "1",
+                "m2": "1",
+                "r2": "_contextRequests",
+                "label": "今のコンテキスト(T = InputContext)"
+            },
+            {
+                "kind": "directed",
+                "from": "TopDownShooter::Inputs::InputDispatcher",
+                "to": "TopDownShooter::Core::Requests::IRequestSink<T>",
+                "m2": "1",
+                "r2": "ContextRequests",
+                "label": "コンテキストを要求する窓口(中身は _contextRequests)"
+            },
+            {
+                "kind": "dependency",
+                "from": "TopDownShooter::Inputs::IInputReceiver",
+                "to": "TopDownShooter::Inputs::InputRecord",
+                "label": "受け取る"
+            },
+            {
+                "kind": "dependency",
+                "from": "TopDownShooter::Inputs::IInputRouteRegistry",
+                "to": "TopDownShooter::Inputs::IInputReceiver",
+                "label": "登録する"
+            },
+            {
+                "kind": "dependency",
+                "from": "TopDownShooter::Actions::ActionCoordinator",
+                "to": "TopDownShooter::Actions::ActionHandle",
+                "label": "返す"
+            },
+            {
+                "kind": "dependency",
+                "from": "TopDownShooter::Actions::ActionCoordinator",
+                "to": "TopDownShooter::Actions::ActionStartResult",
+                "label": "返す"
+            },
+            {
+                "kind": "directed",
+                "from": "TopDownShooter::Players::PlayerActionSystem",
+                "to": "TopDownShooter::Inputs::IInputRouteRegistry",
+                "m2": "1",
+                "r2": "_routeRegistry",
+                "label": "入力を登録"
+            },
+            {
+                "kind": "directed",
+                "from": "TopDownShooter::Players::PlayerActionSystem",
+                "to": "TopDownShooter::Actions::ActionCoordinator",
+                "m2": "1",
+                "r2": "_actionCoordinator",
+                "label": "実行権を求める"
+            },
+            {
+                "kind": "composition",
+                "from": "TopDownShooter::Players::PlayerActionSystem",
+                "to": "TopDownShooter::Players::BufferedAction",
+                "m1": "1",
+                "m2": "*",
+                "r2": "_bufferedActions",
+                "label": "先行入力"
+            },
+            {
+                "kind": "directed",
+                "from": "TopDownShooter::Players::PlayerMovementSystem",
+                "to": "TopDownShooter::Inputs::IInputRouteRegistry",
+                "m2": "1",
+                "r2": "_routeRegistry"
+            },
+            {
+                "kind": "directed",
+                "from": "TopDownShooter::Interactions::InteractSystem",
+                "to": "TopDownShooter::Inputs::IInputRouteRegistry",
+                "m2": "1",
+                "r2": "_routeRegistry"
+            },
+            {
+                "kind": "directed",
+                "from": "TopDownShooter::Interactions::InteractSystem",
+                "to": "TopDownShooter::Actions::ActionCoordinator",
+                "m2": "1",
+                "r2": "_actionCoordinator",
+                "label": "実行権を求める"
+            },
+            {
+                "kind": "directed",
+                "from": "TopDownShooter::Inventories::InventorySystem",
+                "to": "TopDownShooter::Inputs::IInputRouteRegistry",
+                "m2": "1",
+                "r2": "_routeRegistry"
+            },
+            {
+                "kind": "directed",
+                "from": "TopDownShooter::Menus::MenuSystem",
+                "to": "TopDownShooter::Inputs::IInputRouteRegistry",
+                "m2": "1",
+                "r2": "_routeRegistry"
+            }
+        ],
+        "diagrams": [
+            {
+                "name": "コア: ライフサイクル",
+                "type": "class",
+                "desc": "【部品】System が「いつ呼ばれるか」の形。どの層からも使う共通部品"
+            },
+            {
+                "name": "構築",
+                "type": "class",
+                "desc": "Unity から呼ばれ、全部を組み立てて回す。ライフサイクルの部品を使う"
+            },
+            {
+                "name": "要求の集約",
+                "type": "class",
+                "desc": "【部品】複数の場所からの要求を集めて1つの結果を決める汎用の仕組み。ゲーム中の確保ゼロ"
+            },
+            {
+                "name": "時間の流れ",
+                "type": "class",
+                "desc": "【部品】時間の領域。要求の集約の部品を使って、領域ごとの倍率を決める。ゲームの中身も Unity も知らない"
+            },
+            {
+                "name": "時間管理",
+                "type": "class",
+                "desc": "このゲームの大きな括りの時間(GameClocks)、範囲で効く時間の場(TimeFieldSystem)、Unity への反映(UnityTimeDriver、各 Binding)。時間の流れの部品を使う"
+            },
+            {
+                "name": "使用例: 時間を使う機能",
+                "type": "class",
+                "desc": "【使用例】大きな括りに要求する側(ポーズ・スロー・時間停止など)と、自分の管理するものを個別に調整する側(敵・弾)"
+            },
+            {
+                "name": "使用例: 時間停止スキル中にポーズ",
+                "type": "sequence",
+                "desc": "【使用例】グループを止めるスキルと、全体を止めるポーズが重なっても、掛け算で正しく決まる",
+                "elements": [
+                    {
+                        "name": "skill : TimeStopSkill",
+                        "kind": "lifeline"
+                    },
+                    {
+                        "name": "pause : PauseMenuState",
+                        "kind": "lifeline"
+                    },
+                    {
+                        "name": "driver : UnityTimeDriver",
+                        "kind": "lifeline"
+                    },
+                    {
+                        "name": "game : TimeDomain",
+                        "kind": "lifeline"
+                    },
+                    {
+                        "name": "player : TimeDomain",
+                        "kind": "lifeline"
+                    },
+                    {
+                        "name": "enemies : TimeDomain",
+                        "kind": "lifeline"
+                    }
+                ],
+                "relations": [
+                    {
+                        "kind": "sync",
+                        "from": "skill : TimeStopSkill",
+                        "to": "enemies : TimeDomain",
+                        "label": "Request(0, 0, \"TimeStopSkill\") … Projectiles・Environment にも同じく要求",
+                        "dy": 70
+                    },
+                    {
+                        "kind": "reply",
+                        "from": "enemies : TimeDomain",
+                        "to": "skill : TimeStopSkill",
+                        "label": "RequestHandle { Id = 1 }",
+                        "dy": 110
+                    },
+                    {
+                        "kind": "sync",
+                        "from": "driver : UnityTimeDriver",
+                        "to": "game : TimeDomain",
+                        "label": "Advance(実時間 0.016) … Game = 1",
+                        "dy": 150
+                    },
+                    {
+                        "kind": "sync",
+                        "from": "driver : UnityTimeDriver",
+                        "to": "player : TimeDomain",
+                        "label": "Advance … Player = Game 1 × 自分 1 = 1 → プレイヤーは動ける",
+                        "dy": 190
+                    },
+                    {
+                        "kind": "sync",
+                        "from": "driver : UnityTimeDriver",
+                        "to": "enemies : TimeDomain",
+                        "label": "Advance … Enemies = Game 1 × 自分 0 = 0 → 敵は止まる",
+                        "dy": 230
+                    },
+                    {
+                        "kind": "sync",
+                        "from": "pause : PauseMenuState",
+                        "to": "game : TimeDomain",
+                        "label": "Request(0, 0, \"PauseMenu\")",
+                        "dy": 270
+                    },
+                    {
+                        "kind": "reply",
+                        "from": "game : TimeDomain",
+                        "to": "pause : PauseMenuState",
+                        "label": "RequestHandle { Id = 1 } … 領域ごとに番号は別",
+                        "dy": 310
+                    },
+                    {
+                        "kind": "sync",
+                        "from": "driver : UnityTimeDriver",
+                        "to": "game : TimeDomain",
+                        "label": "Advance … Game = 0",
+                        "dy": 350
+                    },
+                    {
+                        "kind": "sync",
+                        "from": "driver : UnityTimeDriver",
+                        "to": "player : TimeDomain",
+                        "label": "Advance … Player = 0 × 1 = 0 → プレイヤーも止まる。スキルの残り時間も減らない",
+                        "dy": 390
+                    },
+                    {
+                        "kind": "sync",
+                        "from": "driver : UnityTimeDriver",
+                        "to": "enemies : TimeDomain",
+                        "label": "Advance … Enemies = 0 × 0 = 0",
+                        "dy": 430
+                    },
+                    {
+                        "kind": "sync",
+                        "from": "pause : PauseMenuState",
+                        "to": "game : TimeDomain",
+                        "label": "_handle.Dispose() → Release(1)",
+                        "dy": 470
+                    },
+                    {
+                        "kind": "sync",
+                        "from": "driver : UnityTimeDriver",
+                        "to": "player : TimeDomain",
+                        "label": "Advance … Player = 1 → 再び動ける",
+                        "dy": 510
+                    },
+                    {
+                        "kind": "sync",
+                        "from": "driver : UnityTimeDriver",
+                        "to": "enemies : TimeDomain",
+                        "label": "Advance … Enemies = 1 × 0 = 0 → 時間停止は続いている",
+                        "dy": 550
+                    },
+                    {
+                        "kind": "sync",
+                        "from": "skill : TimeStopSkill",
+                        "to": "enemies : TimeDomain",
+                        "label": "_handles[0].Dispose() → Release(1) … 3枚とも返す",
+                        "dy": 590
+                    },
+                    {
+                        "kind": "sync",
+                        "from": "driver : UnityTimeDriver",
+                        "to": "enemies : TimeDomain",
+                        "label": "Advance … Enemies = 1 × 1 = 1 → 元に戻る",
+                        "dy": 630
+                    }
+                ]
+            },
+            {
+                "name": "使用例: 敵の倍率の計算(1フレーム)",
+                "type": "sequence",
+                "desc": "【使用例】グループの時間(要求の集約で決まる)を読み、個別の調整(時間の場と凍結)は敵の System が自分で掛ける",
+                "elements": [
+                    {
+                        "name": "system : ExampleEnemySystem",
+                        "kind": "lifeline"
+                    },
+                    {
+                        "name": "enemies : TimeDomain",
+                        "kind": "lifeline"
+                    },
+                    {
+                        "name": "fields : TimeFieldSystem",
+                        "kind": "lifeline"
+                    },
+                    {
+                        "name": "view : EnemyView",
+                        "kind": "lifeline"
+                    }
+                ],
+                "relations": [
+                    {
+                        "kind": "sync",
+                        "from": "system : ExampleEnemySystem",
+                        "to": "enemies : TimeDomain",
+                        "label": "DeltaTime を読む … 実時間 × Game の倍率 × Enemies の倍率 = 0.016",
+                        "dy": 70
+                    },
+                    {
+                        "kind": "sync",
+                        "from": "system : ExampleEnemySystem",
+                        "to": "fields : TimeFieldSystem",
+                        "label": "GetScaleAt(敵の位置)",
+                        "dy": 110
+                    },
+                    {
+                        "kind": "reply",
+                        "from": "fields : TimeFieldSystem",
+                        "to": "system : ExampleEnemySystem",
+                        "label": "0.5 … 減速フィールドの中(場が重なっていれば掛け算)",
+                        "dy": 150
+                    },
+                    {
+                        "kind": "sync",
+                        "from": "system : ExampleEnemySystem",
+                        "to": "system : ExampleEnemySystem",
+                        "label": "凍結の倍率: FreezeRemaining > 0 なら 0、そうでなければ 1。FreezeRemaining は Enemies の DeltaTime で減らす",
+                        "dy": 190
+                    },
+                    {
+                        "kind": "sync",
+                        "from": "system : ExampleEnemySystem",
+                        "to": "system : ExampleEnemySystem",
+                        "label": "LocalScale = 0.5 × 1 = 0.5。Position += Velocity × 0.016 × 0.5",
+                        "dy": 255
+                    },
+                    {
+                        "kind": "sync",
+                        "from": "system : ExampleEnemySystem",
+                        "to": "view : EnemyView",
+                        "label": "SetPosition(Position)",
+                        "dy": 320
+                    },
+                    {
+                        "kind": "sync",
+                        "from": "system : ExampleEnemySystem",
+                        "to": "view : EnemyView",
+                        "label": "ApplyLocalScale(0.5) → 付いている各 ITimeBindable に SetLocalScale(0.5)",
+                        "dy": 360
+                    }
+                ]
+            },
+            {
+                "name": "入力管理",
+                "type": "class",
+                "desc": "Unity の入力を受け取り、順番と押下状態を覚え、今のコンテキストに応じて各 System に配る。コンテキストは要求の集約で決める"
+            },
+            {
+                "name": "入力の受け手と行動",
+                "type": "class",
+                "desc": "入力を受け取って解釈する各 System と、行動の競合を管理する ActionCoordinator。入力管理の部品を使う"
+            },
+            {
+                "name": "入力の流れ(1フレーム)",
+                "type": "sequence",
+                "desc": "Unity の入力が、記録 → キュー → 配送 → 解釈 → 実行権の確認 と流れる",
+                "elements": [
+                    {
+                        "id": "unity",
+                        "kind": "lifeline",
+                        "name": "Unity の Input System",
+                        "head": "boundary"
+                    },
+                    {
+                        "id": "recorder",
+                        "kind": "lifeline",
+                        "name": "recorder : InputRecorder"
+                    },
+                    {
+                        "id": "processor",
+                        "kind": "lifeline",
+                        "name": "processor : InputProcessor"
+                    },
+                    {
+                        "id": "dispatcher",
+                        "kind": "lifeline",
+                        "name": "dispatcher : InputDispatcher"
+                    },
+                    {
+                        "id": "action",
+                        "kind": "lifeline",
+                        "name": "action : PlayerActionSystem"
+                    },
+                    {
+                        "id": "coordinator",
+                        "kind": "lifeline",
+                        "name": "coordinator : ActionCoordinator"
+                    }
+                ],
+                "relations": [
+                    {
+                        "kind": "async",
+                        "from": "unity",
+                        "to": "recorder",
+                        "label": "started(攻撃ボタン) … Update より前に呼ばれる"
+                    },
+                    {
+                        "kind": "sync",
+                        "from": "recorder",
+                        "to": "processor",
+                        "label": "RecordInput(LeftClick, Started) … キューに積み、押下状態に追加"
+                    },
+                    {
+                        "kind": "sync",
+                        "from": "dispatcher",
+                        "to": "processor",
+                        "label": "TryDequeueInput() … OnPreUpdate の中で、キューが空になるまで"
+                    },
+                    {
+                        "kind": "reply",
+                        "from": "processor",
+                        "to": "dispatcher",
+                        "label": "InputRecord(LeftClick, Started)"
+                    },
+                    {
+                        "kind": "sync",
+                        "from": "dispatcher",
+                        "to": "dispatcher",
+                        "label": "TryResolveReceiver(Gameplay, LeftClick) → PlayerActionSystem。押下中の受け手として覚える"
+                    },
+                    {
+                        "kind": "sync",
+                        "from": "dispatcher",
+                        "to": "action",
+                        "label": "OnInputReceived(LeftClick, Started)"
+                    },
+                    {
+                        "kind": "sync",
+                        "from": "action",
+                        "to": "coordinator",
+                        "label": "TryAcquire(Attack)"
+                    },
+                    {
+                        "kind": "reply",
+                        "from": "coordinator",
+                        "to": "action",
+                        "label": "Started + ActionHandle → 攻撃を始める"
+                    }
+                ]
+            },
+            {
+                "name": "先行入力: 攻撃中の回避",
+                "type": "sequence",
+                "desc": "競合で拒否された回避を、PlayerActionSystem が先行入力として持ち、攻撃が終わったら試し直す",
+                "elements": [
+                    {
+                        "id": "dispatcher",
+                        "kind": "lifeline",
+                        "name": "dispatcher : InputDispatcher"
+                    },
+                    {
+                        "id": "action",
+                        "kind": "lifeline",
+                        "name": "action : PlayerActionSystem"
+                    },
+                    {
+                        "id": "coordinator",
+                        "kind": "lifeline",
+                        "name": "coordinator : ActionCoordinator"
+                    }
+                ],
+                "relations": [
+                    {
+                        "kind": "sync",
+                        "from": "dispatcher",
+                        "to": "action",
+                        "label": "OnInputReceived(Dodge, Started) … 攻撃中"
+                    },
+                    {
+                        "kind": "sync",
+                        "from": "action",
+                        "to": "coordinator",
+                        "label": "TryAcquire(Dodge)"
+                    },
+                    {
+                        "kind": "reply",
+                        "from": "coordinator",
+                        "to": "action",
+                        "label": "BlockedByConflict … 攻撃と競合。拒否した行動は覚えない"
+                    },
+                    {
+                        "kind": "sync",
+                        "from": "action",
+                        "to": "action",
+                        "label": "BufferAction(Dodge) … 期限付きで先行入力として持つ"
+                    },
+                    {
+                        "kind": "sync",
+                        "from": "action",
+                        "to": "coordinator",
+                        "label": "Release(攻撃の ActionHandle) … 攻撃が終わった"
+                    },
+                    {
+                        "kind": "sync",
+                        "from": "action",
+                        "to": "action",
+                        "label": "OnActionFinished(Attack) → ProcessBufferedActions()"
+                    },
+                    {
+                        "kind": "sync",
+                        "from": "action",
+                        "to": "coordinator",
+                        "label": "TryAcquire(Dodge) … 期限内なので試し直す"
+                    },
+                    {
+                        "kind": "reply",
+                        "from": "coordinator",
+                        "to": "action",
+                        "label": "Started → 回避を始める"
+                    }
+                ]
+            },
+            {
+                "name": "押したままコンテキストが変わる",
+                "type": "sequence",
+                "desc": "ガードを押したままインベントリを開いて離しても、Canceled はガードを始めた PlayerActionSystem に届く(届かないとガードが解けない)",
+                "elements": [
+                    {
+                        "id": "processor",
+                        "kind": "lifeline",
+                        "name": "processor : InputProcessor"
+                    },
+                    {
+                        "id": "dispatcher",
+                        "kind": "lifeline",
+                        "name": "dispatcher : InputDispatcher"
+                    },
+                    {
+                        "id": "action",
+                        "kind": "lifeline",
+                        "name": "action : PlayerActionSystem"
+                    },
+                    {
+                        "id": "inventory",
+                        "kind": "lifeline",
+                        "name": "inventory : InventorySystem"
+                    }
+                ],
+                "relations": [
+                    {
+                        "kind": "reply",
+                        "from": "processor",
+                        "to": "dispatcher",
+                        "label": "InputRecord(Guard, Started)"
+                    },
+                    {
+                        "kind": "sync",
+                        "from": "dispatcher",
+                        "to": "action",
+                        "label": "OnInputReceived(Guard, Started) … Gameplay。_pressedReceivers[Guard] = action"
+                    },
+                    {
+                        "kind": "reply",
+                        "from": "processor",
+                        "to": "dispatcher",
+                        "label": "InputRecord(Inventory, Started)"
+                    },
+                    {
+                        "kind": "sync",
+                        "from": "dispatcher",
+                        "to": "inventory",
+                        "label": "OnInputReceived(Inventory, Started)"
+                    },
+                    {
+                        "kind": "sync",
+                        "from": "inventory",
+                        "to": "dispatcher",
+                        "label": "ContextRequests.Request(Inventory, 10, \"InventorySystem\") … コンテキストが Inventory に変わる"
+                    },
+                    {
+                        "kind": "reply",
+                        "from": "processor",
+                        "to": "dispatcher",
+                        "label": "InputRecord(Guard, Canceled)"
+                    },
+                    {
+                        "kind": "sync",
+                        "from": "dispatcher",
+                        "to": "action",
+                        "label": "OnInputReceived(Guard, Canceled) … 今は Inventory だが、Started を受け取った action に届ける"
+                    }
+                ]
+            },
+            {
+                "name": "名前空間の依存",
+                "type": "package",
+                "desc": "名前空間同士の依存の向き。矢印はクラス間の関係から自動で出る。循環がなく、外側の層から内側の層へだけ向いていればよい"
+            }
+        ]
+    },
+    "layout": {
+        "tags": [
+            {
+                "name": "TODO",
+                "color": "#e8590c"
+            },
+            {
+                "name": "要確認",
+                "color": "#d6336c"
+            },
+            {
+                "name": "メモ",
+                "color": "#4c6ef5"
+            },
+            {
+                "name": "決定",
+                "color": "#2b8a3e"
+            },
+            {
+                "name": "将来",
+                "color": "#868e96"
+            },
+            {
+                "name": "使用例",
+                "color": "#9c36b5"
+            },
+            {
+                "name": "限界",
+                "color": "#c92a2a"
+            }
+        ],
+        "classMemos": {
+            "TopDownShooter::Bootstrap::GameMain": [
+                {
+                    "cat": "決定",
+                    "text": "Start で Initialize、OnDestroy で Dispose を呼ぶ"
+                },
+                {
+                    "cat": "決定",
+                    "text": "FixedUpdate は SystemRunner に流さない。物理のステップは UnityTimeDriver がゲームの時間に合わせて進める(ポーズ・スロー・加速に物理を合わせるため)"
+                },
+                {
+                    "cat": "TODO",
+                    "text": "Inspector で設定するもの(入力のアセット、シーン上の参照、設定の SO)は、作る機能が決まるたびに [SerializeField] で足す"
+                }
+            ],
+            "TopDownShooter::Bootstrap::CompositionRoot": [
+                {
+                    "cat": "決定",
+                    "text": "依存されるものから順に new し、作った順に SystemRunner へ Add する。Add の順がそのまま Update の実行順"
+                },
+                {
+                    "cat": "決定",
+                    "text": "UnityTimeDriver は、ほかの System より先に Add する(その後の処理が、進めた後の時間を読めるように)"
+                }
+            ],
+            "TopDownShooter::Bootstrap::SystemRunner": [
+                {
+                    "cat": "決定",
+                    "text": "Update は登録順。破棄は作った順の逆に1回だけ。System が例外を出したらログに出して次の System へ進む"
+                },
+                {
+                    "cat": "将来",
+                    "text": "グループ(止める仕組み)は GameFlow を作る段階で追加する。時間が 0 でも、時間を使わない処理は動くため"
+                }
+            ],
+            "TopDownShooter::Core::Requests::IRequestSink<T>": [
+                {
+                    "cat": "要確認",
+                    "text": "優先度を int のままにするか、段階の決まった列挙型にするか。時間の倍率(掛け算)では優先度を使わない"
+                }
+            ],
+            "TopDownShooter::Core::Requests::RequestHandle<T>": [
+                {
+                    "cat": "決定",
+                    "text": "構造体にして、要求のたびの確保をなくす。インターフェースで返すとボックス化で確保が起きるので、型は RequestHandle<T> のまま持つ"
+                },
+                {
+                    "cat": "決定",
+                    "text": "番号は使い回さない(long を1ずつ増やす)。プールも世代番号も不要"
+                },
+                {
+                    "cat": "メモ",
+                    "text": "要求した側の終わり(状態の Exit、Dispose)で必ず返す"
+                }
+            ],
+            "TopDownShooter::Core::Requests::RequestAggregator<T>": [
+                {
+                    "cat": "決定",
+                    "text": "結果が変わらなかったときは Changed を呼ばない"
+                }
+            ],
+            "TopDownShooter::Core::Requests::MultiplyPolicy": [
+                {
+                    "cat": "決定",
+                    "text": "時間の倍率は掛け算にする。一番小さい値を選ぶルールは、加速とスローが重なったときに加速が消えるのでやめた"
+                },
+                {
+                    "cat": "要確認",
+                    "text": "スロー 0.5 が2つ重なると 0.25 になる。同じ種類の演出を重ねたくない場合は、要求する側で1つにまとめる"
+                }
+            ],
+            "TopDownShooter::Core::Timing::TimeDomain": [
+                {
+                    "cat": "決定",
+                    "text": "大きな括り(全体とグループ)にだけ使う。オブジェクト1つずつには持たせない(数が多いと毎フレームの処理と片付けの管理が増え、弾のように構造体でまとめて持つものとも合わないため)"
+                },
+                {
+                    "cat": "決定",
+                    "text": "親を持てるのは1段だけ(Game → グループ)。木を深くしない"
+                }
+            ],
+            "TopDownShooter::Timing::GameClocks": [
+                {
+                    "cat": "決定",
+                    "text": "大きな括りは「全体(Game)× グループ」の2段の掛け算。グループが増えても、Game の子に足すだけ"
+                },
+                {
+                    "cat": "要確認",
+                    "text": "プレイヤーが時間停止中に撃った弾も Projectiles なので止まる。止めたくないなら、プレイヤーの弾用のグループを Player と同じように分ける"
+                }
+            ],
+            "TopDownShooter::Timing::TimeFieldSystem": [
+                {
+                    "cat": "決定",
+                    "text": "範囲の効果は、オブジェクトではなく空間に倍率を持たせる。中に誰がいるかを覚えないので、入った・出たの記録も、片付け漏れも起きない"
+                },
+                {
+                    "cat": "決定",
+                    "text": "複数の System(敵・弾)にまたがる効果なので、共通の窓口(ITimeFieldQuery)で問い合わせる。効き方がそろう"
+                },
+                {
+                    "cat": "要確認",
+                    "text": "場がプレイヤーにも効くか。効かせないなら、プレイヤーの System は場に聞かない(聞くかどうかは各 System が決める)"
+                },
+                {
+                    "cat": "将来",
+                    "text": "形は球だけで始める。箱などが要るようになったら、形を差し替えられるようにする"
+                }
+            ],
+            "TopDownShooter::Timing::UnityTimeDriver": [
+                {
+                    "cat": "決定",
+                    "text": "Time.timeScale は 1 に固定。Time.deltaTime・WaitForSeconds・UniTask.Delay(既定)は実時間になるので、ゲームの時間で待つときは各グループの時間で数える"
+                },
+                {
+                    "cat": "決定",
+                    "text": "物理は Physics.simulationMode = Script にして、Game の経過時間を決まった刻み(_fixedStep)で区切り、刻みごとに OnFixedUpdate → Physics.Simulate の順で進める"
+                },
+                {
+                    "cat": "限界",
+                    "text": "物理演算はシーン全体で1つの時間(Game)でしか進められない。グループや1体だけを遅くしたとき、Rigidbody の動きは自動では遅くならない。移動を自分の倍率で計算するか、速度に倍率を掛ける"
+                },
+                {
+                    "cat": "TODO",
+                    "text": "時間が大きく進んだフレーム(読み込み直後など)で物理のステップが溜まりすぎないよう、1フレームのステップ数に上限を付ける"
+                }
+            ],
+            "TopDownShooter::Timing::AnimatorTimeBinding": [
+                {
+                    "cat": "メモ",
+                    "text": "Time.timeScale を 1 に固定しているので、Animator.speed に倍率をそのまま入れてよい(二重に掛からない)"
+                }
+            ],
+            "Example::Timing::PauseMenuState": [
+                {
+                    "cat": "限界",
+                    "text": "時間を止めても、時間を使わない処理(入力ですぐ起きること、AI の判断など)は止まらない。入力のマップの切り替えと、SystemRunner のグループで止める"
+                }
+            ],
+            "Example::Timing::ExampleEnemySystem": [
+                {
+                    "cat": "決定",
+                    "text": "凍結は時間の倍率として扱うが、能力値(Stats)とは別。この System の中だけで持つ(敵にしか関係しないため)"
+                },
+                {
+                    "cat": "メモ",
+                    "text": "見た目への倍率は、変わった敵にだけ渡せばよい(前のフレームと同じなら渡さない)"
+                }
+            ],
+            "Example::Timing::ExampleBulletSimulation": [
+                {
+                    "cat": "メモ",
+                    "text": "弾は構造体のリストなので、弾1発ごとの倍率も位置で聞いて掛けるだけ。弾ごとに状態を足す必要がない"
+                }
+            ],
+            "TopDownShooter::Inputs::InputDispatcher": [
+                {
+                    "cat": "決定",
+                    "text": "今のコンテキストは要求の集約(HighestPriorityPolicy)で決める。インベントリ・メニュー・会話を開く側が要求し、閉じたら返す。重なっても、閉じた順に正しく前のコンテキストに戻る"
+                },
+                {
+                    "cat": "決定",
+                    "text": "Canceled は Started を受け取った System に届ける(_pressedReceivers)。押したままコンテキストが変わっても、ガードなどが解けなくならないように"
+                },
+                {
+                    "cat": "決定",
+                    "text": "同じコンテキスト・同じ入力への重複登録は、エラーを出して拒否する。優先順位は決めず、複数の System には配らない"
+                },
+                {
+                    "cat": "決定",
+                    "text": "DispatchInputs は OnPreUpdate で呼ぶ。UnityTimeDriver より後、ほかの System の OnUpdate より前"
+                }
+            ],
+            "TopDownShooter::Inputs::IInputRouteRegistry": [
+                {
+                    "cat": "要確認",
+                    "text": "元の設計にはなかったインターフェース。各 System に DispatchInputs などを見せないために足した。InputDispatcher を直接渡す形でよければ消せる"
+                }
+            ],
+            "TopDownShooter::Inputs::InputActionType": [
+                {
+                    "cat": "要確認",
+                    "text": "LeftClick・RightClick は物理的なボタンの名前、Dodge・Guard は意味の名前で、2種類が混ざっている。キー設定で「攻撃を右クリックに」と変えると、LeftClick という名前の入力が右クリックになり、名前と中身がずれる。物理の名前にそろえるなら Primary・Secondary のような名前に、意味の名前にそろえるならコンテキストごとのアクション(攻撃・決定)にする"
+                }
+            ],
+            "TopDownShooter::Inputs::InputRecorder": [
+                {
+                    "cat": "決定",
+                    "text": "InputActionAsset は1つだけを共有する(キー設定の上書きを全員に効かせるため)。自動生成の InputSystem_Actions を new しない"
+                },
+                {
+                    "cat": "要確認",
+                    "text": "コンテキストの切り替えを InputDispatcher で行うので、Unity のアクションマップは基本的に全部有効のままでよい。UI Toolkit が使う UI マップとの関係は、画面を作るときに確かめる"
+                }
+            ],
+            "TopDownShooter::Inputs::InputProcessor": [
+                {
+                    "cat": "TODO",
+                    "text": "ウィンドウのフォーカスが外れた・デバイスが切り替わったときに押下状態を消す(離した通知が来ないことがある)"
+                },
+                {
+                    "cat": "決定",
+                    "text": "キューは作るときに容量を確保する(ゲーム中の確保を起こさない)"
+                }
+            ],
+            "TopDownShooter::Actions::ActionCoordinator": [
+                {
+                    "cat": "決定",
+                    "text": "層はエンティティ。「どの行動とどの行動が同時にできないか」はゲームのルールそのもので、Unity にも入力にも依存しないため"
+                },
+                {
+                    "cat": "将来",
+                    "text": "行動の種類が64個以内なら、競合表を HashSet ではなくビットの組(long)で持つと、軽くて確保も起きない"
+                },
+                {
+                    "cat": "要確認",
+                    "text": "別の System の行動(インタラクトなど)で拒否された先行入力を、いつ試し直すか(元の設計の未解決の問題)。行動の終わりを知らせる仕組みを足すか、毎フレーム試し直すか"
+                }
+            ],
+            "TopDownShooter::Players::PlayerActionSystem": [
+                {
+                    "cat": "TODO",
+                    "text": "先行入力の期限は、Player の時間(ITimeSource)で数える。ポーズ中に期限が切れないように"
+                }
+            ]
+        },
+        "diagrams": {
+            "コア: ライフサイクル": {
+                "classes": [
+                    "TopDownShooter::Core::IInitializable",
+                    "TopDownShooter::Core::IOnPreUpdate",
+                    "TopDownShooter::Core::IOnUpdate",
+                    "TopDownShooter::Core::IOnFixedUpdate",
+                    "TopDownShooter::Core::IOnLateUpdate",
+                    "System::IDisposable"
+                ],
+                "layout": {
+                    "TopDownShooter::Core::IInitializable": {
+                        "x": 40,
+                        "y": 40,
+                        "hideAttrs": true
+                    },
+                    "TopDownShooter::Core::IOnPreUpdate": {
+                        "x": 250,
+                        "y": 40,
+                        "hideAttrs": true
+                    },
+                    "TopDownShooter::Core::IOnUpdate": {
+                        "x": 460,
+                        "y": 40,
+                        "hideAttrs": true
+                    },
+                    "TopDownShooter::Core::IOnFixedUpdate": {
+                        "x": 670,
+                        "y": 40,
+                        "hideAttrs": true
+                    },
+                    "TopDownShooter::Core::IOnLateUpdate": {
+                        "x": 920,
+                        "y": 40,
+                        "hideAttrs": true
+                    },
+                    "System::IDisposable": {
+                        "x": 1130,
+                        "y": 40,
+                        "hideAttrs": true
+                    }
+                }
+            },
+            "構築": {
+                "classes": [
+                    "TopDownShooter::Bootstrap::GameMain",
+                    "TopDownShooter::Bootstrap::CompositionRoot",
+                    "TopDownShooter::Bootstrap::SystemRunner"
+                ],
+                "embeds": [
+                    {
+                        "diagram": "コア: ライフサイクル",
+                        "x": 550,
+                        "y": 1520,
+                        "mode": "full",
+                        "w": 1450,
+                        "h": 220
+                    }
+                ],
+                "layout": {
+                    "TopDownShooter::Bootstrap::GameMain": {
+                        "x": 950,
+                        "y": 420
+                    },
+                    "TopDownShooter::Bootstrap::CompositionRoot": {
+                        "x": 1220,
+                        "y": 710
+                    },
+                    "TopDownShooter::Bootstrap::SystemRunner": {
+                        "x": 930,
+                        "y": 900
+                    }
+                }
+            },
+            "要求の集約": {
+                "classes": [
+                    "TopDownShooter::Core::Requests::IRequestSink<T>",
+                    "TopDownShooter::Core::Requests::IRequestResult<T>",
+                    "TopDownShooter::Core::Requests::RequestAggregator<T>",
+                    "TopDownShooter::Core::Requests::IRequestOwner<T>",
+                    "TopDownShooter::Core::Requests::RequestHandle<T>",
+                    "TopDownShooter::Core::Requests::RequestEntry<T>",
+                    "TopDownShooter::Core::Requests::IAggregationPolicy<T>",
+                    "TopDownShooter::Core::Requests::HighestPriorityPolicy<T>",
+                    "TopDownShooter::Core::Requests::MultiplyPolicy",
+                    "TopDownShooter::Core::Requests::AnyTruePolicy",
+                    "System::IDisposable"
+                ],
+                "layout": {
+                    "TopDownShooter::Core::Requests::IRequestSink<T>": {
+                        "x": 580,
+                        "y": 40,
+                        "hideAttrs": true
+                    },
+                    "TopDownShooter::Core::Requests::IRequestResult<T>": {
+                        "x": 1340,
+                        "y": 40,
+                        "hideAttrs": true
+                    },
+                    "TopDownShooter::Core::Requests::RequestAggregator<T>": {
+                        "x": 1160,
+                        "y": 210
+                    },
+                    "TopDownShooter::Core::Requests::IRequestOwner<T>": {
+                        "x": -180,
+                        "y": 770,
+                        "hideAttrs": true
+                    },
+                    "TopDownShooter::Core::Requests::RequestHandle<T>": {
+                        "x": 140,
+                        "y": 400,
+                        "hideOps": true
+                    },
+                    "TopDownShooter::Core::Requests::RequestEntry<T>": {
+                        "x": 2400,
+                        "y": 460,
+                        "hideOps": true
+                    },
+                    "TopDownShooter::Core::Requests::IAggregationPolicy<T>": {
+                        "x": 1420,
+                        "y": 590,
+                        "hideAttrs": true
+                    },
+                    "TopDownShooter::Core::Requests::HighestPriorityPolicy<T>": {
+                        "x": 1750,
+                        "y": 780
+                    },
+                    "TopDownShooter::Core::Requests::MultiplyPolicy": {
+                        "x": 1040,
+                        "y": 780
+                    },
+                    "TopDownShooter::Core::Requests::AnyTruePolicy": {
+                        "x": 340,
+                        "y": 780
+                    },
+                    "System::IDisposable": {
+                        "x": 200,
+                        "y": 50,
+                        "hideAttrs": true
+                    }
+                }
+            },
+            "時間の流れ": {
+                "classes": [
+                    "TopDownShooter::Core::Timing::ITimeSource",
+                    "TopDownShooter::Core::Timing::TimeDomain",
+                    "TopDownShooter::Core::Timing::ITimeBindable"
+                ],
+                "embeds": [
+                    {
+                        "diagram": "要求の集約",
+                        "x": 900,
+                        "y": 40
+                    }
+                ],
+                "layout": {
+                    "TopDownShooter::Core::Timing::ITimeSource": {
+                        "x": 1100,
+                        "y": 840,
+                        "hideAttrs": true
+                    },
+                    "TopDownShooter::Core::Timing::TimeDomain": {
+                        "x": 900,
+                        "y": 1000
+                    },
+                    "TopDownShooter::Core::Timing::ITimeBindable": {
+                        "x": 1080,
+                        "y": 630,
+                        "hideAttrs": true
+                    }
+                }
+            },
+            "時間管理": {
+                "classes": [
+                    "TopDownShooter::Timing::TimeGroup",
+                    "TopDownShooter::Timing::GameClocks",
+                    "TopDownShooter::Timing::ITimeFieldQuery",
+                    "TopDownShooter::Timing::ITimeFieldRegistry",
+                    "TopDownShooter::Timing::TimeField",
+                    "TopDownShooter::Timing::TimeFieldSystem",
+                    "TopDownShooter::Timing::UnityTimeDriver",
+                    "TopDownShooter::Timing::AnimatorTimeBinding",
+                    "TopDownShooter::Timing::ParticleTimeBinding",
+                    "TopDownShooter::Timing::VisualEffectTimeBinding"
+                ],
+                "embeds": [
+                    {
+                        "diagram": "時間の流れ",
+                        "x": 1100,
+                        "y": 40
+                    },
+                    {
+                        "diagram": "コア: ライフサイクル",
+                        "x": 1100,
+                        "y": 700
+                    }
+                ],
+                "layout": {
+                    "TopDownShooter::Timing::TimeGroup": {
+                        "x": 1890,
+                        "y": 1480,
+                        "hideOps": true
+                    },
+                    "TopDownShooter::Timing::GameClocks": {
+                        "x": 1840,
+                        "y": 1260
+                    },
+                    "TopDownShooter::Timing::ITimeFieldQuery": {
+                        "x": 1100,
+                        "y": 970,
+                        "hideAttrs": true
+                    },
+                    "TopDownShooter::Timing::ITimeFieldRegistry": {
+                        "x": 1390,
+                        "y": 970,
+                        "hideAttrs": true
+                    },
+                    "TopDownShooter::Timing::TimeField": {
+                        "x": 1280,
+                        "y": 1410
+                    },
+                    "TopDownShooter::Timing::TimeFieldSystem": {
+                        "x": 1190,
+                        "y": 1160
+                    },
+                    "TopDownShooter::Timing::UnityTimeDriver": {
+                        "x": 1740,
+                        "y": 970
+                    },
+                    "TopDownShooter::Timing::AnimatorTimeBinding": {
+                        "x": 1100,
+                        "y": 1760
+                    },
+                    "TopDownShooter::Timing::ParticleTimeBinding": {
+                        "x": 1470,
+                        "y": 1760
+                    },
+                    "TopDownShooter::Timing::VisualEffectTimeBinding": {
+                        "x": 1830,
+                        "y": 1760
+                    }
+                }
+            },
+            "使用例: 時間を使う機能": {
+                "classes": [
+                    "Example::Timing::PauseMenuState",
+                    "Example::Timing::HitStop",
+                    "Example::Timing::SlowMotionSkill",
+                    "Example::Timing::TimeStopSkill",
+                    "Example::Timing::HasteBuff",
+                    "Example::Timing::SlowFieldSkill",
+                    "Example::Timing::ExampleEnemySystem",
+                    "Example::Timing::EnemyState",
+                    "Example::Timing::IEnemyView",
+                    "Example::Timing::EnemyView",
+                    "Example::Timing::ExampleBulletSimulation",
+                    "Example::Timing::BulletState"
+                ],
+                "embeds": [
+                    {
+                        "diagram": "時間管理",
+                        "x": 1400,
+                        "y": 40
+                    },
+                    {
+                        "diagram": "時間の流れ",
+                        "x": 1400,
+                        "y": 700
+                    },
+                    {
+                        "diagram": "要求の集約",
+                        "x": 1400,
+                        "y": 1100
+                    },
+                    {
+                        "diagram": "コア: ライフサイクル",
+                        "x": 1400,
+                        "y": 1500
+                    }
+                ],
+                "layout": {
+                    "Example::Timing::PauseMenuState": {
+                        "x": 1400,
+                        "y": 2570
+                    },
+                    "Example::Timing::HitStop": {
+                        "x": 1770,
+                        "y": 2570
+                    },
+                    "Example::Timing::SlowMotionSkill": {
+                        "x": 2040,
+                        "y": 2570
+                    },
+                    "Example::Timing::TimeStopSkill": {
+                        "x": 1400,
+                        "y": 2790
+                    },
+                    "Example::Timing::HasteBuff": {
+                        "x": 1710,
+                        "y": 2790
+                    },
+                    "Example::Timing::SlowFieldSkill": {
+                        "x": 1990,
+                        "y": 2790
+                    },
+                    "Example::Timing::ExampleEnemySystem": {
+                        "x": 1560,
+                        "y": 1880
+                    },
+                    "Example::Timing::EnemyState": {
+                        "x": 1730,
+                        "y": 2130,
+                        "hideOps": true
+                    },
+                    "Example::Timing::IEnemyView": {
+                        "x": 1440,
+                        "y": 2130,
+                        "hideAttrs": true
+                    },
+                    "Example::Timing::EnemyView": {
+                        "x": 1400,
+                        "y": 2350
+                    },
+                    "Example::Timing::ExampleBulletSimulation": {
+                        "x": 2020,
+                        "y": 1880
+                    },
+                    "Example::Timing::BulletState": {
+                        "x": 2090,
+                        "y": 2110,
+                        "hideOps": true
+                    }
+                }
+            },
+            "使用例: 時間停止スキル中にポーズ": {
+                "layout": {
+                    "skill : TimeStopSkill": {
+                        "x": 40,
+                        "y": 40,
+                        "h": 700
+                    },
+                    "pause : PauseMenuState": {
+                        "x": 1120,
+                        "y": 40,
+                        "h": 700
+                    },
+                    "driver : UnityTimeDriver": {
+                        "x": 470,
+                        "y": 40,
+                        "h": 700
+                    },
+                    "game : TimeDomain": {
+                        "x": 700,
+                        "y": 40,
+                        "h": 700
+                    },
+                    "player : TimeDomain": {
+                        "x": 910,
+                        "y": 40,
+                        "h": 700
+                    },
+                    "enemies : TimeDomain": {
+                        "x": 240,
+                        "y": 40,
+                        "h": 700
+                    }
+                }
+            },
+            "使用例: 敵の倍率の計算(1フレーム)": {
+                "layout": {
+                    "system : ExampleEnemySystem": {
+                        "x": 40,
+                        "y": 40,
+                        "h": 430
+                    },
+                    "enemies : TimeDomain": {
+                        "x": 310,
+                        "y": 40,
+                        "h": 430
+                    },
+                    "fields : TimeFieldSystem": {
+                        "x": 540,
+                        "y": 40,
+                        "h": 430
+                    },
+                    "view : EnemyView": {
+                        "x": 770,
+                        "y": 40,
+                        "h": 430
+                    }
+                }
+            },
+            "名前空間の依存": {
+                "namespaces": [
+                    "TopDownShooter",
+                    "Example",
+                    "System",
+                    "TopDownShooter::Bootstrap",
+                    "TopDownShooter::Core",
+                    "TopDownShooter::Timing",
+                    "Example::Timing",
+                    "TopDownShooter::Core::Requests",
+                    "TopDownShooter::Core::Timing",
+                    "TopDownShooter::Inputs",
+                    "TopDownShooter::Actions",
+                    "TopDownShooter::Players",
+                    "TopDownShooter::Interactions",
+                    "TopDownShooter::Inventories",
+                    "TopDownShooter::Menus"
+                ],
+                "layout": {
+                    "TopDownShooter": {
+                        "x": 40,
+                        "y": 300,
+                        "w": 800,
+                        "h": 720
+                    },
+                    "Example": {
+                        "x": 50,
+                        "y": 40,
+                        "w": 780,
+                        "h": 180
+                    },
+                    "System": {
+                        "x": 250,
+                        "y": 1100,
+                        "w": 380,
+                        "h": 70
+                    },
+                    "TopDownShooter::Bootstrap": {
+                        "x": 90,
+                        "y": 370,
+                        "w": 710,
+                        "h": 70
+                    },
+                    "TopDownShooter::Core": {
+                        "x": 140,
+                        "y": 690,
+                        "w": 610,
+                        "h": 310
+                    },
+                    "TopDownShooter::Timing": {
+                        "x": 60,
+                        "y": 520,
+                        "w": 760
+                    },
+                    "Example::Timing": {
+                        "x": 70,
+                        "y": 110,
+                        "w": 740
+                    },
+                    "TopDownShooter::Core::Requests": {
+                        "x": 160,
+                        "y": 920,
+                        "w": 570,
+                        "h": 70
+                    },
+                    "TopDownShooter::Core::Timing": {
+                        "x": 200,
+                        "y": 770,
+                        "w": 490,
+                        "h": 70
+                    }
+                }
+            },
+            "入力管理": {
+                "classes": [
+                    "TopDownShooter::Inputs::InputActionType",
+                    "TopDownShooter::Inputs::InputEventType",
+                    "TopDownShooter::Inputs::InputContext",
+                    "TopDownShooter::Inputs::InputRecord",
+                    "TopDownShooter::Inputs::InputRouteKey",
+                    "TopDownShooter::Inputs::IInputReceiver",
+                    "TopDownShooter::Inputs::IInputRouteRegistry",
+                    "TopDownShooter::Inputs::InputRecorder",
+                    "TopDownShooter::Inputs::InputProcessor",
+                    "TopDownShooter::Inputs::InputDispatcher"
+                ],
+                "embeds": [
+                    {
+                        "diagram": "要求の集約",
+                        "x": 1400,
+                        "y": 40
+                    },
+                    {
+                        "diagram": "コア: ライフサイクル",
+                        "x": 1400,
+                        "y": 700
+                    }
+                ]
+            },
+            "入力の受け手と行動": {
+                "classes": [
+                    "TopDownShooter::Players::PlayerActionSystem",
+                    "TopDownShooter::Players::BufferedAction",
+                    "TopDownShooter::Players::PlayerMovementSystem",
+                    "TopDownShooter::Interactions::InteractSystem",
+                    "TopDownShooter::Inventories::InventorySystem",
+                    "TopDownShooter::Menus::MenuSystem",
+                    "TopDownShooter::Actions::ActionCoordinator",
+                    "TopDownShooter::Actions::PlayerActionType",
+                    "TopDownShooter::Actions::ActionHandle",
+                    "TopDownShooter::Actions::ActionStartResult"
+                ],
+                "embeds": [
+                    {
+                        "diagram": "入力管理",
+                        "x": 1400,
+                        "y": 40
+                    },
+                    {
+                        "diagram": "コア: ライフサイクル",
+                        "x": 1400,
+                        "y": 800
+                    }
+                ]
+            }
+        }
+    }
+}
